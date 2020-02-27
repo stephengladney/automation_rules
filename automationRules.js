@@ -14,7 +14,9 @@ const conditions = [
   "is greater than",
   "is greater than or equal to",
   "is less than",
-  "is less than or equal to"
+  "is less than or equal to",
+  "is falsy",
+  "is truthy"
 ]
 
 class Rule {
@@ -57,6 +59,10 @@ function isConditionMet(condition, data) {
       return param1 < param2
     case "is less than or equal to":
       return param1 <= param2
+    case "is falsy":
+      return !param1
+    case "is truthy":
+      return !!param1
     default:
       throw "isConditionMet: Unrecognized operator"
   }
