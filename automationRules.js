@@ -1,6 +1,6 @@
 const mappings = new Map([
   ["Assignee", "assignee"],
-  ["Current status", "currenStatus"],
+  ["Current status", "currentStatus"],
   ["Previous status", "previousStatus"],
   ["Card title", "cardTitle"],
   ["Team assigned", "teamAssigned"]
