@@ -1,10 +1,10 @@
-const mappings = new Map([
-  ["Assignee", "assignee"],
-  ["Current status", "currentStatus"],
-  ["Previous status", "previousStatus"],
-  ["Card title", "cardTitle"],
-  ["Team assigned", "teamAssigned"]
-])
+const mappings = {
+  Assignee: "assignee",
+  "Card title": "cardTitle",
+  "Current status": "currentStatus",
+  "Previous status": "previousStatus",
+  "Team assigned": "teamAssigned"
+}
 
 const conditions = [
   "equals",
@@ -31,7 +31,8 @@ class Rule {
 
 class Condition {
   constructor(param1, operator, param2) {
-    if (!mappings.has(param1)) throw "Condition: invalid 1st parameter"
+    if (!mappings.hasOwnProperty(param1))
+      throw "Condition: invalid 1st parameter"
     if (!conditions.includes(operator)) throw "Condition: invalid operator"
     this.param1 = param1
     this.operator = operator
@@ -41,7 +42,7 @@ class Condition {
 
 function isConditionMet(condition, data) {
   const { operator, param2 } = condition
-  const param1 = data[mappings.get(condition.param1)]
+  const param1 = data[mappings[condition.param1]]
   switch (operator) {
     case "equals":
       return param1 == param2
