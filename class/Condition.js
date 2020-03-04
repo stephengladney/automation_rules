@@ -1,5 +1,6 @@
 const mappings = require("../config/mappings")
 const operators = require("../config/operators")
+
 class Condition {
   constructor({ param1, operator, param2 }) {
     if (!mappings.hasOwnProperty(param1))
