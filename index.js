@@ -1,44 +1,6 @@
-const mappings = {
-  Assignee: "assignee",
-  "Card title": "cardTitle",
-  "Current status": "currentStatus",
-  "Previous status": "previousStatus",
-  "Team assigned": "teamAssigned"
-}
-
-const operators = [
-  "equals",
-  "does not equal",
-  "includes",
-  "does not include",
-  "is greater than",
-  "is greater than or equal to",
-  "is less than",
-  "is less than or equal to",
-  "is falsy",
-  "is truthy"
-]
-
-class Rule {
-  constructor({ action, conditions }) {
-    if (typeof action != "function") throw "Rule: action must be a function"
-    if (!conditions || conditions.length === 0)
-      throw "Rule: must supply at least one condition"
-    this.action = action
-    this.conditions = conditions
-  }
-}
-
-class Condition {
-  constructor(param1, operator, param2) {
-    if (!mappings.hasOwnProperty(param1))
-      throw "Condition: invalid 1st parameter"
-    if (!operators.includes(operator)) throw "Condition: invalid operator"
-    this.param1 = param1
-    this.operator = operator
-    this.param2 = param2
-  }
-}
+const { mappings } = require("./mappings")
+const { operators } = require("./operators")
+const { Rule } = require("./Rule")
 
 function isConditionMet(condition, data) {
   const { operator, param2 } = condition
