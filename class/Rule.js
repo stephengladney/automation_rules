@@ -1,4 +1,4 @@
-import { areAllConditionsMet } from "./Condition"
+const { areAllConditionsMet } = require("./Condition")
 
 class Rule {
   constructor({ action, conditions }) {
