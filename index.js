@@ -1,6 +1,8 @@
-exports.mappings = require("./mappings")
-exports.operators = require("./operators")
-exports.Rule = require("./Rule")
+exports.mappings = require("./config/mappings")
+exports.operators = require("./config/operators")
 
-const functions = require("./functions")
+exports.Condition = require("./class/Condition")
+exports.Rule = require("./class/Rule")
+
+const functions = require("./lib/functions")
 Object.keys(functions).forEach(fn => (exports[fn] = functions[fn]))
