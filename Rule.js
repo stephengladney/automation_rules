@@ -1,4 +1,4 @@
-exports.Rule = class Rule {
+class Rule {
   constructor({ action, conditions }) {
     if (typeof action != "function") throw "Rule: action must be a function"
     if (!conditions || conditions.length === 0)
@@ -7,3 +7,5 @@ exports.Rule = class Rule {
     this.conditions = conditions
   }
 }
+
+module.exports = Rule

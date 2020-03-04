@@ -1,4 +1,4 @@
-exports.Condition = class Condition {
+class Condition {
   constructor(param1, operator, param2) {
     if (!mappings.hasOwnProperty(param1))
       throw "Condition: invalid 1st parameter"
@@ -8,3 +8,5 @@ exports.Condition = class Condition {
     this.param2 = param2
   }
 }
+
+module.exports = Condition
