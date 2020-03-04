@@ -34,7 +34,10 @@ function isConditionMet(condition, data) {
 function areAllConditionsMet(data, rule) {
   let result = true
   rule.conditions.forEach(condition => {
-    if (!isConditionMet(condition, data)) result = false
+    if (!isConditionMet(condition, data)) {
+      result = false
+      break
+    }
   })
   return result
 }
