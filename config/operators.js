@@ -1,4 +1,4 @@
-const operators = [
+module.exports = [
   "equals",
   "does not equal",
   "includes",
@@ -10,5 +10,3 @@ const operators = [
   "is falsy",
   "is truthy"
 ]
-
-module.exports = operators

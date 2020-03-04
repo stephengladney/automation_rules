@@ -1,3 +1,5 @@
+import { areAllConditionsMet } from "./Condition"
+
 class Rule {
   constructor({ action, conditions }) {
     if (typeof action != "function") throw "Rule: action must be a function"
@@ -9,3 +11,15 @@ class Rule {
 }
 
 module.exports = Rule
+
+function executeAutomationRule(data, rule) {
+  if (areAllConditionsMet(data, rule)) rule.action(data)
+}
+
+module.exports.executeAutomationRule = executeAutomationRule
+
+function executeAllAutomationRules(data, rules) {
+  rules.forEach(rule => executeAutomationRule(data, rule))
+}
+
+module.exports.executeAllAutomationRules = executeAllAutomationRules
