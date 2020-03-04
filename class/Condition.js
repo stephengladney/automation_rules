@@ -12,8 +12,6 @@ class Condition {
   }
 }
 
-module.exports = Condition
-
 function isConditionMet(condition, data) {
   const { operator, param2 } = condition
   const param1 = data[mappings[condition.param1]]
@@ -43,8 +41,6 @@ function isConditionMet(condition, data) {
   }
 }
 
-module.exports.isConditionMet = isConditionMet
-
 function areAllConditionsMet(data, rule) {
   let result = true
   rule.conditions.forEach(condition => {
@@ -56,4 +52,8 @@ function areAllConditionsMet(data, rule) {
   return result
 }
 
-module.exports.areAllConditionsMet = areAllConditionsMet
+module.exports = {
+  areAllConditionsMet,
+  Condition,
+  isConditionMet
+}

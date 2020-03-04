@@ -10,16 +10,16 @@ class Rule {
   }
 }
 
-module.exports = Rule
-
 function executeAutomationRule(data, rule) {
   if (areAllConditionsMet(data, rule)) rule.action(data)
 }
-
-module.exports.executeAutomationRule = executeAutomationRule
 
 function executeAllAutomationRules(data, rules) {
   rules.forEach(rule => executeAutomationRule(data, rule))
 }
 
-module.exports.executeAllAutomationRules = executeAllAutomationRules
+module.exports = {
+  executeAllAutomationRules,
+  executeAutomationRule,
+  Rule
+}
