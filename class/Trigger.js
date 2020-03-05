@@ -7,8 +7,12 @@ class Trigger {
   }
 }
 
-function isTriggerEnabled(trigger, listOfTriggers) {
-  return listOfTriggers.includes(trigger)
+function rulesWithTrigger(rules, trigger) {
+  return rules.filter(
+    rule =>
+      rule.trigger.target === trigger.target &&
+      rule.trigger.event === trigger.event
+  )
 }
 
-module.exports = { Trigger, isTriggerEnabled }
+module.exports = { Trigger, rulesWithTrigger }

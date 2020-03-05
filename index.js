@@ -1,13 +1,14 @@
 module.exports.mappings = require("./config/mappings")
 module.exports.operators = require("./config/operators")
-module.exports.triggers = require("./config/triggers")
+module.exports.events = require("./config/events")
 
-const CONDITION = require("./class/Condition")
-for (func in CONDITION) {
-  module.exports[func] = CONDITION[func]
-}
+const _classes = {}
+_classes.Condition = require("./class/Condition")
+_classes.Rule = require("./class/Rule")
+_classes.Trigger = require("./class/Trigger")
 
-const RULE = require("./class/Rule")
-for (func in RULE) {
-  module.exports[func] = RULE[func]
+for (_class in _classes) {
+  for ([name, func] of Object.entries(_classes[_class])) {
+    module.exports[name] = func
+  }
 }
