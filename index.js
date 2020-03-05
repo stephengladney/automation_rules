@@ -1,6 +1,5 @@
 module.exports.mappings = require("./config/mappings")
 module.exports.operators = require("./config/operators")
-module.exports.events = require("./config/events")
 
 const _classes = {}
 _classes.Condition = require("./class/Condition")
