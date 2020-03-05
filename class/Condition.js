@@ -17,7 +17,11 @@ function isConditionMet(condition, data) {
   let { operator, param2 } = condition
   const mappedParam1 = mappings[condition.param1]
   const param1 = data[mappedParam1]
-  const previousParam1 = data.previous[mappedParam1]
+  const previousParam1 = data.previous ? data.previous[mappedParam1] : null
+
+  console.log(
+    `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} p1: ${param1} | p2: ${param2} | prev: ${previousParam1}`
+  )
 
   switch (operator) {
     case "equals":
@@ -53,19 +57,34 @@ function isConditionMet(condition, data) {
   }
 }
 
+function stringifyCondition(condition) {
+  return `${condition.param1} ${condition.operator} ${condition.param2}`
+}
 function areAllConditionsMet(data, rule) {
   let result = true
   for (condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
+      console.log(
+        `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${stringifyCondition(
+          condition
+        )}`
+      )
       result = false
       break
     }
   }
+  !!result &&
+    console.log(
+      `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${stringifyCondition(
+        condition
+      )}`
+    )
   return result
 }
 
 module.exports = {
   areAllConditionsMet,
   Condition,
-  isConditionMet
+  isConditionMet,
+  stringifyCondition
 }
