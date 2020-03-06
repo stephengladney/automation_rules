@@ -16,7 +16,6 @@ for (_import in imports) {
 
 let _rules
 module.exports.setRules = arr => (_rules = arr)
-module.exports.showRules = () => console.log(_rules)
 
 module.exports.execute = (trigger, data) => {
   imports.Rule.executeAllAutomationRules(
