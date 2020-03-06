@@ -86,12 +86,6 @@ function areAllConditionsMet(data, rule) {
       break
     }
   }
-  !!result &&
-    console.log(
-      `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${stringifyCondition(
-        condition
-      )}\x1b[0m`
-    )
   return result
 }
 
