@@ -62,7 +62,8 @@ function isConditionMet(condition, data) {
       result = param1 !== previousParam1
       break
     case "has not changed":
-      breakresult = param1 === previousParam1
+      result = param1 === previousParam1
+      break
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`
   }
