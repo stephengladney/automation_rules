@@ -14,47 +14,59 @@ class Condition {
 }
 
 function isConditionMet(condition, data) {
-  let { operator, param2 } = condition
+  const { operator, param2 } = condition
   const mappedParam1 = mappings[condition.param1]
   const param1 = data[mappedParam1]
   const previousParam1 = data.previous ? data.previous[mappedParam1] : null
+  const stringifiedCondition = `${condition.param1}: ${param1} | prev: ${previousParam1}`
 
-  console.log(
-    `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} p1: ${param1} | p2: ${param2} | prev: ${previousParam1}`
-  )
+  let result
 
   switch (operator) {
     case "equals":
-      return param1 == param2
+      result = param1 == param2
+      break
     case "does not equal":
-      return param1 != param2
+      result = param1 != param2
+      break
     case "did equal":
-      return previousParam1 == param2
+      result = previousParam1 == param2
+      break
     case "did not equal":
-      return previousParam1 != param2
+      result = previousParam1 != param2
     case "includes":
-      return param1.includes(param2)
+      result = param1.includes(param2)
+      break
     case "does not include":
-      return !param1.includes(param2)
+      result = !param1.includes(param2)
+      break
     case "is greater than":
-      return param1 > param2
+      result = param1 > param2
+      break
     case "is greater than or equal to":
-      return param1 >= param2
+      result = param1 >= param2
+      break
     case "is less than":
-      return param1 < param2
+      result = param1 < param2
+      break
     case "is less than or equal to":
-      return param1 <= param2
+      result = param1 <= param2
+      break
     case "is falsy":
-      return !param1
+      result = !param1
+      break
     case "is truthy":
-      return !!param1
+      result = !!param1
+      break
     case "has changed":
-      return param1 !== previousParam1
+      result = param1 !== previousParam1
+      break
     case "has not changed":
-      return param1 === previousParam1
+      breakresult = param1 === previousParam1
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`
   }
+  return { result, data: stringifiedCondition }
 }
 
 function stringifyCondition(condition) {
@@ -63,11 +75,12 @@ function stringifyCondition(condition) {
 function areAllConditionsMet(data, rule) {
   let result = true
   for (condition of rule.conditions) {
-    if (!isConditionMet(condition, data)) {
+    const evaluation = isConditionMet(condition, data)
+    if (evaluation.result === false) {
       console.log(
         `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${stringifyCondition(
           condition
-        )}`
+        )} \x1b[0m(${evaluation.data})`
       )
       result = false
       break
@@ -77,7 +90,7 @@ function areAllConditionsMet(data, rule) {
     console.log(
       `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${stringifyCondition(
         condition
-      )}`
+      )}\x1b[0m`
     )
   return result
 }
