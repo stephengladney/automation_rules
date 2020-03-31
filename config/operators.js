@@ -1,16 +1,16 @@
-module.exports = [
-  "equals",
-  "does not equal",
-  "did equal",
-  "did not equal",
-  "includes",
-  "does not include",
-  "has changed",
-  "has not changed",
-  "is greater than",
-  "is greater than or equal to",
-  "is less than",
-  "is less than or equal to",
-  "is falsy",
-  "is truthy"
-]
+module.exports.equals = "equals"
+module.exports.doesNotEqual = "does not equal"
+module.exports.didEqual = "did equal"
+module.exports.didNotEqual = "did not equal"
+module.exports.doesInclude = "does include"
+module.exports.doesNotInclude = "does not include"
+module.exports.hasChanged = "has changed"
+module.exports.hasNotChanged = "has not changed"
+module.exports.isGreatherThan = "is greater than"
+module.exports.isGreatherThanOrEqualTo = "is greater than or equal to"
+module.exports.isLessThan = "is less than"
+module.exports.isLessThanOrEqualTo = "is less than or equal to"
+module.exports.isFalsy = "is falsy"
+module.exports.isTruthy = "is truthy"
+
+module.exports.operators = Object.values(module.exports)

@@ -5,7 +5,7 @@ class Condition {
   constructor({ param1, operator, param2 }) {
     if (!mappings.hasOwnProperty(param1))
       throw `\x1b[30m\x1b[43m Condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
-    if (!operators.includes(operator))
+    if (!Object.values(operators).includes(operator))
       throw `Condition: invalid operator: ${operator}`
     this.param1 = param1
     this.operator = operator
@@ -23,45 +23,45 @@ function isConditionMet(condition, data) {
   let result
 
   switch (operator) {
-    case "equals":
+    case operators.equals:
       result = param1 == param2
       break
-    case "does not equal":
+    case operators.doesNotEqual:
       result = param1 != param2
       break
-    case "did equal":
+    case operators.didEqual:
       result = previousParam1 == param2
       break
-    case "did not equal":
+    case operators.didNotEqual:
       result = previousParam1 != param2
-    case "includes":
+    case operators.doesInclude:
       result = param1.includes(param2)
       break
-    case "does not include":
+    case operators.doesNotInclude:
       result = !param1.includes(param2)
       break
-    case "is greater than":
+    case operators.isGreatherThan:
       result = param1 > param2
       break
-    case "is greater than or equal to":
+    case operators.isGreatherThanOrEqualTo:
       result = param1 >= param2
       break
-    case "is less than":
+    case operators.isLessThan:
       result = param1 < param2
       break
-    case "is less than or equal to":
+    case operators.isGreatherThanOrEqualTo:
       result = param1 <= param2
       break
-    case "is falsy":
+    case operators.isFalsy:
       result = !param1
       break
-    case "is truthy":
+    case operators.isTruthy:
       result = !!param1
       break
-    case "has changed":
+    case operators.hasChanged:
       result = param1 !== previousParam1
       break
-    case "has not changed":
+    case operators.hasNotChanged:
       breakresult = param1 === previousParam1
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`

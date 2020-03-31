@@ -1,26 +1,16 @@
 module.exports.mappings = require("./config/mappings")
-module.exports.operators = require("./config/operators")
+module.exports.operators = require("./config/operators").operators
 
-const imports = {}
-imports.Rule = require("./class/Rule")
-imports.Trigger = require("./class/Trigger")
-imports.Condition = require("./class/Condition")
+const { executeAllAutomationRules, Rule } = require("./class/Rule")
+const { rulesWithTrigger, Trigger } = require("./class/Trigger")
 
-const isClass = key => key.substr(0, 1) === key.substr(0, 1).toUpperCase()
+module.exports.Rule = Rule
+module.exports.Trigger = Trigger
+module.exports.Condition = require("./class/Condition").Condition
 
-for (_import in imports) {
-  for ([key, val] of Object.entries(imports[_import])) {
-    if (isClass(key)) module.exports[key] = val
-  }
-}
-
-let _rules
-module.exports.setRules = arr => (_rules = arr)
-module.exports.showRules = () => console.log(_rules)
+let rules
+module.exports.setRules = arr => (rules = arr)
 
 module.exports.execute = (trigger, data) => {
-  imports.Rule.executeAllAutomationRules(
-    data,
-    imports.Trigger.rulesWithTrigger(_rules, trigger)
-  )
+  executeAllAutomationRules(data, rulesWithTrigger(rules, trigger))
 }
