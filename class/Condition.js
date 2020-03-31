@@ -18,7 +18,7 @@ function isConditionMet(condition, data) {
   const mappedParam1 = mappings[condition.param1]
   const param1 = data[mappedParam1]
   const previousParam1 = data.previous ? data.previous[mappedParam1] : null
-  const stringifiedCondition = `${condition.param1}: ${param1} | prev: ${previousParam1}`
+  const stringifiedParam1 = `${condition.param1}: ${param1} | prev: ${previousParam1}`
 
   let result
 
@@ -67,7 +67,7 @@ function isConditionMet(condition, data) {
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`
   }
-  return { result, data: stringifiedCondition }
+  return { result, data: stringifiedParam1 }
 }
 
 function stringifyCondition(condition) {
