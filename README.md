@@ -1,6 +1,53 @@
-# Automation Rules
+# automation_rules README
 
-## Classes
+### Mappings
+
+Mappings associate human-readable strings with actual key names from your object-oriented data. This is currently hard-coded in `mappings.js`
+
+Example:
+
+```javascript
+module.exports = {
+  Assignee: "assignee",
+  "Card title": "cardTitle",
+  "Current status": "currentStatus",
+  "Previous status": "previousStatus",
+  "Team assigned": "teamAssigned",
+}
+```
+
+### Operators
+
+Operators are used to compare two pieces of information. These are static and provided by the library.
+
+To use, require the index.js file and then use `.op.` to access the operators.
+
+Example:
+
+```javascript
+const ar = require("./index")
+ar.op.equals
+```
+
+<details>
+<summary>Valid operators</summary>
+<ul>
+<li>equals</li>
+<li>doesNotEqual</li>
+<li>didEqual</li>
+<li>didNotEqual</li>
+<li>doesInclude</li>
+<li>doesNotInclude</li>
+<li>hasChanged</li>
+<li>hasNotChanged</li>
+<li>isGreatherThan</li>
+<li>isGreatherThanOrEqualTo</li>
+<li>isLessThan</li>
+<li>isLessThanOrEqualTo</li>
+<li>isFalsy</li>
+<li>isTruthy</li>
+</ul>
+</details>
 
 ### Trigger
 
