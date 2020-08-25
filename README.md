@@ -61,7 +61,7 @@ Example:
 const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
 ```
 
-### Condition {param1, operator, param2}
+### Condition ({param1, operator, param2})
 
 {param1: **Mappings** key, operator: **Operator**, param2: _any_}
 
