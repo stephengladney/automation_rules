@@ -53,7 +53,7 @@ ar.op.equals
 
 <hr>
 
-### _class_ Trigger (event)
+### `_class_` Trigger (event)
 
 (event: _string_)
 
