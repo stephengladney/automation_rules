@@ -16,6 +16,7 @@ module.exports = {
 }
 ```
 
+<hr>
 ### Operators
 
 Operators are used to compare two pieces of information. These are static and provided by the library.
