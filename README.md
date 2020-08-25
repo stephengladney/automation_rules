@@ -64,9 +64,9 @@ const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
 
 ### Condition
 
-param1: Mapping key<br>
-operator: Operator<br>
-param2: any<br>
+param1: **Mappings** key<br>
+operator: **Operator**<br>
+param2: _any_<br>
 
 Conditions allow you to verify that a specific scenario has been met.
 
@@ -85,8 +85,8 @@ const condition = new ar.Condition({
 ### Rule
 
 action: _function_<br>
-conditions: Condition[]
-trigger: Trigger
+conditions: **Condition**[]<br>
+trigger: **Trigger**
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
