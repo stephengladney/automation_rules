@@ -49,10 +49,7 @@ ar.op.equals
 </ul>
 </details>
 
-### Trigger
-
-target: _string_<br>
-event: _string_
+### Trigger ({target, event}: {target: _string_, event: _string_})
 
 Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up to make it easier to create various combinations.
 
@@ -62,11 +59,7 @@ Example:
 const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
 ```
 
-### Condition
-
-param1: **Mappings** key<br>
-operator: **Operator**<br>
-param2: _any_<br>
+### Condition {param1, operator, param2}: {param1: **Mappings** key, operator: **Operator**, param2: _any_})
 
 Conditions allow you to verify that a specific scenario has been met.
 
