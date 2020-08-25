@@ -99,3 +99,11 @@ const rule = new ar.Rule({
   trigger: trigger,
 })
 ```
+
+### setRules ([Rule 1, Rule 2, ...])
+
+This method sets the list of rules that the library is aware of. (maintained in memory)
+
+### execute (Trigger, data)
+
+This method will execute all rules for a particular trigger. Place this method in your code where that trigger occurs.g
