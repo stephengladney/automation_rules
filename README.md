@@ -4,7 +4,7 @@
 
 ### Trigger
 
-target: _string_
+target: _string_<br>
 event: _string_
 
 Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up to make it easier to create various combinations.
@@ -17,9 +17,9 @@ const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
 
 ### Condition
 
-param1: Mapping key
-operator: Operator
-param2: any
+param1: Mapping key<br>
+operator: Operator<br>
+param2: any<br>
 
 Conditions allow you to verify that a specific scenario has been met.
 
