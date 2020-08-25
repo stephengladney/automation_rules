@@ -67,7 +67,7 @@ const trigger = new ar.Trigger("Assignee is updated")
 
 <hr>
 
-### Condition ({param1, operator, param2})
+### _class_ Condition ({param1, operator, param2})
 
 {param1: **Mappings** key, operator: **Operator**, param2: _any_}
 
@@ -87,7 +87,7 @@ const condition = new ar.Condition({
 
 <hr>
 
-### Rule ({action, conditions, trigger})
+### _class_ Rule ({action, conditions, trigger})
 
 {action: _function_, conditions: **Condition**[], trigger: **Trigger**}
 
