@@ -5,7 +5,6 @@
 ### Trigger
 
 target: _string_
-
 event: _string_
 
 Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up to make it easier to create various combinations.
