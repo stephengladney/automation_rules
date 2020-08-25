@@ -17,6 +17,7 @@ module.exports = {
 ```
 
 <hr>
+
 ### Operators
 
 Operators are used to compare two pieces of information. These are static and provided by the library.
@@ -50,6 +51,8 @@ ar.op.equals
 </ul>
 </details>
 
+<hr>
+
 ### Trigger ({target, event})
 
 {target: _string_, event: _string_}
@@ -61,6 +64,8 @@ Example:
 ```javascript
 const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
 ```
+
+<hr>
 
 ### Condition ({param1, operator, param2})
 
@@ -80,6 +85,8 @@ const condition = new ar.Condition({
 
 **NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` and contain its previous state.
 
+<hr>
+
 ### Rule ({action, conditions, trigger})
 
 {action: _function_, conditions: **Condition**[], trigger: **Trigger**}
@@ -96,9 +103,13 @@ const rule = new ar.Rule({
 })
 ```
 
+<hr>
+
 ### setRules ([Rule 1, Rule 2, ...])
 
 This method sets the list of rules that the library is aware of. (maintained in memory)
+
+<hr>
 
 ### execute (Trigger, data)
 
