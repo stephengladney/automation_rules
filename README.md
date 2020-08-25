@@ -53,16 +53,16 @@ ar.op.equals
 
 <hr>
 
-### Trigger ({target, event})
+### Trigger (event)
 
-{target: _string_, event: _string_}
+(event: _string_)
 
-Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up into two strings to make it easier to create various combinations.
+Triggers are just strings to describe a scenario where you'd like to execute an automation rules.
 
 Example:
 
 ```javascript
-const trigger = new ar.Trigger({ target: "Assignee", event: "has changed" })
+const trigger = new ar.Trigger("Assignee is updated")
 ```
 
 <hr>
