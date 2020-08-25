@@ -53,7 +53,7 @@ ar.op.equals
 
 <hr>
 
-### _class_ `Trigger (event)`
+### `Trigger (event)`
 
 (event: _string_)
 
@@ -67,7 +67,7 @@ const trigger = new ar.Trigger("Assignee is updated")
 
 <hr>
 
-### _class_ `Condition ({param1, operator, param2})`
+### `Condition ({param1, operator, param2})`
 
 {param1: **Mappings** key, operator: **Operator**, param2: _any_}
 
@@ -87,7 +87,7 @@ const condition = new ar.Condition({
 
 <hr>
 
-### _class_ Rule ({action, conditions, trigger})
+### Rule ({action, conditions, trigger})
 
 {action: _function_, conditions: **Condition**[], trigger: **Trigger**}
 
