@@ -79,9 +79,11 @@ function areAllConditionsMet(data, rule) {
     const evaluation = isConditionMet(condition, data)
     if (evaluation.result === false) {
       console.log(
-        `[AR] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${stringifyCondition(
-          condition
-        )} \x1b[0m(${evaluation.data})`
+        `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${
+          rule.trigger.event
+        } \x1b[0m\x1b[37m\x1b[41m${stringifyCondition(condition)}\x1b[0m (${
+          evaluation.data
+        })`
       )
       result = false
       break
@@ -94,5 +96,5 @@ module.exports = {
   areAllConditionsMet,
   Condition,
   isConditionMet,
-  stringifyCondition
+  stringifyCondition,
 }

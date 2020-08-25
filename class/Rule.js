@@ -12,7 +12,21 @@ class Rule {
 }
 
 function executeAutomationRule(data, rule) {
-  if (areAllConditionsMet(data, rule)) rule.action(data)
+  if (areAllConditionsMet(data, rule)) {
+    const conditions = rule.conditions
+      .map(
+        condition =>
+          `${condition.param1} ${condition.operator} ${condition.param2}`
+      )
+      .join(", ")
+
+    rule.action(data)
+    console.log(
+      `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
+        rule.trigger.event
+      } \x1b[30m\x1b[42m${conditions}\x1b[0m`
+    )
+  }
 }
 
 function executeAllAutomationRules(data, rules) {
@@ -22,5 +36,5 @@ function executeAllAutomationRules(data, rules) {
 module.exports = {
   executeAllAutomationRules,
   executeAutomationRule,
-  Rule
+  Rule,
 }
