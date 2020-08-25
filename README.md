@@ -113,4 +113,11 @@ This method sets the list of rules that the library is aware of. (maintained in 
 
 ### execute (Trigger, data)
 
-This method will execute all rules for a particular trigger. Place this method in your code where that trigger occurs.g
+This method will execute all rules for a particular trigger. Place this method in your code where that trigger occurs.
+
+Example:
+
+```javascript
+//do thing A
+ar.execute(triggerForThingA, data)
+```
