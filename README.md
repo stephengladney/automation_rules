@@ -79,7 +79,7 @@ const condition = new ar.Condition({
 
 **NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` and contain its previous state.
 
-### Rule
+### Rule ({action, conditions, trigger})
 
 {action: _function_, conditions: **Condition**[], trigger: **Trigger**}
 
