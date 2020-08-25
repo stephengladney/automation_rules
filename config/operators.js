@@ -12,5 +12,3 @@ module.exports.isLessThan = "is less than"
 module.exports.isLessThanOrEqualTo = "is less than or equal to"
 module.exports.isFalsy = "is falsy"
 module.exports.isTruthy = "is truthy"
-
-module.exports.operators = Object.values(module.exports)
