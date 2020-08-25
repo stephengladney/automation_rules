@@ -1,4 +1,5 @@
 const { areAllConditionsMet } = require("./Condition")
+const settings = require("../config/settings.json")
 
 class Rule {
   constructor({ action, conditions, trigger }) {
@@ -21,11 +22,13 @@ function executeAutomationRule(data, rule) {
       .join(", ")
 
     rule.action(data)
-    console.log(
-      `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
-        rule.trigger.event
-      } \x1b[30m\x1b[42m${conditions}\x1b[0m`
-    )
+    if (settings.logging) {
+      console.log(
+        `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
+          rule.trigger.event
+        } \x1b[30m\x1b[42m${conditions}\x1b[0m`
+      )
+    }
   }
 }
 
