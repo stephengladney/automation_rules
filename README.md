@@ -57,7 +57,7 @@ ar.op.equals
 
 {target: _string_, event: _string_}
 
-Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up to make it easier to create various combinations.
+Triggers are really just strings broken up into 'target' and 'event' that relate to your application. They can be whatever you want and are purely used for your users to select a scenario to create a new rule around. It is broken up into two strings to make it easier to create various combinations.
 
 Example:
 
@@ -83,7 +83,7 @@ const condition = new ar.Condition({
 })
 ```
 
-**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` and contain its previous state.
+**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` that contains the object's previous state.
 
 <hr>
 
