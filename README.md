@@ -78,7 +78,7 @@ Example:
 ```javascript
 const condition = new ar.Condition({
   param1: "Assignee",
-  operator: ar.op.equals,
+  operator: ar.Op.equals,
   param2: "Sam",
 })
 ```
@@ -98,7 +98,7 @@ Example:
 ```javascript
 const rule = new ar.Rule({
   action: () => console.log("rule fired"),
-  conditions: [condition],
+  conditions: [condition, ...],
   trigger: trigger,
 })
 ```
