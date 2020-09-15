@@ -22,13 +22,13 @@ module.exports = {
 
 Operators are used to compare two pieces of information. These are static and provided by the library.
 
-To use, require the index.js file and then use `.op.` to access the operators.
+To use, require the index.js file and then use `.Op.` to access the operators.
 
 Example:
 
 ```javascript
 const ar = require("./index")
-ar.op.equals
+ar.Op.equals
 ```
 
 <details>

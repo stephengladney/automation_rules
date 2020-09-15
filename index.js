@@ -1,5 +1,5 @@
 module.exports.mappings = require("./config/mappings")
-module.exports.op = require("./config/operators")
+module.exports.Op = require("./config/operators")
 
 const { executeAllAutomationRules, Rule } = require("./class/Rule")
 const { rulesWithTrigger, Trigger } = require("./class/Trigger")
