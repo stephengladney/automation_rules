@@ -98,7 +98,7 @@ Example:
 ```javascript
 const rule = new ar.Rule({
   action: () => console.log("rule fired"),
-  conditions: [condition, ...],
+  conditions: [condition],
   trigger: trigger,
 })
 ```
