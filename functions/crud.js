@@ -1,5 +1,5 @@
 let rules = []
-let logCallback = null
+let logCallback = () => {}
 const logCallbackCaller = (rule, isSuccess, data) =>
   logCallback(rule, isSuccess, data)
 

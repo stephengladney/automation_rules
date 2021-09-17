@@ -150,7 +150,7 @@ Response:
 
 <hr>
 
-### setLogCallback(({ data, failedCondition, isSuccess, rule })
+### setLogCallback({ data, failedCondition, isSuccess, rule })
 
 Set the log callback function.
 

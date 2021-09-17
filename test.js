@@ -59,3 +59,5 @@ ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
     )
   }
 })
+
+ar.executeAllRulesWithTrigger(trigger, { data })
