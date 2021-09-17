@@ -3,6 +3,7 @@ const { rule } = require("./rule")
 function trigger(event) {
   if (!event) throw "trigger: Event is required"
   const trigger = {
+    event,
     rules: [],
     addRule: ({ action, conditions }) => {
       const splitConditions = conditions.map(
