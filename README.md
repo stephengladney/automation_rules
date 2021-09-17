@@ -81,7 +81,7 @@ const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 
 <hr>
 
-### rule({ action: _() => {}_, conditions, trigger })
+### rule({ callback, conditions, trigger })
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
@@ -97,7 +97,7 @@ const rule = ar.rule({
 
 <hr>
 
-### setRules ([rule 1, rule 2, ...])
+### addRule (rule)
 
 This method sets the list of rules that the library is aware of. (maintained in memory)
 
@@ -112,4 +112,36 @@ Example:
 ```javascript
 //do thing A
 ar.execute(triggerForThingA, data)
+```
+
+### getRules({ withTrigger })
+
+This method will return a JSON payload of rules currently being stored.
+
+Example:
+
+```
+[
+  {
+    trigger: "Thing happened",
+    rules: [
+      {
+        conditions: [
+          { operator: "does not equal", param: "Assignee", value: 2 },
+          { operator: "equals", param: "Assignee", value: "Sam" },
+        ],
+        description: "Log i fired is Assignee is Sam",
+        trigger: "Thing happened",
+      },
+      {
+        conditions: [
+          { operator: "equals", param: "Assignee", value: "John" },
+          { operator: "does not equal", param: "Assignee", value: 4 },
+        ],
+        description: "Log i fired if Assignee is John",
+        trigger: "Thing happened",
+      },
+    ],
+  },
+]
 ```

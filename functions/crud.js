@@ -7,7 +7,7 @@ function addRule(rule) {
   rules.push(rule)
 }
 
-function listRules({ withTrigger } = {}) {
+function getRules({ withTrigger } = {}) {
   const result = []
   rules.forEach((rule) => {
     if (withTrigger && rule.trigger !== withTrigger) return
@@ -28,7 +28,7 @@ function setLogCallback(callback) {
 
 module.exports = {
   addRule,
-  listRules,
+  getRules,
   logCallback,
   logCallbackCaller,
   rules,

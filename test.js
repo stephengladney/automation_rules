@@ -60,4 +60,5 @@ ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
   }
 })
 
-ar.executeAllRulesForTrigger(trigger, { data })
+console.log(JSON.stringify(ar.getRules()))
+// ar.executeAllRulesForTrigger(trigger, { data })

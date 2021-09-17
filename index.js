@@ -15,7 +15,7 @@ module.exports.mappings = require("./config/mappings")
 module.exports.op = require("./config/operators")
 
 module.exports.addRule = crud.addRule
-module.exports.listRules = crud.listRules
+module.exports.getRules = crud.getRules
 module.exports.setLogCallback = crud.setLogCallback
 
 module.exports.executeAllRulesForTrigger = (trigger, { data }) =>
