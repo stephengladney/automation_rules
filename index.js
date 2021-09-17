@@ -18,5 +18,5 @@ module.exports.addRule = crud.addRule
 module.exports.getRules = crud.getRules
 module.exports.setLogCallback = crud.setLogCallback
 
-module.exports.executeAllRulesForTrigger = (trigger, { data }) =>
+module.exports.executeAllRulesWithTrigger = (trigger, { data }) =>
   executeAllRules(getAllRulesWithTrigger(crud.rules, trigger), data)

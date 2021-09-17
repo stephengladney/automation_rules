@@ -6,7 +6,7 @@ const trigger = ar.trigger("Thing happened")
 
 ar.addRule(
   ar.rule({
-    action: () => console.log("i fired"),
+    callback: () => console.log("i fired"),
     conditions: [
       ar.condition(["Assignee", ar.op.doesNotEqual, 2]),
       ar.condition(["Assignee", ar.op.equals, "Sam"]),
@@ -18,7 +18,7 @@ ar.addRule(
 
 ar.addRule(
   ar.rule({
-    action: () => console.log("i fired"),
+    callback: () => console.log("i fired"),
     conditions: [
       ar.condition(["Assignee", ar.op.equals, "John"]),
       ar.condition(["Assignee", ar.op.doesNotEqual, 4]),
@@ -59,6 +59,3 @@ ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
     )
   }
 })
-
-console.log(JSON.stringify(ar.getRules()))
-// ar.executeAllRulesForTrigger(trigger, { data })

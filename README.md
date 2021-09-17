@@ -53,21 +53,7 @@ ar.Op.equals
 
 <hr>
 
-### trigger(event)
-
-Returns { event: _string_ }
-
-A trigger is a string that describes a scenario where you'd like to execute an automation rule. This is required and will help organize your automation rules.
-
-Example:
-
-```javascript
-const trigger = ar.trigger("When a user is created")
-```
-
-<hr>
-
-### condition([_param_, _operator_, _value_])
+### condition ([_param_, _operator_, _value_])
 
 Conditions allow you to verify that a specific scenario has been met.
 
@@ -81,17 +67,23 @@ const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 
 <hr>
 
-### rule({ callback, conditions, trigger })
+### rule ({ callback, conditions, trigger })
 
-Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
+Create a rule with with a callback function to perform when the trigger and conditions are both met.
+
+Note: Triggers are just strings that describe a scenario, i.e. "When a new user is created"
 
 Example:
 
 ```javascript
+const triggers = {
+  NEW_USER_CREATED: "When a new user is created",
+}
+
 const rule = ar.rule({
-  action: () => console.log("rule fired"),
+  callback: () => console.log("A new user was created!"),
   conditions: [condition],
-  trigger: trigger,
+  trigger: triggers.NEW_USER_CREATED,
 })
 ```
 
@@ -99,22 +91,26 @@ const rule = ar.rule({
 
 ### addRule (rule)
 
-This method sets the list of rules that the library is aware of. (maintained in memory)
+Add a rule to the current list of rules. (maintained in memory)
 
 <hr>
 
-### execute (trigger, data)
+### executeAllRulesWithTrigger (trigger, { data })
 
-This method will execute all rules for a particular trigger. Place this method in your code where that trigger occurs.
+Execute all rules with a particular trigger. Place this method in your code where that trigger occurs.
 
 Example:
 
 ```javascript
 //do thing A
-ar.execute(triggerForThingA, data)
+ar.executeAllRulesWithTrigger(trigger, {
+  data: { first_name: "Thomas", last_name: "Anderson", age: 34 },
+})
 ```
 
-### getRules({ withTrigger })
+<hr>
+
+### getRules ({ withTrigger? })
 
 This method will return a JSON payload of rules currently being stored.
 
@@ -151,3 +147,9 @@ Response:
   },
 ]
 ```
+
+<hr>
+
+### setLogCallback(({ rule, isSuccess, failedCondition })
+
+Set the log callback function.

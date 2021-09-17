@@ -2,16 +2,16 @@ const { areAllConditionsMet } = require("./condition")
 const settings = require("../config/settings.json")
 const { logCallbackCaller } = require("./crud")
 
-function rule({ action, conditions, description, trigger }) {
-  if (typeof action != "function") throw "rule: action must be a function"
+function rule({ callback, conditions, description, trigger }) {
+  if (typeof callback != "function") throw "rule: callback must be a function"
   if (!conditions || conditions.length === 0)
     throw "rule: must supply at least one condition"
-  return { action, conditions, description, trigger }
+  return { callback, conditions, description, trigger }
 }
 
 function executeAutomationRule(data, rule) {
   if (areAllConditionsMet(data, rule)) {
-    rule.action(data)
+    rule.callback(data)
     if (settings.logging.logSuccess) {
       logCallbackCaller({ rule, isSuccess: true, data })
     }
