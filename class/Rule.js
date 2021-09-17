@@ -1,15 +1,11 @@
 const { areAllConditionsMet } = require("./Condition")
 const settings = require("../config/settings.json")
 
-class Rule {
-  constructor({ action, conditions, trigger }) {
-    if (typeof action != "function") throw "Rule: action must be a function"
-    if (!conditions || conditions.length === 0)
-      throw "Rule: must supply at least one condition"
-    this.action = action
-    this.conditions = conditions
-    this.trigger = trigger
-  }
+function Rule({ action, conditions, trigger }) {
+  if (typeof action != "function") throw "Rule: action must be a function"
+  if (!conditions || conditions.length === 0)
+    throw "Rule: must supply at least one condition"
+  return { action, conditions, trigger }
 }
 
 function executeAutomationRule(data, rule) {

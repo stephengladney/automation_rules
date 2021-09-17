@@ -10,7 +10,7 @@ function Trigger(event) {
           `${condition.param1} ${condition.operator} ${condition.param2}`
       )
       trigger.rules.push(
-        new Rule({
+        Rule({
           action,
           conditions,
           trigger: event,
