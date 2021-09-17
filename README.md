@@ -154,5 +154,5 @@ Response:
 
 Set the log callback function.
 
-`failedCondition` - This variable gives you access to which specific condition failed if the rule fails.
-`isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
+- `failedCondition` - This variable gives you access to which specific condition failed if the rule fails.
+- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
