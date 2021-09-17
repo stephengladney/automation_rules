@@ -53,7 +53,7 @@ ar.Op.equals
 
 <hr>
 
-### trigger(event: _string_)
+### trigger(event)
 
 Returns { event: _string_ }
 
@@ -67,7 +67,7 @@ const trigger = ar.trigger("When a user is created")
 
 <hr>
 
-### condition([param: `Mappings` key, operator: `Operator`, value: `any`])
+### condition([param: _Mappings key_, _operator_, _value_])
 
 Conditions allow you to verify that a specific scenario has been met.
 
