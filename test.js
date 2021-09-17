@@ -1,7 +1,7 @@
 const ar = require("./index")
 const data = { assignee: "Sam", previous: { assignee: "Dave" } }
 const settings = require("./config/settings.json")
-
+const { stringifyCondition } = require("./functions/condition")
 const trigger = ar.trigger("Thing happened")
 
 ar.addRule(
@@ -28,7 +28,7 @@ ar.addRule(
   })
 )
 
-ar.setLogCallback((rule, isSuccess, data) => {
+ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
   const conditions = rule.conditions
     .map(
       (condition) =>
@@ -41,7 +41,9 @@ ar.setLogCallback((rule, isSuccess, data) => {
         settings.logging.includeTimestamp
           ? `${new Date().toDateString()} ${new Date().toLocaleTimeString()} `
           : ""
-      }\x1b[1m\x1b[32m${rule.trigger} \x1b[30m\x1b[42m${conditions}\x1b[0m`
+      }\x1b[1m\x1b[32m${rule.description} | ${
+        rule.trigger
+      } \x1b[30m\x1b[42m${conditions}\x1b[0m`
     )
   } else {
     console.log(
@@ -51,7 +53,7 @@ ar.setLogCallback((rule, isSuccess, data) => {
           : ""
       }\x1b[1m\x1b[31m${rule.trigger} \x1b[0m\x1b[37m\x1b[41m${conditions}${
         settings.logging.logDataOnFailure
-          ? `\x1b[0m (${JSON.stringify(data)})`
+          ? `\x1b[0m (${stringifyCondition(failedCondition)})`
           : ""
       }`
     )

@@ -78,8 +78,12 @@ function areAllConditionsMet(data, rule) {
   for (condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
       if (settings.logging.logFailure) {
-        const mappedParam = mappings[condition.param]
-        logCallbackCaller(rule, false, data)
+        logCallbackCaller({
+          rule,
+          isSuccess: false,
+          failedCondition: condition,
+          data,
+        })
       }
       result = false
       break

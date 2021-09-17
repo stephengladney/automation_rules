@@ -12,7 +12,9 @@ function rule({ action, conditions, description, trigger }) {
 function executeAutomationRule(data, rule) {
   if (areAllConditionsMet(data, rule)) {
     rule.action(data)
-    if (settings.logging.logSuccess) logCallbackCaller(rule, true, data)
+    if (settings.logging.logSuccess) {
+      logCallbackCaller({ rule, isSuccess: true, data })
+    }
   }
 }
 
