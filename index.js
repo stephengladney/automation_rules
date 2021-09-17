@@ -3,10 +3,11 @@ module.exports.Op = require("./config/operators")
 
 const { executeAllAutomationRules, Rule } = require("./class/Rule")
 const { rulesWithTrigger, Trigger } = require("./class/Trigger")
+const { Condition } = require("./class/Condition")
 
 module.exports.Rule = Rule
 module.exports.Trigger = Trigger
-module.exports.Condition = require("./class/Condition").Condition
+module.exports.Condition = Condition
 
 let rules
 module.exports.setRules = (arr) => (rules = arr)
