@@ -55,9 +55,9 @@ ar.Op.equals
 
 ### trigger(event: _string_)
 
-Returns { event: _string_, rules: **Rule**[]}
+Returns { event: _string_, addRule: () => {), rules: **Rule**[]}
 
-Triggers an event (string to describe a scenario where you'd like to execute an automation rules) and an array of rules.
+Triggers contain an event (string to describe a scenario where you'd like to execute an automation rules) and an array of rules.
 
 Example:
 

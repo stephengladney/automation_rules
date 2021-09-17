@@ -1,14 +1,38 @@
 const ar = require("./index")
 const data = { assignee: "Sam" }
 
-const newTrigger = ar.trigger("Thing happened")
+const trigger = ar.trigger("Thing happened")
 
-newTrigger.addRule({
-  action: () => console.log("i fired"),
-  conditions: [
-    ar.condition(["Assignee", ar.op.doesNotEqual, 2]),
-    ar.condition(["Assignee", ar.op.equals, "Sam"]),
-  ],
-})
+ar.addRule(
+  ar.rule({
+    action: () => console.log("i fired"),
+    conditions: [
+      ar.condition(["Assignee", ar.op.doesNotEqual, 2]),
+      ar.condition(["Assignee", ar.op.equals, "Sam"]),
+    ],
+    trigger,
+  })
+)
 
-ar.executeAllRulesForTrigger(newTrigger, { data })
+ar.addRule(
+  ar.rule({
+    action: () => console.log("i fired"),
+    conditions: [
+      ar.condition(["Assignee", ar.op.equals, "John"]),
+      ar.condition(["Assignee", ar.op.doesNotEqual, 4]),
+    ],
+    trigger,
+  })
+)
+
+console.log(JSON.stringify(ar.listRules()))
+
+const result = [
+  {
+    trigger: "Thing happened",
+    rules: [
+      "Assignee does not equal 2, Assignee equals Sam, ",
+      "Assignee equals John, Assignee does not equal 4, ",
+    ],
+  },
+]

@@ -28,12 +28,17 @@ function executeAutomationRule(data, rule) {
   }
 }
 
-function executeAllRulesForTrigger(trigger, { data }) {
-  trigger.rules.forEach((rule) => executeAutomationRule(data, rule))
+function getAllRulesWithTrigger(rules, trigger) {
+  return rules.filter((rule) => rule.trigger === trigger)
+}
+
+function executeAllRules(rules, data) {
+  rules.forEach((rule) => executeAutomationRule(data, rule))
 }
 
 module.exports = {
-  executeAllRulesForTrigger,
+  executeAllRules,
   executeAutomationRule,
+  getAllRulesWithTrigger,
   rule,
 }
