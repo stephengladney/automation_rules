@@ -53,9 +53,7 @@ ar.Op.equals
 
 <hr>
 
-### trigger (event)
-
-(event: _string_)
+### trigger(event: _string_)
 
 Triggers are just strings to describe a scenario where you'd like to execute an automation rules.
 
@@ -67,9 +65,7 @@ const trigger = ar.trigger("Assignee is updated")
 
 <hr>
 
-### condition ([param1, operator, param2])
-
-{param1: **Mappings** key, operator: **Operator**, param2: _any_}
+### condition([param1: **Mappings** key, operator: **Operator**, param2: _any_])
 
 Conditions allow you to verify that a specific scenario has been met.
 
@@ -83,9 +79,7 @@ const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 
 <hr>
 
-### rule ({action, conditions, trigger})
-
-{action:, conditions: **condition**[], trigger: **trigger**}
+### rule({action:, conditions: **condition**[], trigger: **trigger**})
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
