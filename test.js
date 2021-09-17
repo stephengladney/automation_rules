@@ -25,14 +25,15 @@ ar.addRule(
   })
 )
 
-console.log(JSON.stringify(ar.listRules()))
+ar.executeAllRulesForTrigger(trigger, { data })
+// console.log(JSON.stringify(ar.listRules()))
 
-const result = [
-  {
-    trigger: "Thing happened",
-    rules: [
-      "Assignee does not equal 2, Assignee equals Sam, ",
-      "Assignee equals John, Assignee does not equal 4, ",
-    ],
-  },
-]
+// const result = [
+//   {
+//     trigger: "Thing happened",
+//     rules: [
+//       "Assignee does not equal 2, Assignee equals Sam, ",
+//       "Assignee equals John, Assignee does not equal 4, ",
+//     ],
+//   },
+// ]
