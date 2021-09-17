@@ -67,7 +67,7 @@ const trigger = new ar.Trigger("Assignee is updated")
 
 <hr>
 
-### _class_ Condition ({param1, operator, param2})
+### _class_ Condition ([param1, operator, param2])
 
 {param1: **Mappings** key, operator: **Operator**, param2: _any_}
 
@@ -76,11 +76,7 @@ Conditions allow you to verify that a specific scenario has been met.
 Example:
 
 ```javascript
-const condition = new ar.Condition({
-  param1: "Assignee",
-  operator: ar.Op.equals,
-  param2: "Sam",
-})
+const condition = new ar.Condition(["Assignee", ar.Op.equals, "Sam"])
 ```
 
 **NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` that contains the object's previous state.
