@@ -2,23 +2,23 @@ const mappings = require("../config/mappings")
 const operators = require("../config/operators")
 const settings = require("../config/settings.json")
 
-function condition([param1, operator, param2]) {
-  if (!mappings.hasOwnProperty(param1))
-    throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
+function condition([param, operator, value]) {
+  if (!mappings.hasOwnProperty(param))
+    throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param} `
   if (!Object.values(operators).includes(operator))
     throw `condition: invalid operator: ${operator}`
   return {
     operator,
-    param1,
-    param2,
+    param,
+    value,
   }
 }
 
 function isConditionMet(condition, data) {
-  const { operator, param2 } = condition
-  const mappedParam1 = mappings[condition.param1]
-  const param1 = data[mappedParam1]
-  const stringifiedParam1 = `${condition.param1}: ${param1}${
+  const { operator, value } = condition
+  const mappedParam1 = mappings[condition.param]
+  const param = data[mappedParam1]
+  const stringifiedParam1 = `${condition.param}: ${param}${
     data.previous ? ` | prev: ${data.previous[mappedParam1]}` : ``
   }`
 
@@ -26,45 +26,45 @@ function isConditionMet(condition, data) {
 
   switch (operator) {
     case operators.equals:
-      result = param1 == param2
+      result = param == value
       break
     case operators.doesNotEqual:
-      result = param1 != param2
+      result = param != value
       break
     case operators.didEqual:
-      result = previousParam1 == param2
+      result = previousParam1 == value
       break
     case operators.didNotEqual:
-      result = previousParam1 != param2
+      result = previousParam1 != value
     case operators.doesInclude:
-      result = param1.includes(param2)
+      result = param.includes(value)
       break
     case operators.doesNotInclude:
-      result = !param1.includes(param2)
+      result = !param.includes(value)
       break
     case operators.isGreatherThan:
-      result = param1 > param2
+      result = param > value
       break
     case operators.isGreatherThanOrEqualTo:
-      result = param1 >= param2
+      result = param >= value
       break
     case operators.isLessThan:
-      result = param1 < param2
+      result = param < value
       break
     case operators.isGreatherThanOrEqualTo:
-      result = param1 <= param2
+      result = param <= value
       break
     case operators.isFalsy:
-      result = !param1
+      result = !param
       break
     case operators.isTruthy:
-      result = !!param1
+      result = !!param
       break
     case operators.hasChanged:
-      result = param1 !== previousParam1
+      result = param !== previousParam1
       break
     case operators.hasNotChanged:
-      result = param1 === previousParam1
+      result = param === previousParam1
       break
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`
@@ -73,7 +73,7 @@ function isConditionMet(condition, data) {
 }
 
 function stringifyCondition(condition) {
-  return `${condition.param1} ${condition.operator} ${condition.param2}`
+  return `${condition.param} ${condition.operator} ${condition.value}`
 }
 function areAllConditionsMet(data, rule) {
   let result = true

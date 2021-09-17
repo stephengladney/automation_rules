@@ -67,7 +67,7 @@ const trigger = ar.trigger("Assignee is updated")
 
 <hr>
 
-### condition([param1: **Mappings** key, operator: **Operator**, param2: _any_])
+### condition([param: **Mappings** key, operator: **Operator**, value: _any_])
 
 Conditions allow you to verify that a specific scenario has been met.
 

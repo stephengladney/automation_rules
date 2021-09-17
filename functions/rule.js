@@ -1,11 +1,11 @@
 const { areAllConditionsMet } = require("./condition")
 const settings = require("../config/settings.json")
 
-function rule({ action, conditions, trigger }) {
+function rule({ action, conditions, description, trigger }) {
   if (typeof action != "function") throw "rule: action must be a function"
   if (!conditions || conditions.length === 0)
     throw "rule: must supply at least one condition"
-  return { action, conditions, trigger }
+  return { action, conditions, description, trigger }
 }
 
 function executeAutomationRule(data, rule) {
@@ -13,7 +13,7 @@ function executeAutomationRule(data, rule) {
     const conditions = rule.conditions
       .map(
         (condition) =>
-          `${condition.param1} ${condition.operator} ${condition.param2}`
+          `${condition.param} ${condition.operator} ${condition.value}`
       )
       .join(", ")
 
