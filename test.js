@@ -44,10 +44,6 @@ ar.setLogCallback((rule, isSuccess, data) => {
       }\x1b[1m\x1b[32m${rule.trigger} \x1b[30m\x1b[42m${conditions}\x1b[0m`
     )
   } else {
-    // `${condition.param}: ${data[mappedParam]}${
-    //   data.previous ? ` | prev: ${data.previous[mappedParam]}` : ``
-    // }
-
     console.log(
       `[\x1b[36mar\x1b[0m] ${
         settings.logging.includeTimestamp
