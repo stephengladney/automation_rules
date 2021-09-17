@@ -18,8 +18,9 @@ function isConditionMet(condition, data) {
   const { operator, param2 } = condition
   const mappedParam1 = mappings[condition.param1]
   const param1 = data[mappedParam1]
-  const previousParam1 = data.previous ? data.previous[mappedParam1] : null
-  const stringifiedParam1 = `${condition.param1}: ${param1} | prev: ${previousParam1}`
+  const stringifiedParam1 = `${condition.param1}: ${param1}${
+    data.previous ? ` | prev: ${data.previous[mappedParam1]}` : ``
+  }`
 
   let result
 

@@ -1,5 +1,5 @@
 const ar = require("./index")
-const data = { assignee: "Sam" }
+const data = { assignee: "Sam", previous: { assignee: "Dave" } }
 
 const trigger = ar.trigger("Thing happened")
 
