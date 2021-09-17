@@ -16,6 +16,7 @@ module.exports.op = require("./config/operators")
 
 module.exports.addRule = crud.addRule
 module.exports.listRules = crud.listRules
+module.exports.setLogCallback = crud.setLogCallback
 
-module.exports.executeAllRulesForTrigger = (triggerToQuery, { data }) =>
-  executeAllRules(getAllRulesWithTrigger(crud.rules, triggerToQuery), data)
+module.exports.executeAllRulesForTrigger = (trigger, { data }) =>
+  executeAllRules(getAllRulesWithTrigger(crud.rules, trigger), data)

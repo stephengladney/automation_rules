@@ -1,5 +1,6 @@
 const ar = require("./index")
 const data = { assignee: "Sam", previous: { assignee: "Dave" } }
+const settings = require("./config/settings.json")
 
 const trigger = ar.trigger("Thing happened")
 
@@ -26,5 +27,39 @@ ar.addRule(
     trigger,
   })
 )
+
+ar.setLogCallback((rule, isSuccess, data) => {
+  const conditions = rule.conditions
+    .map(
+      (condition) =>
+        `${condition.param} ${condition.operator} ${condition.value}`
+    )
+    .join(", ")
+  if (isSuccess) {
+    console.log(
+      `[\x1b[36mar\x1b[0m] ${
+        settings.logging.includeTimestamp
+          ? `${new Date().toDateString()} ${new Date().toLocaleTimeString()} `
+          : ""
+      }\x1b[1m\x1b[32m${rule.trigger} \x1b[30m\x1b[42m${conditions}\x1b[0m`
+    )
+  } else {
+    // `${condition.param}: ${data[mappedParam]}${
+    //   data.previous ? ` | prev: ${data.previous[mappedParam]}` : ``
+    // }
+
+    console.log(
+      `[\x1b[36mar\x1b[0m] ${
+        settings.logging.includeTimestamp
+          ? `${new Date().toDateString()} ${new Date().toLocaleTimeString()} `
+          : ""
+      }\x1b[1m\x1b[31m${rule.trigger} \x1b[0m\x1b[37m\x1b[41m${conditions}${
+        settings.logging.logDataOnFailure
+          ? `\x1b[0m (${JSON.stringify(data)})`
+          : ""
+      }`
+    )
+  }
+})
 
 ar.executeAllRulesForTrigger(trigger, { data })

@@ -1,5 +1,6 @@
 const { areAllConditionsMet } = require("./condition")
 const settings = require("../config/settings.json")
+const { logCallbackCaller } = require("./crud")
 
 function rule({ action, conditions, description, trigger }) {
   if (typeof action != "function") throw "rule: action must be a function"
@@ -10,21 +11,8 @@ function rule({ action, conditions, description, trigger }) {
 
 function executeAutomationRule(data, rule) {
   if (areAllConditionsMet(data, rule)) {
-    const conditions = rule.conditions
-      .map(
-        (condition) =>
-          `${condition.param} ${condition.operator} ${condition.value}`
-      )
-      .join(", ")
-
     rule.action(data)
-    if (settings.logSuccess) {
-      console.log(
-        `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
-          rule.trigger
-        } \x1b[30m\x1b[42m${conditions}\x1b[0m`
-      )
-    }
+    if (settings.logging.logSuccess) logCallbackCaller(rule, true, data)
   }
 }
 

@@ -1,6 +1,7 @@
 const mappings = require("../config/mappings")
 const operators = require("../config/operators")
 const settings = require("../config/settings.json")
+const { logCallbackCaller } = require("./crud")
 
 function condition([param, operator, value]) {
   if (!mappings.hasOwnProperty(param))
@@ -16,12 +17,8 @@ function condition([param, operator, value]) {
 
 function isConditionMet(condition, data) {
   const { operator, value } = condition
-  const mappedParam1 = mappings[condition.param]
-  const param = data[mappedParam1]
-  const stringifiedParam1 = `${condition.param}: ${param}${
-    data.previous ? ` | prev: ${data.previous[mappedParam1]}` : ``
-  }`
-
+  const mappedParam = mappings[condition.param]
+  const param = data[mappedParam]
   let result
 
   switch (operator) {
@@ -69,25 +66,20 @@ function isConditionMet(condition, data) {
     default:
       throw `isConditionMet: Unrecognized operator ${operator}`
   }
-  return { result, data: stringifiedParam1 }
+  return result
 }
 
 function stringifyCondition(condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
+
 function areAllConditionsMet(data, rule) {
   let result = true
   for (condition of rule.conditions) {
-    const evaluation = isConditionMet(condition, data)
-    if (evaluation.result === false) {
-      if (settings.logFailure) {
-        console.log(
-          `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${
-            rule.trigger
-          } \x1b[0m\x1b[37m\x1b[41m${stringifyCondition(condition)}${
-            settings.logDataOnFailure ? `\x1b[0m (${evaluation.data})` : ""
-          }`
-        )
+    if (!isConditionMet(condition, data)) {
+      if (settings.logging.logFailure) {
+        const mappedParam = mappings[condition.param]
+        logCallbackCaller(rule, false, data)
       }
       result = false
       break

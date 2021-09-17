@@ -1,4 +1,7 @@
 let rules = []
+let logCallback = null
+const logCallbackCaller = (rule, isSuccess, data) =>
+  logCallback(rule, isSuccess, data)
 
 function addRule(rule) {
   rules.push(rule)
@@ -19,4 +22,15 @@ function listRules({ withTrigger } = {}) {
   return result
 }
 
-module.exports = { addRule, listRules, rules }
+function setLogCallback(callback) {
+  logCallback = callback
+}
+
+module.exports = {
+  addRule,
+  listRules,
+  logCallback,
+  logCallbackCaller,
+  rules,
+  setLogCallback,
+}
