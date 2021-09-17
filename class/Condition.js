@@ -2,11 +2,11 @@ const mappings = require("../config/mappings")
 const operators = require("../config/operators")
 const settings = require("../config/settings.json")
 
-function Condition([param1, operator, param2]) {
+function condition([param1, operator, param2]) {
   if (!mappings.hasOwnProperty(param1))
-    throw `\x1b[30m\x1b[43m Condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
+    throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
   if (!Object.values(operators).includes(operator))
-    throw `Condition: invalid operator: ${operator}`
+    throw `condition: invalid operator: ${operator}`
   return {
     operator,
     param1,
@@ -97,7 +97,7 @@ function areAllConditionsMet(data, rule) {
 
 module.exports = {
   areAllConditionsMet,
-  Condition,
+  condition,
   isConditionMet,
   stringifyCondition,
 }

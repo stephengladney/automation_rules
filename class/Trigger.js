@@ -1,7 +1,7 @@
-const { Rule } = require("./Rule")
+const { rule } = require("./rule")
 
-function Trigger(event) {
-  if (!event) throw "Trigger: Event is required"
+function trigger(event) {
+  if (!event) throw "trigger: Event is required"
   const trigger = {
     rules: [],
     addRule: ({ action, conditions }) => {
@@ -10,7 +10,7 @@ function Trigger(event) {
           `${condition.param1} ${condition.operator} ${condition.param2}`
       )
       trigger.rules.push(
-        Rule({
+        rule({
           action,
           conditions,
           trigger: event,
@@ -21,4 +21,4 @@ function Trigger(event) {
   return trigger
 }
 
-module.exports = Trigger
+module.exports = trigger

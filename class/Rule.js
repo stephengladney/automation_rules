@@ -1,10 +1,10 @@
-const { areAllConditionsMet } = require("./Condition")
+const { areAllConditionsMet } = require("./condition")
 const settings = require("../config/settings.json")
 
-function Rule({ action, conditions, trigger }) {
-  if (typeof action != "function") throw "Rule: action must be a function"
+function rule({ action, conditions, trigger }) {
+  if (typeof action != "function") throw "rule: action must be a function"
   if (!conditions || conditions.length === 0)
-    throw "Rule: must supply at least one condition"
+    throw "rule: must supply at least one condition"
   return { action, conditions, trigger }
 }
 
@@ -35,5 +35,5 @@ function executeAllRulesForTrigger(trigger, { data }) {
 module.exports = {
   executeAllRulesForTrigger,
   executeAutomationRule,
-  Rule,
+  rule,
 }

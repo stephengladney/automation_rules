@@ -1,12 +1,12 @@
-const { executeAllRulesForTrigger, Rule } = require("./class/Rule")
-const { Condition } = require("./class/Condition")
-const Trigger = require("./class/Trigger")
+const { executeAllRulesForTrigger, rule } = require("./class/rule")
+const { condition } = require("./class/condition")
+const trigger = require("./class/trigger")
 
-module.exports.Rule = Rule
-module.exports.Trigger = Trigger
-module.exports.Condition = Condition
+module.exports.rule = rule
+module.exports.trigger = trigger
+module.exports.condition = condition
 
 module.exports.mappings = require("./config/mappings")
-module.exports.Op = require("./config/operators")
+module.exports.op = require("./config/operators")
 
 module.exports.executeAllRulesForTrigger = executeAllRulesForTrigger

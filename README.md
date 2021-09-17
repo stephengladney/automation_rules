@@ -53,7 +53,7 @@ ar.Op.equals
 
 <hr>
 
-### _class_ Trigger (event)
+### trigger (event)
 
 (event: _string_)
 
@@ -62,12 +62,12 @@ Triggers are just strings to describe a scenario where you'd like to execute an 
 Example:
 
 ```javascript
-const trigger = new ar.Trigger("Assignee is updated")
+const trigger = ar.trigger("Assignee is updated")
 ```
 
 <hr>
 
-### _class_ Condition ([param1, operator, param2])
+### condition ([param1, operator, param2])
 
 {param1: **Mappings** key, operator: **Operator**, param2: _any_}
 
@@ -76,23 +76,23 @@ Conditions allow you to verify that a specific scenario has been met.
 Example:
 
 ```javascript
-const condition = new ar.Condition(["Assignee", ar.Op.equals, "Sam"])
+const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 ```
 
 **NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` that contains the object's previous state.
 
 <hr>
 
-### _class_ Rule ({action, conditions, trigger})
+### rule ({action, conditions, trigger})
 
-{action: _function_, conditions: **Condition**[], trigger: **Trigger**}
+{action:, conditions: **condition**[], trigger: **trigger**}
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
 Example:
 
 ```javascript
-const rule = new ar.Rule({
+const rule = ar.rule({
   action: () => console.log("rule fired"),
   conditions: [condition],
   trigger: trigger,
@@ -101,13 +101,13 @@ const rule = new ar.Rule({
 
 <hr>
 
-### setRules ([Rule 1, Rule 2, ...])
+### setRules ([rule 1, rule 2, ...])
 
 This method sets the list of rules that the library is aware of. (maintained in memory)
 
 <hr>
 
-### execute (Trigger, data)
+### execute (trigger, data)
 
 This method will execute all rules for a particular trigger. Place this method in your code where that trigger occurs.
 

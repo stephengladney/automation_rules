@@ -1,14 +1,14 @@
 const ar = require("./index")
 const data = { assignee: "Sam" }
 
-const trigger = ar.Trigger("Thing happened")
+const newTrigger = ar.trigger("Thing happened")
 
-trigger.addRule({
+newTrigger.addRule({
   action: () => console.log("i fired"),
   conditions: [
-    new ar.Condition(["Assignee", ar.Op.doesNotEqual, 2]),
-    new ar.Condition(["Assignee", ar.Op.equals, "Sam"]),
+    ar.condition(["Assignee", ar.op.doesNotEqual, 2]),
+    ar.condition(["Assignee", ar.op.equals, "Sam"]),
   ],
 })
 
-ar.executeAllRulesForTrigger(trigger, { data })
+ar.executeAllRulesForTrigger(newTrigger, { data })
