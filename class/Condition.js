@@ -2,15 +2,15 @@ const mappings = require("../config/mappings")
 const operators = require("../config/operators")
 const settings = require("../config/settings.json")
 
-class Condition {
-  constructor([param1, operator, param2]) {
-    if (!mappings.hasOwnProperty(param1))
-      throw `\x1b[30m\x1b[43m Condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
-    if (!Object.values(operators).includes(operator))
-      throw `Condition: invalid operator: ${operator}`
-    this.param1 = param1
-    this.operator = operator
-    this.param2 = param2
+function Condition([param1, operator, param2]) {
+  if (!mappings.hasOwnProperty(param1))
+    throw `\x1b[30m\x1b[43m Condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param1} `
+  if (!Object.values(operators).includes(operator))
+    throw `Condition: invalid operator: ${operator}`
+  return {
+    operator,
+    param1,
+    param2,
   }
 }
 
