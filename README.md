@@ -55,14 +55,14 @@ ar.Op.equals
 
 ### trigger(event: _string_)
 
-Returns { event: _string_, addRule: () => {), rules: **Rule**[]}
+Returns { event: _string_ }
 
-Triggers contain an event (string to describe a scenario where you'd like to execute an automation rules) and an array of rules.
+A trigger is a string that describes a scenario where you'd like to execute an automation rule. This is required and will help organize your automation rules.
 
 Example:
 
 ```javascript
-const trigger = ar.trigger("Assignee is updated")
+const trigger = ar.trigger("When a user is created")
 ```
 
 <hr>
@@ -77,11 +77,11 @@ Example:
 const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 ```
 
-**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), your data will need to contain a key called `previous` that contains the object's previous state.
+**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), when executing automatoin rules, your data will need to contain a key called `previous` that contains the data's previous state. More on that below.
 
 <hr>
 
-### rule({action:, conditions: **condition**[], trigger: **trigger**})
+### rule({action: () => {}, conditions: **condition**[], trigger: **trigger**})
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
