@@ -81,7 +81,7 @@ const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 
 <hr>
 
-### rule({action: `() => {}`, conditions: **condition**[], trigger: **trigger**})
+### rule({action: `() => {}`, conditions: `**condition**[]`, trigger: **trigger**})
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
