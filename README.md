@@ -125,30 +125,29 @@ ar.getRules()
 ```
 
 Response:
-[
-{
-trigger: "Thing happened",
-rules: [
-{
-conditions: [
-{ operator: "does not equal", param: "Assignee", value: 2 },
-{ operator: "equals", param: "Assignee", value: "Sam" },
-],
-description: "Log i fired is Assignee is Sam",
-trigger: "Thing happened",
-},
-{
-conditions: [
-{ operator: "equals", param: "Assignee", value: "John" },
-{ operator: "does not equal", param: "Assignee", value: 4 },
-],
-description: "Log i fired if Assignee is John",
-trigger: "Thing happened",
-},
-],
-},
-]
 
 ```
-
+[
+  {
+    trigger: "Thing happened",
+    rules: [
+      {
+        conditions: [
+          { operator: "does not equal", param: "Assignee", value: 2 },
+          { operator: "equals", param: "Assignee", value: "Sam" },
+        ],
+        description: "Log i fired is Assignee is Sam",
+        trigger: "Thing happened",
+      },
+      {
+        conditions: [
+          { operator: "equals", param: "Assignee", value: "John" },
+          { operator: "does not equal", param: "Assignee", value: 4 },
+        ],
+        description: "Log i fired if Assignee is John",
+        trigger: "Thing happened",
+      },
+    ],
+  },
+]
 ```
