@@ -83,9 +83,9 @@ function areAllConditionsMet(data, rule) {
         console.log(
           `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${
             rule.trigger
-          } \x1b[0m\x1b[37m\x1b[41m${stringifyCondition(condition)}\x1b[0m (${
-            evaluation.data
-          })`
+          } \x1b[0m\x1b[37m\x1b[41m${stringifyCondition(condition)}${
+            settings.logDataOnFailure ? `\x1b[0m (${evaluation.data})` : ""
+          }`
         )
       }
       result = false
