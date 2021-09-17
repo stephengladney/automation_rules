@@ -67,7 +67,7 @@ const trigger = ar.trigger("When a user is created")
 
 <hr>
 
-### condition([param: _Mappings key_, _operator_, _value_])
+### condition([_param_, _operator_, _value_])
 
 Conditions allow you to verify that a specific scenario has been met.
 
@@ -81,7 +81,7 @@ const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
 
 <hr>
 
-### rule({action: `() => {}`, conditions: `condition[]`, trigger: `trigger`})
+### rule({ action: _() => {}_, conditions, trigger })
 
 Rules combine triggers and conditions with an action to perform when the trigger and conditions are both met.
 
