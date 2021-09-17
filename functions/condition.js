@@ -80,7 +80,7 @@ function areAllConditionsMet(data, rule) {
   for (condition of rule.conditions) {
     const evaluation = isConditionMet(condition, data)
     if (evaluation.result === false) {
-      if (settings.logging) {
+      if (settings.logFailure) {
         console.log(
           `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[31m${
             rule.trigger

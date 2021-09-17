@@ -18,7 +18,7 @@ function executeAutomationRule(data, rule) {
       .join(", ")
 
     rule.action(data)
-    if (settings.logging) {
+    if (settings.logSuccess) {
       console.log(
         `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
           rule.trigger

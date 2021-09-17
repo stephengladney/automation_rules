@@ -1,1 +1,1 @@
-{ "logging": true, "logDataOnFailure": true }
+{ "logFailure": true, "logSuccess": false, "logDataOnFailure": true }
