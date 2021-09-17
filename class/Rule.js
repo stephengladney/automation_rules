@@ -25,19 +25,19 @@ function executeAutomationRule(data, rule) {
     if (settings.logging) {
       console.log(
         `[\x1b[36mar\x1b[0m] ${new Date().toDateString()} ${new Date().toLocaleTimeString()} \x1b[1m\x1b[32m${
-          rule.trigger.event
+          rule.trigger
         } \x1b[30m\x1b[42m${conditions}\x1b[0m`
       )
     }
   }
 }
 
-function executeAllAutomationRules(data, rules) {
-  rules.forEach((rule) => executeAutomationRule(data, rule))
+function executeAllRulesForTrigger(trigger, { data }) {
+  trigger.rules.forEach((rule) => executeAutomationRule(data, rule))
 }
 
 module.exports = {
-  executeAllAutomationRules,
+  executeAllRulesForTrigger,
   executeAutomationRule,
   Rule,
 }

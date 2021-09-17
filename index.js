@@ -1,8 +1,6 @@
-const { executeAllAutomationRules, Rule } = require("./class/Rule")
-const { rulesWithTrigger, Trigger } = require("./class/Trigger")
+const { executeAllRulesForTrigger, Rule } = require("./class/Rule")
 const { Condition } = require("./class/Condition")
-
-let rules
+const Trigger = require("./class/Trigger")
 
 module.exports.Rule = Rule
 module.exports.Trigger = Trigger
@@ -11,8 +9,4 @@ module.exports.Condition = Condition
 module.exports.mappings = require("./config/mappings")
 module.exports.Op = require("./config/operators")
 
-module.exports.setRules = (arr) => (rules = arr)
-
-module.exports.execute = (trigger, data) => {
-  executeAllAutomationRules(data, rulesWithTrigger(rules, trigger))
-}
+module.exports.executeAllRulesForTrigger = executeAllRulesForTrigger

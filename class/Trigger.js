@@ -1,12 +1,24 @@
-class Trigger {
-  constructor(event) {
-    if (!event) throw "Trigger: Event is required"
-    this.event = event
+const { Rule } = require("./Rule")
+
+function Trigger(event) {
+  if (!event) throw "Trigger: Event is required"
+  const trigger = {
+    rules: [],
+    addRule: ({ action, conditions }) => {
+      const splitConditions = conditions.map(
+        (condition) =>
+          `${condition.param1} ${condition.operator} ${condition.param2}`
+      )
+      trigger.rules.push(
+        new Rule({
+          action,
+          conditions,
+          trigger: event,
+        })
+      )
+    },
   }
+  return trigger
 }
 
-function rulesWithTrigger(rules, trigger) {
-  return rules.filter((rule) => rule.trigger.event === trigger.event)
-}
-
-module.exports = { Trigger, rulesWithTrigger }
+module.exports = Trigger
