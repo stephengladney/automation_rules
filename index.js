@@ -9,7 +9,7 @@ module.exports.Trigger = Trigger
 module.exports.Condition = require("./class/Condition").Condition
 
 let rules
-module.exports.setRules = arr => (rules = arr)
+module.exports.setRules = (arr) => (rules = arr)
 
 module.exports.execute = (trigger, data) => {
   executeAllAutomationRules(data, rulesWithTrigger(rules, trigger))

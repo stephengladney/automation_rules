@@ -6,7 +6,7 @@ class Trigger {
 }
 
 function rulesWithTrigger(rules, trigger) {
-  return rules.filter(rule => rule.trigger.event === trigger.event)
+  return rules.filter((rule) => rule.trigger.event === trigger.event)
 }
 
 module.exports = { Trigger, rulesWithTrigger }

@@ -16,7 +16,7 @@ function executeAutomationRule(data, rule) {
   if (areAllConditionsMet(data, rule)) {
     const conditions = rule.conditions
       .map(
-        condition =>
+        (condition) =>
           `${condition.param1} ${condition.operator} ${condition.param2}`
       )
       .join(", ")
@@ -33,7 +33,7 @@ function executeAutomationRule(data, rule) {
 }
 
 function executeAllAutomationRules(data, rules) {
-  rules.forEach(rule => executeAutomationRule(data, rule))
+  rules.forEach((rule) => executeAutomationRule(data, rule))
 }
 
 module.exports = {
