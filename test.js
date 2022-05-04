@@ -2,16 +2,17 @@ const ar = require("./index")
 const data = { assignee: "Sam", previous: { assignee: "Dave" } }
 const settings = require("./config/settings.json")
 const { stringifyCondition } = require("./functions/condition")
-const trigger = ar.trigger("Thing happened")
+const trigger = ar.trigger("When someone is assigned")
+const mappings = require("./config/mappings")
 
 ar.addRule(
   ar.rule({
     callback: () => console.log("i fired"),
     conditions: [
-      ar.condition(["Assignee", ar.op.doesNotEqual, 2]),
-      ar.condition(["Assignee", ar.op.equals, "Sam"]),
+      ar.condition("Assignee", ar.op.doesNotEqual, 2),
+      ar.condition("Assignee", ar.op.equals, "Sam"),
     ],
-    description: "Log i fired is Assignee is Sam",
+    description: "Sam assigned",
     trigger,
   })
 )
@@ -20,10 +21,10 @@ ar.addRule(
   ar.rule({
     callback: () => console.log("i fired"),
     conditions: [
-      ar.condition(["Assignee", ar.op.equals, "John"]),
-      ar.condition(["Assignee", ar.op.doesNotEqual, 4]),
+      ar.condition("Assignee", ar.op.didNotEqual, "Dave"),
+      ar.condition("Assignee", ar.op.equals, "Sam"),
     ],
-    description: "Log i fired if Assignee is John",
+    description: "John assigned",
     trigger,
   })
 )
@@ -51,9 +52,13 @@ ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
         settings.logging.includeTimestamp
           ? `${new Date().toDateString()} ${new Date().toLocaleTimeString()} `
           : ""
-      }\x1b[1m\x1b[31m${rule.trigger} \x1b[0m\x1b[37m\x1b[41m${conditions}${
+      }\x1b[1m\x1b[31m${rule.description} | ${
+        rule.trigger
+      } \x1b[0m\x1b[37m\x1b[41m${conditions}${
         settings.logging.logDataOnFailure
-          ? `\x1b[0m (${stringifyCondition(failedCondition)})`
+          ? `\x1b[0m (${failedCondition.param}: ${
+              data[mappings[failedCondition.param]]
+            })`
           : ""
       }`
     )

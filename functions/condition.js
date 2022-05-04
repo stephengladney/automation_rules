@@ -3,7 +3,7 @@ const operators = require("../config/operators")
 const settings = require("../config/settings.json")
 const { logCallbackCaller } = require("./crud")
 
-function condition([param, operator, value]) {
+function condition(param, operator, value) {
   if (!mappings.hasOwnProperty(param))
     throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param} `
   if (!Object.values(operators).includes(operator))
@@ -19,6 +19,7 @@ function isConditionMet(condition, data) {
   const { operator, value } = condition
   const mappedParam = mappings[condition.param]
   const param = data[mappedParam]
+  const previousParam1 = data.previous ? data.previous[mappedParam] : null
   let result
 
   switch (operator) {
@@ -33,6 +34,7 @@ function isConditionMet(condition, data) {
       break
     case operators.didNotEqual:
       result = previousParam1 != value
+      break
     case operators.doesInclude:
       result = param.includes(value)
       break
