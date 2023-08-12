@@ -2,18 +2,7 @@ import mappings from "../config/mappings"
 import * as operators from "../config/operators"
 import settings from "../config/settings.json"
 import { logCallbackCaller } from "./crud"
-
-type OperatorKey = keyof typeof operators
-type Operator = (typeof operators)[OperatorKey]
-
-type ParamKey = keyof typeof mappings
-type Param = (typeof mappings)[ParamKey]
-
-type Condition = {
-  operator: Operator
-  param: Param
-  value: any
-}
+import type { Condition, Param, Operator } from "../types"
 
 export function condition(param: Param, operator: Operator, value: any) {
   return {

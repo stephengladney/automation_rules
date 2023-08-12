@@ -1,13 +1,17 @@
-let rules = []
-let logCallback = () => {}
-const logCallbackCaller = (rule, isSuccess, data) =>
-  logCallback(rule, isSuccess, data)
+import type { Rule } from "../types"
 
-function addRule(rule) {
+export let rules: Rule[] = []
+export let logCallback = (rule: Rule, isSuccess: boolean, data: any) => {}
+
+export function logCallbackCaller(rule: Rule, isSuccess: boolean, data: any) {
+  logCallback(rule, isSuccess, data)
+}
+
+export function addRule(rule: Rule) {
   rules.push(rule)
 }
 
-function getRules({ withTrigger } = {}) {
+export function getRules({ withTrigger }: { withTrigger?: any }) {
   const result = []
   rules.forEach((rule) => {
     if (withTrigger && rule.trigger !== withTrigger) return
@@ -22,15 +26,6 @@ function getRules({ withTrigger } = {}) {
   return result
 }
 
-function setLogCallback(callback) {
+export function setLogCallback(callback) {
   logCallback = callback
-}
-
-module.exports = {
-  addRule,
-  getRules,
-  logCallback,
-  logCallbackCaller,
-  rules,
-  setLogCallback,
 }
