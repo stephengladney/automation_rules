@@ -1,7 +1,5 @@
-export default {
-  Assignee: "assignee",
-  "Card title": "cardTitle",
-  "Current status": "currentStatus",
-  "Previous status": "previousStatus",
-  "Team assigned": "teamAssigned",
+export const mappings: { [key: string]: string } = {}
+
+export function addMapping(key: string, value: string) {
+  mappings[key] = value
 }

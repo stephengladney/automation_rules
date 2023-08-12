@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isTruthy = exports.isFalsy = exports.isLessThanOrEqualTo = exports.isLessThan = exports.isGreatherThanOrEqualTo = exports.isGreatherThan = exports.hasNotChanged = exports.hasChanged = exports.doesNotInclude = exports.doesInclude = exports.didNotEqual = exports.didEqual = exports.doesNotEqual = exports.equals = void 0;
+exports.equals = "equals";
+exports.doesNotEqual = "does not equal";
+exports.didEqual = "did equal";
+exports.didNotEqual = "did not equal";
+exports.doesInclude = "does include";
+exports.doesNotInclude = "does not include";
+exports.hasChanged = "has changed";
+exports.hasNotChanged = "has not changed";
+exports.isGreatherThan = "is greater than";
+exports.isGreatherThanOrEqualTo = "is greater than or equal to";
+exports.isLessThan = "is less than";
+exports.isLessThanOrEqualTo = "is less than or equal to";
+exports.isFalsy = "is falsy";
+exports.isTruthy = "is truthy";

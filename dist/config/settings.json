@@ -1,0 +1,8 @@
+{
+    "logging": {
+        "includeTimestamp": true,
+        "logFailure": true,
+        "logSuccess": true,
+        "logDataOnFailure": true
+    }
+}

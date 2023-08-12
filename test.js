@@ -1,8 +1,10 @@
-const ar = require("./index")
+const ar = require("./dist/index")
 const data = { assignee: "Sam", previous: { assignee: "Dave" } }
-const settings = require("./config/settings.json")
+const settings = require("./dist/config/settings.json")
 const trigger = ar.trigger("When someone is assigned")
-const mappings = require("./config/mappings")
+const { addMapping, mappings } = ar
+
+addMapping("Assignee", "assignee")
 
 ar.addRule(
   ar.rule({
@@ -28,7 +30,7 @@ ar.addRule(
   })
 )
 
-ar.setLogCallback(({ rule, isSuccess, failedCondition }) => {
+ar.setLogCallback(({ rule, isSuccess, failedCondition, data }) => {
   const conditions = rule.conditions
     .map(
       (condition) =>

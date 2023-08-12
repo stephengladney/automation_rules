@@ -1,8 +1,8 @@
-import mappings from "../config/mappings"
+import { mappings } from "../config/mappings"
 import * as operators from "../config/operators"
 import settings from "../config/settings.json"
 import { logCallbackCaller } from "./crud"
-import type { Condition, Param, Operator } from "../types"
+import type { Condition, Param, Operator, Rule } from "../types"
 
 export function condition(param: Param, operator: Operator, value: any) {
   return {
@@ -19,7 +19,7 @@ type Data = {
 
 export function isConditionMet(condition: Condition, data: Data) {
   const { operator, value } = condition
-  const mappedParam = mappings[condition.param]
+  const mappedParam = mappings[condition.param as keyof typeof mappings]
   const param = data[mappedParam]
   const previousParam1 = data.previous ? data.previous[mappedParam] : null
   let result
@@ -73,11 +73,11 @@ export function isConditionMet(condition: Condition, data: Data) {
   return result
 }
 
-export function stringifyCondition(condition) {
+export function stringifyCondition(condition: Condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-export function areAllConditionsMet(data: Data, rule) {
+export function areAllConditionsMet(data: Data, rule: Rule) {
   let result = true
   for (let condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {

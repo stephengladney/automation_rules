@@ -29,10 +29,10 @@ export function executeAutomationRule(data: any, rule: Rule) {
   }
 }
 
-export function getAllRulesWithTrigger(rules, trigger) {
+export function getAllRulesWithTrigger(rules: Rule[], trigger: Trigger) {
   return rules.filter((rule) => rule.trigger === trigger)
 }
 
-export function executeAllRules(rules, data) {
+export function executeAllRules(rules: Rule[], data: any) {
   rules.forEach((rule) => executeAutomationRule(data, rule))
 }

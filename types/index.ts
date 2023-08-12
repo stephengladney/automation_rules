@@ -1,4 +1,4 @@
-import mappings from "../config/mappings"
+import { mappings } from "../config/mappings"
 import * as operators from "../config/operators"
 
 type OperatorKey = keyof typeof operators
