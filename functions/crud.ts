@@ -1,10 +1,33 @@
-import type { Rule, Trigger } from "../types"
+import type { Condition, Rule, Trigger } from "../types"
 
 export let rules: Rule[] = []
-export let logCallback = (rule: Rule, isSuccess: boolean, data: any) => {}
 
-export function logCallbackCaller(rule: Rule, isSuccess: boolean, data: any) {
-  logCallback(rule, isSuccess, data)
+type Callback = ({
+  rule,
+  isSuccess,
+  failedCondition,
+  data,
+}: {
+  rule: Rule
+  isSuccess: boolean
+  failedCondition?: Condition
+  data: any
+}) => any
+
+export let logCallback: Callback
+
+export function logCallbackCaller({
+  rule,
+  isSuccess,
+  failedCondition,
+  data,
+}: {
+  rule: Rule
+  isSuccess: boolean
+  failedCondition?: Condition
+  data: any
+}) {
+  logCallback({ rule, isSuccess, failedCondition, data })
 }
 
 export function addRule(rule: Rule) {
@@ -26,6 +49,6 @@ export function getRules({ withTrigger }: { withTrigger?: any }) {
   return result
 }
 
-export function setLogCallback(callback) {
+export function setLogCallback(callback: Callback) {
   logCallback = callback
 }

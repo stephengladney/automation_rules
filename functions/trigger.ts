@@ -1,3 +1,3 @@
-export function trigger(event: string) {
+export default function trigger(event: string) {
   return event
 }
