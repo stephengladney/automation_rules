@@ -1,7 +1,6 @@
 const ar = require("./index")
 const data = { assignee: "Sam", previous: { assignee: "Dave" } }
 const settings = require("./config/settings.json")
-const { stringifyCondition } = require("./functions/condition")
 const trigger = ar.trigger("When someone is assigned")
 const mappings = require("./config/mappings")
 
