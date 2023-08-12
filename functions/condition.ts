@@ -15,7 +15,7 @@ type Condition = {
   value: any
 }
 
-function condition(param: Param, operator: Operator, value: any) {
+export function condition(param: Param, operator: Operator, value: any) {
   return {
     operator,
     param,
@@ -27,7 +27,8 @@ type Data = {
   [key: Param]: any
   previous?: any
 }
-function isConditionMet(condition: Condition, data: Data) {
+
+export function isConditionMet(condition: Condition, data: Data) {
   const { operator, value } = condition
   const mappedParam = mappings[condition.param]
   const param = data[mappedParam]
@@ -83,11 +84,11 @@ function isConditionMet(condition: Condition, data: Data) {
   return result
 }
 
-function stringifyCondition(condition) {
+export function stringifyCondition(condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-function areAllConditionsMet(data: Data, rule) {
+export function areAllConditionsMet(data: Data, rule) {
   let result = true
   for (let condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
@@ -104,11 +105,4 @@ function areAllConditionsMet(data: Data, rule) {
     }
   }
   return result
-}
-
-export default {
-  areAllConditionsMet,
-  condition,
-  isConditionMet,
-  stringifyCondition,
 }
