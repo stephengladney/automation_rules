@@ -1,21 +1,33 @@
-const mappings = require("../config/mappings")
-const operators = require("../config/operators")
-const settings = require("../config/settings.json")
-const { logCallbackCaller } = require("./crud")
+import mappings from "../config/mappings"
+import * as operators from "../config/operators"
+import settings from "../config/settings.json"
+import { logCallbackCaller } from "./crud"
 
-function condition(param, operator, value) {
-  if (!mappings.hasOwnProperty(param))
-    throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param} `
-  if (!Object.values(operators).includes(operator))
-    throw `condition: invalid operator: ${operator}`
+type OperatorKey = keyof typeof operators
+type Operator = (typeof operators)[OperatorKey]
+
+type ParamKey = keyof typeof mappings
+type Param = (typeof mappings)[ParamKey]
+
+type Condition = {
+  operator: Operator
+  param: Param
+  value: any
+}
+
+function condition(param: Param, operator: Operator, value: any) {
   return {
     operator,
     param,
     value,
-  }
+  } as Condition
 }
 
-function isConditionMet(condition, data) {
+type Data = {
+  [key: Param]: any
+  previous?: any
+}
+function isConditionMet(condition: Condition, data: Data) {
   const { operator, value } = condition
   const mappedParam = mappings[condition.param]
   const param = data[mappedParam]
@@ -75,9 +87,9 @@ function stringifyCondition(condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-function areAllConditionsMet(data, rule) {
+function areAllConditionsMet(data: Data, rule) {
   let result = true
-  for (condition of rule.conditions) {
+  for (let condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
       if (settings.logging.logFailure) {
         logCallbackCaller({
@@ -94,7 +106,7 @@ function areAllConditionsMet(data, rule) {
   return result
 }
 
-module.exports = {
+export default {
   areAllConditionsMet,
   condition,
   isConditionMet,
