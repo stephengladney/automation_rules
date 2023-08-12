@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   Assignee: "assignee",
   "Card title": "cardTitle",
   "Current status": "currentStatus",
