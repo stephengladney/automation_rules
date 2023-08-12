@@ -1,4 +1,4 @@
-import { mappings } from "../config/mappings"
+import { params } from "../config/params"
 import * as operators from "../config/operators"
 import settings from "../config/settings.json"
 import { logCallbackCaller } from "./crud"
@@ -19,9 +19,8 @@ type Data = {
 
 export function isConditionMet(condition: Condition, data: Data) {
   const { operator, value } = condition
-  const mappedParam = mappings[condition.param as keyof typeof mappings]
-  const param = data[mappedParam]
-  const previousParam1 = data.previous ? data.previous[mappedParam] : null
+  const param = data[condition.param]
+  const previousParam1 = data.previous ? data.previous[param] : null
   let result
 
   switch (operator) {

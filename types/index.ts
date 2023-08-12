@@ -1,12 +1,10 @@
-import { mappings } from "../config/mappings"
+import { params } from "../config/params"
 import * as operators from "../config/operators"
 
 type OperatorKey = keyof typeof operators
 export type Operator = (typeof operators)[OperatorKey]
 
-type ParamKey = keyof typeof mappings
-export type Param = (typeof mappings)[ParamKey]
-
+export type Param = string
 export type Trigger = string
 
 export type Condition = {

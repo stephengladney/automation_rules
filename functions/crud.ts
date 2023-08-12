@@ -1,6 +1,7 @@
 import type { Condition, Rule, Trigger } from "../types"
 
-export let rules: Rule[] = []
+type RuleWithId = Rule & { id: number }
+export let rules: RuleWithId[] = []
 
 type Callback = ({
   rule,
@@ -14,7 +15,7 @@ type Callback = ({
   data: any
 }) => any
 
-export let logCallback: Callback
+export let logCallback: Callback = (params) => {}
 
 export function logCallbackCaller({
   rule,
@@ -30,23 +31,18 @@ export function logCallbackCaller({
   logCallback({ rule, isSuccess, failedCondition, data })
 }
 
-export function addRule(rule: Rule) {
-  rules.push(rule)
+export function addRules(...newRules: Rule[]) {
+  newRules.forEach((newRule) => {
+    rules.push({ ...newRule, id: rules.length + 1 })
+  })
 }
 
-export function getRules({ withTrigger }: { withTrigger?: any }) {
-  const result: { trigger: Trigger; rules: Rule[] }[] = []
-  rules.forEach((rule) => {
-    if (withTrigger && rule.trigger !== withTrigger) return
+export function removeRuleById(id: number) {
+  rules = rules.filter((rule) => rule.id !== id)
+}
 
-    const foundIndex = result.findIndex((i) => i.trigger === rule.trigger)
-    if (foundIndex != -1) {
-      result[foundIndex].rules.push(rule)
-    } else {
-      result.push({ trigger: rule.trigger, rules: [rule] })
-    }
-  })
-  return result
+export function removeAllRules() {
+  rules = []
 }
 
 export function setLogCallback(callback: Callback) {
