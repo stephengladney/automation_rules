@@ -7,6 +7,7 @@ import {
 } from "./functions/crud"
 import {
   executeAutomationRule,
+  executeRules,
   getRules,
   getRulesWithTrigger,
 } from "./functions/rule"
@@ -107,7 +108,7 @@ describe("rules", () => {
         trigger: "on test",
       })
 
-      executeAutomationRule({ name: true }, newRule)
+      executeAutomationRule(newRule, { name: true })
       expect(callback).toHaveBeenCalled()
     })
 
@@ -122,7 +123,7 @@ describe("rules", () => {
         trigger: "on test",
       })
 
-      executeAutomationRule({ name: false }, newRule)
+      executeAutomationRule(newRule, { name: false })
       expect(callback).not.toHaveBeenCalled()
     })
   })
@@ -260,6 +261,58 @@ describe("rules", () => {
       expect(rulesWithTrigger.includes(newRule)).toBeTruthy()
       expect(rulesWithTrigger.includes(newRule2)).toBeTruthy()
       expect(rulesWithTrigger.includes(newRule3)).toBeFalsy()
+    })
+  })
+
+  describe("executeRules", () => {
+    it("executes all of the provided rules", () => {
+      const newCondition = condition("name", ar.op.equals, true)
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const newRule = ar.rule({
+        callback: callback1,
+        conditions: [newCondition],
+        description: "test rule",
+        trigger: "on test",
+      })
+
+      const newRule2 = ar.rule({
+        callback: callback2,
+        conditions: [newCondition],
+        description: "test rule",
+        trigger: "on test",
+      })
+
+      executeRules([newRule, newRule2], { name: true })
+      expect(callback1).toHaveBeenCalled()
+      expect(callback2).toHaveBeenCalled()
+    })
+  })
+
+  describe("executeRulesWithTrigger", () => {
+    it("executes all rules with the provided trigger", () => {
+      const newCondition = condition("name", ar.op.equals, true)
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const newRule = ar.rule({
+        callback: callback1,
+        conditions: [newCondition],
+        description: "test rule",
+        trigger: "on test",
+      })
+
+      const newRule2 = ar.rule({
+        callback: callback2,
+        conditions: [newCondition],
+        description: "test rule",
+        trigger: "on test",
+      })
+
+      addRules(newRule, newRule2)
+      ar.executeRulesWithTrigger("on test", { name: true })
+
+      expect(callback1).toHaveBeenCalled()
+      expect(callback2).toHaveBeenCalled()
     })
   })
 })

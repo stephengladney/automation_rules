@@ -22,7 +22,7 @@ export function rule({
   return { callback, conditions, description, trigger } as Rule
 }
 
-export function executeAutomationRule(data: any, rule: Rule) {
+export function executeAutomationRule(rule: Rule, data: any) {
   if (areAllConditionsMet(data, rule)) {
     rule.callback(data)
     if (settings.logging.logSuccess) {
@@ -49,5 +49,5 @@ export function getRulesWithTrigger(rules: Rule[], trigger: Trigger) {
 }
 
 export function executeRules(rules: Rule[], data: any) {
-  rules.forEach((rule) => executeAutomationRule(data, rule))
+  rules.forEach((rule) => executeAutomationRule(rule, data))
 }

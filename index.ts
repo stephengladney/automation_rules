@@ -15,10 +15,8 @@ import { addParam as _addParam, params as _params } from "./config/params"
 import * as _op from "./config/operators"
 import type { Trigger } from "./types"
 
-export const executeRulesWithTrigger = (
-  trigger: Trigger,
-  { data }: { data: any }
-) => executeRules(getRulesWithTrigger(rules, trigger), data)
+export const executeRulesWithTrigger = (trigger: Trigger, data: any) =>
+  executeRules(getRulesWithTrigger(rules, trigger), data)
 
 export const addParam = _addParam
 export const addRules = _addRules
