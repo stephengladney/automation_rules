@@ -10,7 +10,7 @@ import {
   getRules as _getRules,
   setLogCallback as _setLogCallback,
   rules,
-} from "./functions/crud.js"
+} from "./functions/crud"
 import {
   addMapping as _addMapping,
   mappings as _mappings,
