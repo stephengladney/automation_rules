@@ -7,6 +7,8 @@ export type Operator = (typeof operators)[OperatorKey]
 type ParamKey = keyof typeof mappings
 export type Param = (typeof mappings)[ParamKey]
 
+export type Trigger = string
+
 export type Condition = {
   operator: Operator
   param: Param
@@ -17,7 +19,5 @@ export type Rule = {
   callback: Function
   conditions: Condition[]
   description: string
-  trigger: any
+  trigger: Trigger
 }
-
-export type Trigger = string

@@ -1,4 +1,4 @@
-import type { Rule } from "../types"
+import type { Rule, Trigger } from "../types"
 
 export let rules: Rule[] = []
 export let logCallback = (rule: Rule, isSuccess: boolean, data: any) => {}
@@ -12,7 +12,7 @@ export function addRule(rule: Rule) {
 }
 
 export function getRules({ withTrigger }: { withTrigger?: any }) {
-  const result = []
+  const result: { trigger: Trigger; rules: Rule[] }[] = []
   rules.forEach((rule) => {
     if (withTrigger && rule.trigger !== withTrigger) return
 
