@@ -1,8 +1,10 @@
-# automation_rules README
+# automation-rules
 
-### Mappings
+Automation rules allow your app's users to created automated workflows when events occur and certain conditions are met. For example, say your app processes transactions for a store and the store owner wants to offer a 10% discount on purchases over $100. The owner can create an automation rule to automatically apply the discount when an order over $100 is placed.
 
-Mappings associate human-readable strings with actual key names from your object-oriented data. This is currently hard-coded in `mappings.js`
+### Params
+
+The library works by reading object key/value pairs to evaluate conditions of particular data.
 
 Example:
 
