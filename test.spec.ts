@@ -1,18 +1,23 @@
 import { condition, isConditionMet } from "./functions/condition"
+import {} from "./functions/logging"
 import {
   addRules,
-  removeAllRules,
-  removeRuleById,
-  rules,
-  setRuleId,
-} from "./functions/crud"
-import {
   executeAutomationRule,
   executeRules,
   getRules,
   getRulesWithTrigger,
+  removeAllRules,
+  removeRuleById,
+  rules,
+  setRuleId,
 } from "./functions/rule"
 import * as ar from "./index"
+import {
+  callLogCallback,
+  logCallback,
+  setLogCallback,
+} from "./functions/logging"
+import exp from "constants"
 
 describe("params", () => {
   describe("addParam", () => {
@@ -315,6 +320,36 @@ describe("rules", () => {
 
       expect(callback1).toHaveBeenCalled()
       expect(callback2).toHaveBeenCalled()
+    })
+  })
+})
+
+describe("logging", () => {
+  it("lets the user set the logging callback", () => {
+    const dummyCallback = jest.fn()
+    setLogCallback(dummyCallback)
+    expect(logCallback).toBe(dummyCallback)
+  })
+
+  it("calls the logging callback with data", () => {
+    const dummyLoggingCallback = jest.fn()
+    setLogCallback(dummyLoggingCallback)
+    ar.addParam("name")
+    const callback = jest.fn()
+    const newCondition = condition("name", ar.op.equals, true)
+    const newRule = ar.rule({
+      callback,
+      conditions: [newCondition],
+      description: "test rule",
+      trigger: "on test",
+    })
+
+    executeAutomationRule(newRule, { name: true })
+    expect(dummyLoggingCallback).toHaveBeenCalledWith({
+      rule: newRule,
+      isSuccess: true,
+      failedCondition: undefined,
+      data: { name: true },
     })
   })
 })

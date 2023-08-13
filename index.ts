@@ -1,17 +1,15 @@
 import {
+  addRules as _addRules,
   executeRules,
   getRules as _getRules,
   getRulesWithTrigger,
+  removeAllRules as _removeAllRules,
   rule as _rule,
+  rules,
 } from "./functions/rule"
 import { condition as _condition } from "./functions/condition"
 import _trigger from "./functions/trigger"
-import {
-  addRules as _addRules,
-  setLogCallback as _setLogCallback,
-  rules,
-  removeAllRules as _removeAllRules,
-} from "./functions/crud"
+import { setLogCallback as _setLogCallback } from "./functions/logging"
 import { addParam as _addParam, params as _params } from "./config/params"
 import * as _op from "./config/operators"
 import type { Trigger } from "./types"

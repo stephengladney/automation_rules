@@ -1,8 +1,10 @@
 import { areAllConditionsMet } from "./condition"
 import settings from "../config/settings.json"
-import { logCallbackCaller } from "./crud"
+import { callLogCallback } from "./logging"
 import type { Condition, Rule, Trigger } from "../types"
-import { rules } from "./crud"
+
+export let rules: Rule[] = []
+export let ruleId = 1
 
 export function rule({
   callback,
@@ -26,7 +28,7 @@ export function executeAutomationRule(rule: Rule, data: any) {
   if (areAllConditionsMet(data, rule)) {
     rule.callback(data)
     if (settings.logging.logSuccess) {
-      logCallbackCaller({ rule, isSuccess: true, data })
+      callLogCallback({ rule, isSuccess: true, data })
     }
   }
 }
@@ -50,4 +52,23 @@ export function getRulesWithTrigger(rules: Rule[], trigger: Trigger) {
 
 export function executeRules(rules: Rule[], data: any) {
   rules.forEach((rule) => executeAutomationRule(rule, data))
+}
+
+export function addRules(...newRules: Rule[]) {
+  newRules.forEach((newRule) => {
+    rules.push({ ...newRule, id: newRule.id ?? ruleId })
+    if (!newRule.id) ruleId += 1
+  })
+}
+
+export function removeRuleById(id: number) {
+  rules = rules.filter((rule) => rule.id !== id)
+}
+
+export function removeAllRules() {
+  rules = []
+}
+
+export function setRuleId(n: number) {
+  ruleId = n
 }

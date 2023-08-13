@@ -1,7 +1,7 @@
 import { params } from "../config/params"
 import * as operators from "../config/operators"
 import settings from "../config/settings.json"
-import { logCallbackCaller } from "./crud"
+import { callLogCallback } from "./logging"
 import type { Condition, Param, Operator, Rule } from "../types"
 
 export function condition(param: Param, operator: Operator, value: any) {
@@ -81,7 +81,7 @@ export function areAllConditionsMet(data: Data, rule: Rule) {
   for (let condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
       if (settings.logging.logFailure) {
-        logCallbackCaller({
+        callLogCallback({
           rule,
           isSuccess: false,
           failedCondition: condition,
