@@ -14,6 +14,7 @@ export type Condition = {
 }
 
 export type Rule = {
+  id?: string | number
   callback: Function
   conditions: Condition[]
   description: string

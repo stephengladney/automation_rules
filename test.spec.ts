@@ -4,6 +4,7 @@ import {
   removeAllRules,
   removeRuleById,
   rules,
+  setRuleId,
 } from "./functions/crud"
 import {
   executeAutomationRule,
@@ -74,6 +75,7 @@ describe("conditions", () => {
 describe("rules", () => {
   afterEach(() => {
     removeAllRules()
+    setRuleId(1)
   })
 
   describe("rule", () => {

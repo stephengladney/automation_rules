@@ -1,7 +1,8 @@
 import type { Condition, Rule, Trigger } from "../types"
 
-type RuleWithId = Rule & { id: number }
-export let rules: RuleWithId[] = []
+export let rules: Rule[] = []
+
+export let ruleId = 1
 
 type Callback = ({
   rule,
@@ -33,7 +34,8 @@ export function logCallbackCaller({
 
 export function addRules(...newRules: Rule[]) {
   newRules.forEach((newRule) => {
-    rules.push({ ...newRule, id: rules.length + 1 })
+    rules.push({ ...newRule, id: newRule.id ?? ruleId })
+    if (!newRule.id) ruleId += 1
   })
 }
 
@@ -47,4 +49,8 @@ export function removeAllRules() {
 
 export function setLogCallback(callback: Callback) {
   logCallback = callback
+}
+
+export function setRuleId(n: number) {
+  ruleId = n
 }
