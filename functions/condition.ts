@@ -2,9 +2,13 @@ import { params } from "../config/params"
 import * as operators from "../config/operators"
 import settings from "../config/settings.json"
 import { callLogCallback } from "./logging"
-import type { Condition, Param, Operator, Rule } from "../types"
+import type { Condition, Operator, Rule } from "../types"
 
-export function condition(param: Param, operator: Operator, value: any) {
+export function condition<T extends object>(
+  param: keyof T,
+  operator: Operator,
+  value: T[keyof T]
+) {
   return {
     operator,
     param,
@@ -13,7 +17,7 @@ export function condition(param: Param, operator: Operator, value: any) {
 }
 
 type Data = {
-  [key: Param]: any
+  [key: string]: any
   previous?: any
 }
 

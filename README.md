@@ -2,67 +2,77 @@
 
 Automation rules allow your app's users to created automated workflows when events occur and certain conditions are met. For example, say your app processes transactions for a store and the store owner wants to offer a 10% discount on purchases over $100. The owner can create an automation rule to automatically apply the discount when an order over $100 is placed.
 
+## Getting Started
+
+To install the package, run `npm install automation-rules` in your terminal
+
+Add `import ar from "automation-rules` in your code wherever you wish to use the library.
+
 ### Params
 
-The library works by reading object key/value pairs to evaluate conditions of particular data.
+The library works by reading object key/value pairs of data provided to evaluate whether or not conditions are met. Before creating rules, you must tell the library the names of the keys you wish to evaluate.
 
 Example:
 
-```javascript
-module.exports = {
-  Assignee: "assignee",
-  "Card title": "cardTitle",
-  "Current status": "currentStatus",
-  "Previous status": "previousStatus",
-  "Team assigned": "teamAssigned",
-}
+Your want to evaluate the total price of an order. Your Order object has a key named `total`.
+
+```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+```
+
+```typescript
+ar.op.addParam("total")
 ```
 
 <hr>
 
 ### Operators
 
-Operators are used to compare two pieces of information. These are static and provided by the library.
-
-To use, require the index.js file and then use `.Op.` to access the operators.
+Operators are used to compare two pieces of datainformation. These are static and provided by the library. To access, add `.op.` to your `ar` variable. For convenience of rendering in your UI, these operators resolve to human-readable strings.
 
 Example:
 
-```javascript
-const ar = require("./index")
-ar.Op.equals
+```typescript
+ar.op.equals //=> "equals"
+ar.op.doesNotEqual //=> "does not equal"
+ar.op.didEqual //=> "did equal"
+ar.op.didNotEqual //=> "did not equal"
+ar.op.doesInclude //=> "does include"
+ar.op.doesNotInclude //=> "does not include"
+ar.op.hasChanged //=> "has changed"
+ar.op.hasNotChanged //=> "has not changed"
+ar.op.isGreatherThan //=> "is greater than"
+ar.op.isGreatherThanOrEqualTo //=> "is greater than or equal to"
+ar.op.isLessThan //=> "is less than"
+ar.op.isLessThanOrEqualTo //=> "is less than or equal to"
+ar.op.isFalsy //=> "is falsy"
+ar.op.isTruthy //=> "is truthy"
 ```
-
-<details>
-<summary>Valid operators</summary>
-<ul>
-<li>equals</li>
-<li>doesNotEqual</li>
-<li>didEqual</li>
-<li>didNotEqual</li>
-<li>doesInclude</li>
-<li>doesNotInclude</li>
-<li>hasChanged</li>
-<li>hasNotChanged</li>
-<li>isGreatherThan</li>
-<li>isGreatherThanOrEqualTo</li>
-<li>isLessThan</li>
-<li>isLessThanOrEqualTo</li>
-<li>isFalsy</li>
-<li>isTruthy</li>
-</ul>
-</details>
 
 <hr>
 
-### condition ([_param_, _operator_, _value_])
+### Conditions
 
-Conditions allow you to verify that a specific scenario has been met.
+Conditions allow your users to verify that a specific scenario has been met.
+
+```typescript
+function condition<T extends object>(
+  param: keyof T,
+  operator: Operator,
+  value: T[keyof T]
+)
+
+type Condition = { param: Param; operator: Operator; value: any }
+```
 
 Example:
 
-```javascript
-const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
+```typescript
+const condition = ar.condition<Order>(
+  "Total",
+  ar.op.isGreaterThanOrEqualTo,
+  "Sam"
+)
 ```
 
 **NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), when executing automatoin rules, your data will need to contain a key called `previous` that contains the data's previous state. More on that below.
@@ -82,7 +92,7 @@ const triggers = {
   NEW_USER_CREATED: "When a new user is created",
 }
 
-const rule = ar.rule({
+const rule = ar.op.rule({
   callback: () => console.log("A new user was created!"),
   conditions: [condition],
   trigger: triggers.NEW_USER_CREATED,
@@ -105,7 +115,7 @@ Example:
 
 ```javascript
 //do thing A
-ar.executeAllRulesWithTrigger(trigger, {
+ar.op.executeAllRulesWithTrigger(trigger, {
   data: { first_name: "Thomas", last_name: "Anderson", age: 34 },
 })
 ```
@@ -119,7 +129,7 @@ This method will return a JSON payload of rules currently being stored.
 Example:
 
 ```
-ar.getRules()
+ar.op.getRules()
 ```
 
 Response:
