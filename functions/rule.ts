@@ -6,17 +6,12 @@ import type { Condition, Rule, Trigger } from "../types"
 export let rules: Rule[] = []
 export let ruleId = 1
 
-export function rule({
-  callback,
-  conditions,
-  description,
-  trigger,
-}: {
-  callback: Function
-  conditions: [Condition, ...Condition[]]
+export function rule(
+  trigger: Trigger,
+  conditions: [Condition, ...Condition[]],
+  callback: Function,
   description: string
-  trigger: Trigger
-}) {
+) {
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }

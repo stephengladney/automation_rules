@@ -85,12 +85,7 @@ describe("rules", () => {
       ar.addParam("name")
       const callback = () => {}
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], callback, "test rule")
       expect(newRule).toEqual({
         callback,
         conditions: [newCondition],
@@ -105,12 +100,7 @@ describe("rules", () => {
       ar.addParam("name")
       const callback = jest.fn()
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], callback, "test rule")
 
       executeAutomationRule(newRule, { name: true })
       expect(callback).toHaveBeenCalled()
@@ -120,12 +110,7 @@ describe("rules", () => {
       ar.addParam("name")
       const callback = jest.fn()
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], callback, "test rule")
 
       executeAutomationRule(newRule, { name: false })
       expect(callback).not.toHaveBeenCalled()
@@ -135,24 +120,14 @@ describe("rules", () => {
   describe("addRules", () => {
     it("adds the new rules to the rules array", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
       addRules(newRule)
       expect(rules[0].description).toBe("test rule")
     })
 
     it("adds an id to a new rule", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
       addRules(newRule)
       expect(rules[0].id).toBe(1)
     })
@@ -161,18 +136,8 @@ describe("rules", () => {
   describe("removeRuleById", () => {
     it("removes the rule with the specified id", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "rule 1",
-        trigger: "on test",
-      })
-      const newRule2 = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "rule 2",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "rule 1")
+      const newRule2 = ar.rule("on test", [newCondition], () => {}, "rule 2")
       addRules(newRule, newRule2)
       removeRuleById(1)
       expect(rules.length).toBe(1)
@@ -183,12 +148,7 @@ describe("rules", () => {
   describe("removeAllRules", () => {
     it("removes all rules from the rules array", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
       addRules(newRule)
       removeAllRules()
       expect(rules.length).toBe(0)
@@ -198,26 +158,11 @@ describe("rules", () => {
   describe("getRules", () => {
     it("returns all rules, organized by trigger", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
 
-      const newRule2 = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule2 = ar.rule("on test", [newCondition], () => {}, "test rule")
 
-      const newRule3 = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "derp",
-      })
+      const newRule3 = ar.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
       addRules(...rules)
@@ -238,26 +183,11 @@ describe("rules", () => {
   describe("getRulesWithTrigger", () => {
     it("returns all rules with the specified trigger", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
-      const newRule = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
 
-      const newRule2 = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule2 = ar.rule("on test", [newCondition], () => {}, "test rule")
 
-      const newRule3 = ar.rule({
-        callback: () => {},
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "derp",
-      })
+      const newRule3 = ar.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
       const rulesWithTrigger = getRulesWithTrigger(rules, "on test")
@@ -273,19 +203,14 @@ describe("rules", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      const newRule = ar.rule({
-        callback: callback1,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], callback1, "test rule")
 
-      const newRule2 = ar.rule({
-        callback: callback2,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule2 = ar.rule(
+        "on test",
+        [newCondition],
+        callback2,
+        "test rule"
+      )
 
       executeRules([newRule, newRule2], { name: true })
       expect(callback1).toHaveBeenCalled()
@@ -298,19 +223,14 @@ describe("rules", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      const newRule = ar.rule({
-        callback: callback1,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule = ar.rule("on test", [newCondition], callback1, "test rule")
 
-      const newRule2 = ar.rule({
-        callback: callback2,
-        conditions: [newCondition],
-        description: "test rule",
-        trigger: "on test",
-      })
+      const newRule2 = ar.rule(
+        "on test",
+        [newCondition],
+        callback2,
+        "test rule"
+      )
 
       addRules(newRule, newRule2)
       ar.executeRulesWithTrigger("on test", { name: true })
@@ -334,12 +254,7 @@ describe("logging", () => {
     ar.addParam("name")
     const callback = jest.fn()
     const newCondition = condition<DataType>("name", ar.op.equals, true)
-    const newRule = ar.rule({
-      callback,
-      conditions: [newCondition],
-      description: "test rule",
-      trigger: "on test",
-    })
+    const newRule = ar.rule("on test", [newCondition], callback, "test rule")
 
     executeAutomationRule(newRule, { name: true })
     expect(dummyLoggingCallback).toHaveBeenCalledWith({
