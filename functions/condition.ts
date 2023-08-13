@@ -1,25 +1,26 @@
-const mappings = require("../config/mappings")
-const operators = require("../config/operators")
-const settings = require("../config/settings.json")
-const { logCallbackCaller } = require("./crud")
+import { params } from "../config/params"
+import * as operators from "../config/operators"
+import settings from "../config/settings.json"
+import { callLogCallback } from "./logging"
+import type { Condition, Param, Operator, Rule } from "../types"
 
-function condition(param, operator, value) {
-  if (!mappings.hasOwnProperty(param))
-    throw `\x1b[30m\x1b[43m condition \x1b[37m\x1b[41m Invalid 1st parameter: \x1b[1m${param} `
-  if (!Object.values(operators).includes(operator))
-    throw `condition: invalid operator: ${operator}`
+export function condition(param: Param, operator: Operator, value: any) {
   return {
     operator,
     param,
     value,
-  }
+  } as Condition
 }
 
-function isConditionMet(condition, data) {
+type Data = {
+  [key: Param]: any
+  previous?: any
+}
+
+export function isConditionMet(condition: Condition, data: Data) {
   const { operator, value } = condition
-  const mappedParam = mappings[condition.param]
-  const param = data[mappedParam]
-  const previousParam1 = data.previous ? data.previous[mappedParam] : null
+  const param = data[condition.param]
+  const previousParam1 = data.previous ? data.previous[param] : null
   let result
 
   switch (operator) {
@@ -71,16 +72,16 @@ function isConditionMet(condition, data) {
   return result
 }
 
-function stringifyCondition(condition) {
+export function stringifyCondition(condition: Condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-function areAllConditionsMet(data, rule) {
+export function areAllConditionsMet(data: Data, rule: Rule) {
   let result = true
-  for (condition of rule.conditions) {
+  for (let condition of rule.conditions) {
     if (!isConditionMet(condition, data)) {
       if (settings.logging.logFailure) {
-        logCallbackCaller({
+        callLogCallback({
           rule,
           isSuccess: false,
           failedCondition: condition,
@@ -92,11 +93,4 @@ function areAllConditionsMet(data, rule) {
     }
   }
   return result
-}
-
-module.exports = {
-  areAllConditionsMet,
-  condition,
-  isConditionMet,
-  stringifyCondition,
 }

@@ -1,0 +1,5 @@
+.github/
+index.ts
+test.spec.ts
+jest.config.js
+tsconfig.json
