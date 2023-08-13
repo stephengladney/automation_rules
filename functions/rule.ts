@@ -13,11 +13,10 @@ export function rule({
   trigger,
 }: {
   callback: Function
-  conditions: Condition[]
+  conditions: [Condition, ...Condition[]]
   description: string
   trigger: Trigger
 }) {
-  if (typeof callback != "function") throw "rule: callback must be a function"
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }

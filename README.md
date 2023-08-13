@@ -53,7 +53,7 @@ ar.op.isTruthy //=> "is truthy"
 
 ### Conditions
 
-Conditions allow your users to verify that a specific scenario has been met.
+Conditions allow your users to verify that a specific scenario has been met. The `condition` function provides an easy way to get a typesafe condition.
 
 ```typescript
 function condition<T extends object>(
@@ -62,20 +62,20 @@ function condition<T extends object>(
   value: T[keyof T]
 )
 
-type Condition = { param: Param; operator: Operator; value: any }
+type Condition = { param: keyof T; operator: Operator; value: T[keyof T] }
 ```
 
 Example:
 
 ```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+
 const condition = ar.condition<Order>(
-  "Total",
+  "total",
   ar.op.isGreaterThanOrEqualTo,
-  "Sam"
+  100
 )
 ```
-
-**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), when executing automatoin rules, your data will need to contain a key called `previous` that contains the data's previous state. More on that below.
 
 <hr>
 
