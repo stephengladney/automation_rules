@@ -6,7 +6,7 @@ Automation rules allow your app's users to created automated workflows when even
 
 To install the package, run `npm install automation-rules` in your terminal
 
-Add `import ar from "automation-rules"` in your code wherever you wish to use the library.
+Add `import arule from "automation-rules"` in your code wherever you wish to use the library.
 
 Rules are composed of four parts: Trigger, Conditions, Callback and Description.
 
@@ -36,32 +36,34 @@ type Order = { items: Item[]; subtotal: number; tax: number; total: number }
 Example:
 
 ```typescript
-ar.addParam("total")
+arule.addParam("total")
 ```
 
 <hr>
 
 ### Operators
 
-Operators are used to compare two pieces of datainformation. These are static and provided by the library. To access, add `.op.` to your `ar` variable. For convenience of rendering in your UI, these operators resolve to human-readable strings.
+Operators are used to compare two pieces of datainformation. These are static and provided by the library. To access, evaluate `arule.operators`. For convenience of rendering in your UI, these operators resolve to human-readable strings. TypeScript offers autocomplete in code.
 
 Example:
 
 ```typescript
-ar.op.equals //=> "equals"
-ar.op.doesNotEqual //=> "does not equal"
-ar.op.didEqual //=> "did equal"
-ar.op.didNotEqual //=> "did not equal"
-ar.op.doesInclude //=> "does include"
-ar.op.doesNotInclude //=> "does not include"
-ar.op.hasChanged //=> "has changed"
-ar.op.hasNotChanged //=> "has not changed"
-ar.op.isGreatherThan //=> "is greater than"
-ar.op.isGreatherThanOrEqualTo //=> "is greater than or equal to"
-ar.op.isLessThan //=> "is less than"
-ar.op.isLessThanOrEqualTo //=> "is less than or equal to"
-ar.op.isFalsy //=> "is falsy"
-ar.op.isTruthy //=> "is truthy"
+const operators = [
+  "equals",
+  "does not equal",
+  "did equal",
+  "did not equal",
+  "includes",
+  "does not include",
+  "has changed",
+  "has not changed",
+  "is greater than",
+  "is greater than or equal to",
+  "is less than",
+  "is less than or equal to",
+  "is falsy",
+  "is truthy",
+]
 ```
 
 <hr>
@@ -85,9 +87,9 @@ Example:
 ```typescript
 type Order = { items: Item[]; subtotal: number; tax: number; total: number }
 
-const condition = ar.condition<Order>(
+const condition = arule.condition<Order>(
   "total",
-  ar.op.isGreaterThanOrEqualTo,
+  "is greater than or equal to",
   100
 )
 ```
@@ -117,15 +119,15 @@ const triggers = {
   ORDER_SUBMITTED: "When an order is submitted",
 }
 
-const myCondition = ar.condition<Order>(
+const myCondition = arule.condition<Order>(
   "total",
-  ar.op.isGreaterThanOrEqualTo,
+  "is greater than or equal to",
   100
 )
 
 const myCallback = (order: Order) => alert(`Order of ${order.total} submitted!`)
 
-const rule = ar.rule<Order>(
+const rule = arule.rule<Order>(
   triggers.ORDER_SUBMITTED,
   [myCondition],
   myCallback,
@@ -209,15 +211,15 @@ This method will return an array of all currently active rules.
 Example:
 
 ```typescript
-ar.getRules()
+arule.getRules()
 /*=> [
   { trigger: "When thing happens", 
-    conditions: [ar.condition("key", ar.op.equals, "value")],
+    conditions: [arule.condition("key", "equals", "value")],
     callback: (data) => { console.log(data) }
     description: "Log the data when thing happens"
   },
   { trigger: "When other thing happens", 
-    conditions: [ar.condition("key", ar.op.equals, "value")],
+    conditions: [arule.condition("key", "equals", "value")],
     callback: (data) => { alert(data.key) }
     description: "Alert the value of the key when other thing happens"
   }
@@ -238,10 +240,10 @@ This method will return an array of all currently active rules for a specific tr
 Example:
 
 ```typescript
-ar.getRulesByTrigger("when thing happens")
+arule.getRulesByTrigger("when thing happens")
 /*=> [
   { trigger: "When thing happens", 
-    conditions: [ar.condition("key", ar.op.equals, "value")],
+    conditions: [arule.condition("key", "equals", "value")],
     callback: (data) => { console.log(data) }
     description: "Log the data when thing happens"
   }
