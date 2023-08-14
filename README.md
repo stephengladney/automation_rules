@@ -147,16 +147,35 @@ const exampleCallback = (data: DataType) => {
 
 ### Logging
 
-You can also set a specific callback function.
+You can also enable logging on success and/or failure of rules.
+
+#### setLogging
+
+```typescript
+function setLogging({
+  onSuccess,
+  onFailure,
+}: {
+  onSuccess: boolean
+  onFailure: boolean
+})
+```
+
+- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
+- `failedCondition` - The first condition that failed if the rule failed to succeed.
 
 #### setLogCallback
+
+Logging fires a callback function that you define. This allows you to customize how you log results.
 
 ```typescript
 type Callback = (
   rule: Rule,
   result: { isSuccess: boolean; failedCondition?: Condition },
   data: any
-) => any
+) => {
+  /* do stuff */
+}
 
 function setLogCallback(callback: Callback)
 ```
@@ -165,7 +184,7 @@ function setLogCallback(callback: Callback)
 
 #### addRules
 
-Add rule(s) to the current list of active rules. (maintained in memory)
+Add rule(s) to the current list of active rules.
 
 ```typescript
 function addRules(...newRules: Rule[])
@@ -229,11 +248,3 @@ ar.getRulesByTrigger("when thing happens")
 ]
 */
 ```
-
-<hr>
-### setLogCallback({ data, failedCondition, isSuccess, rule })
-
-Set the log callback function.
-
-- `failedCondition` - This variable gives you access to which specific condition was not met if the rule fails.
-- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
