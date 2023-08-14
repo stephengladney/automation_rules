@@ -1,4 +1,4 @@
-import * as operators from "../config/operators"
+import * as operators from "../operators"
 
 type OperatorKey = keyof typeof operators
 export type Operator = (typeof operators)[OperatorKey]

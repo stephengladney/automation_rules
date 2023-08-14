@@ -145,6 +145,22 @@ const exampleCallback = (data: DataType) => {
 }
 ```
 
+### Logging
+
+You can also set a specific callback function.
+
+#### setLogCallback
+
+```typescript
+type Callback = (
+  rule: Rule,
+  result: { isSuccess: boolean; failedCondition?: Condition },
+  data: any
+) => any
+
+function setLogCallback(callback: Callback)
+```
+
 ### Additional functions
 
 #### addRules
@@ -195,7 +211,7 @@ ar.getRules()
 #### getRulesByTrigger ()
 
 ```typescript
-
+function getRulesByTrigger(trigger: Trigger)
 ```
 
 This method will return an array of all currently active rules for a specific trigger.
@@ -203,17 +219,12 @@ This method will return an array of all currently active rules for a specific tr
 Example:
 
 ```typescript
-ar.getRules()
+ar.getRulesByTrigger("when thing happens")
 /*=> [
   { trigger: "When thing happens", 
     conditions: [ar.condition("key", ar.op.equals, "value")],
     callback: (data) => { console.log(data) }
     description: "Log the data when thing happens"
-  },
-  { trigger: "When other thing happens", 
-    conditions: [ar.condition("key", ar.op.equals, "value")],
-    callback: (data) => { alert(data.key) }
-    description: "Alert the value of the key when other thing happens"
   }
 ]
 */

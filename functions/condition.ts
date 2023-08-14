@@ -1,7 +1,5 @@
-import { params } from "../config/params"
-import * as operators from "../config/operators"
-import settings from "../config/settings.json"
-import { callLogCallback } from "./logging"
+import * as operators from "../operators"
+import { callLogCallback, logOnFailure } from "./logging"
 import type { Condition, Operator, Rule } from "../types"
 
 export function condition<T extends object>(
@@ -99,13 +97,12 @@ export function areAllConditionsMet<DataType>(
   let result = true
   for (let condition of rule.conditions) {
     if (!isConditionMet<DataType>(condition, data)) {
-      if (settings.logging.logFailure) {
-        callLogCallback({
+      if (logOnFailure) {
+        callLogCallback(
           rule,
-          isSuccess: false,
-          failedCondition: condition,
-          data,
-        })
+          { isSuccess: false, failedCondition: condition },
+          data
+        )
       }
       result = false
       break

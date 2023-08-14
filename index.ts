@@ -7,9 +7,9 @@ import {
   rule,
 } from "./functions/rule"
 import { condition } from "./functions/condition"
-import { setLogCallback } from "./functions/logging"
-import { addParam, params } from "./config/params"
-import * as op from "./config/operators"
+import { setLogCallback, setLogging } from "./functions/logging"
+import { addParam, params } from "./functions/params"
+import * as op from "./operators"
 import type { Trigger } from "./types"
 
 function executeRulesWithTrigger<DataType>(
@@ -31,4 +31,5 @@ export default {
   rule,
   removeAllRules,
   setLogCallback,
+  setLogging,
 }

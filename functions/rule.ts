@@ -1,6 +1,5 @@
 import { areAllConditionsMet } from "./condition"
-import settings from "../config/settings.json"
-import { callLogCallback } from "./logging"
+import { callLogCallback, logOnSuccess } from "./logging"
 import type { Condition, Rule, Trigger } from "../types"
 
 export let rules: Rule[] = []
@@ -24,8 +23,8 @@ export function executeAutomationRule<DataType>(
 ) {
   if (areAllConditionsMet<DataType>(data, rule)) {
     rule.callback(data)
-    if (settings.logging.logSuccess) {
-      callLogCallback({ rule, isSuccess: true, data })
+    if (logOnSuccess) {
+      callLogCallback(rule, { isSuccess: true }, data)
     }
   }
 }
