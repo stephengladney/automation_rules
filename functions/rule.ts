@@ -6,11 +6,11 @@ import type { Condition, Rule, Trigger } from "../types"
 export let rules: Rule[] = []
 export let ruleId = 1
 
-export function rule(
+export function rule<DataType>(
   trigger: Trigger,
   conditions: [Condition, ...Condition[]],
-  callback: Function,
-  description: string
+  callback: (data: DataType) => unknown,
+  description?: string
 ) {
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
@@ -18,8 +18,11 @@ export function rule(
   return { callback, conditions, description, trigger } as Rule
 }
 
-export function executeAutomationRule(rule: Rule, data: any) {
-  if (areAllConditionsMet(data, rule)) {
+export function executeAutomationRule<DataType>(
+  rule: Rule,
+  data: DataType & { previous?: DataType }
+) {
+  if (areAllConditionsMet<DataType>(data, rule)) {
     rule.callback(data)
     if (settings.logging.logSuccess) {
       callLogCallback({ rule, isSuccess: true, data })

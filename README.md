@@ -8,6 +8,19 @@ To install the package, run `npm install automation-rules` in your terminal
 
 Add `import ar from "automation-rules` in your code wherever you wish to use the library.
 
+Rules are composed of four parts: Trigger, Conditions, Callback and Description.
+
+### Triggers
+
+A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around.
+
+```typescript
+const myTriggers = {
+  NEW_USER_CREATED: "When a new user is created",
+  ORDER_SUBMITTED: "When an order is submitted",
+}
+```
+
 ### Params
 
 The library works by reading object key/value pairs of data provided to evaluate whether or not conditions are met. Before creating rules, you must tell the library the names of the keys you wish to evaluate.
@@ -19,6 +32,8 @@ Your want to evaluate the total price of an order. Your Order object has a key n
 ```typescript
 type Order = { items: Item[]; subtotal: number; tax: number; total: number }
 ```
+
+Example:
 
 ```typescript
 ar.op.addParam("total")
@@ -79,42 +94,80 @@ const condition = ar.condition<Order>(
 
 <hr>
 
-### rule ({ callback, conditions, trigger })
+### Rules
 
-Create a rule with with a callback function to perform when the trigger and conditions are both met.
+Rules combine triggers, conditions with a callback function to execute when the conditions are met.
 
-Note: Triggers are just strings that describe a scenario, i.e. "When a new user is created"
+```typescript
+function rule<DataType>(
+  trigger: Trigger,
+  conditions: [Condition, ...Condition[]],
+  callback: (data: DataType) => unknown,
+  description?: string
+)
+```
 
 Example:
 
-```javascript
+```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+
 const triggers = {
   NEW_USER_CREATED: "When a new user is created",
+  ORDER_SUBMITTED: "When an order is submitted",
 }
 
-const rule = ar.op.rule({
-  callback: () => console.log("A new user was created!"),
-  conditions: [condition],
-  trigger: triggers.NEW_USER_CREATED,
-})
+const myCondition = ar.condition<Order>(
+  "total",
+  ar.op.isGreaterThanOrEqualTo,
+  100
+)
+
+const myCallback = (order: Order) => alert(`Order of ${order.total} submitted!`)
+
+const rule = ar.rule<Order>(
+  triggers.ORDER_SUBMITTED,
+  [myCondition],
+  myCallback,
+  "Show alert on order submission"
+)
 ```
 
 <hr>
 
-### addRule (rule)
+### Callbacks
 
-Add a rule to the current list of rules. (maintained in memory)
+This a function to invoke when a trigger occurs and all conditions are met.
+
+```typescript
+const exampleCallback = (data: DataType) => {
+  /* do stuff */
+}
+```
+
+### Additional functions
+
+#### addRules
+
+Add rule(s) to the current list of active rules. (maintained in memory)
+
+```typescript
+function addRules(...newRules: Rule[])
+```
 
 <hr>
 
-### executeAllRulesWithTrigger (trigger, { data })
+#### executeRulesWithTrigger
 
 Execute all rules with a particular trigger. Place this method in your code where that trigger occurs.
 
+```typescript
+function executeRulesWithTrigger<DataType>(trigger: Trigger, data: DataType)
+```
+
 Example:
 
-```javascript
-//do thing A
+```typescript
 ar.op.executeAllRulesWithTrigger(trigger, {
   data: { first_name: "Thomas", last_name: "Anderson", age: 34 },
 })

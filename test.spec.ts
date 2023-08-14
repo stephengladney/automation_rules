@@ -71,6 +71,13 @@ describe("conditions", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
       expect(isConditionMet(newCondition, data)).toBeFalsy()
     })
+
+    it("returns true if previous value matches condition", () => {
+      ar.addParam("name")
+      const data = { name: true, previous: { name: false } }
+      const newCondition = condition<DataType>("name", ar.op.didEqual, false)
+      expect(isConditionMet(newCondition, data)).toBeTruthy()
+    })
   })
 })
 

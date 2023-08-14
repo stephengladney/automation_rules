@@ -8,14 +8,17 @@ import {
   rules,
 } from "./functions/rule"
 import { condition } from "./functions/condition"
-import trigger from "./functions/trigger"
 import { setLogCallback } from "./functions/logging"
 import { addParam, params } from "./config/params"
 import * as op from "./config/operators"
 import type { Trigger } from "./types"
 
-const executeRulesWithTrigger = (trigger: Trigger, data: any) =>
+function executeRulesWithTrigger<DataType>(
+  trigger: Trigger,
+  data: DataType & { previous?: DataType }
+) {
   executeRules(getRulesWithTrigger(rules, trigger), data)
+}
 
 export default {
   addParam,
@@ -28,5 +31,4 @@ export default {
   rule,
   removeAllRules,
   setLogCallback,
-  trigger,
 }
