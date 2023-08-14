@@ -1,8 +1,9 @@
 {
   "name": "automation-rules",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Allow your app's users to created automated workflows when events occur and certain conditions are met.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest"
   },
