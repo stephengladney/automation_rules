@@ -1,7 +1,6 @@
-import * as operators from "../operators"
+import { operators } from "../operators"
 
-type OperatorKey = keyof typeof operators
-export type Operator = (typeof operators)[OperatorKey]
+export type Operator = (typeof operators)[number]
 
 export type Trigger = string
 

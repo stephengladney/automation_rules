@@ -1,9 +1,9 @@
-export default [
+export const operators = [
   "equals",
   "does not equal",
   "did equal",
   "did not equal",
-  "does include",
+  "includes",
   "does not include",
   "has changed",
   "has not changed",
@@ -13,4 +13,4 @@ export default [
   "is less than or equal to",
   "is falsy",
   "is truthy",
-]
+] as const

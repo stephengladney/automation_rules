@@ -9,7 +9,7 @@ import {
 import { condition } from "./functions/condition"
 import { setLogCallback, setLogging } from "./functions/logging"
 import { addParam, params } from "./functions/params"
-import * as operators from "./operators"
+import { operators } from "./operators"
 import type { Trigger } from "./types"
 
 function executeRulesWithTrigger<DataType>(
