@@ -2,10 +2,10 @@ import * as operators from "../operators"
 import { callLogCallback, logOnFailure } from "./logging"
 import type { Condition, Operator, Rule } from "../types"
 
-export function condition<T>(
-  param: keyof T,
+export function condition<T extends object, U extends keyof T>(
+  param: U,
   operator: Operator,
-  value: T[keyof T]
+  value: T[U]
 ) {
   return {
     operator,
