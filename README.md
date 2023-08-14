@@ -6,7 +6,7 @@ Automation rules allow your app's users to created automated workflows when even
 
 To install the package, run `npm install automation-rules` in your terminal
 
-Add `import ar from "automation-rules` in your code wherever you wish to use the library.
+Add `import ar from "automation-rules"` in your code wherever you wish to use the library.
 
 Rules are composed of four parts: Trigger, Conditions, Callback and Description.
 
