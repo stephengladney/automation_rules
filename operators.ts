@@ -1,14 +1,16 @@
-export const equals = "equals"
-export const doesNotEqual = "does not equal"
-export const didEqual = "did equal"
-export const didNotEqual = "did not equal"
-export const doesInclude = "does include"
-export const doesNotInclude = "does not include"
-export const hasChanged = "has changed"
-export const hasNotChanged = "has not changed"
-export const isGreatherThan = "is greater than"
-export const isGreatherThanOrEqualTo = "is greater than or equal to"
-export const isLessThan = "is less than"
-export const isLessThanOrEqualTo = "is less than or equal to"
-export const isFalsy = "is falsy"
-export const isTruthy = "is truthy"
+export default [
+  "equals",
+  "does not equal",
+  "did equal",
+  "did not equal",
+  "does include",
+  "does not include",
+  "has changed",
+  "has not changed",
+  "is greater than",
+  "is greater than or equal to",
+  "is less than",
+  "is less than or equal to",
+  "is falsy",
+  "is truthy",
+]
