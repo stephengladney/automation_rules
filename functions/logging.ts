@@ -1,31 +1,33 @@
 import type { Condition, Rule } from "../types"
 
-type Callback = ({
-  rule,
-  isSuccess,
-  failedCondition,
-  data,
+export let logOnSuccess = false
+export let logOnFailure = false
+
+export function setLogging({
+  onSuccess,
+  onFailure,
 }: {
-  rule: Rule
-  isSuccess: boolean
-  failedCondition?: Condition
+  onSuccess?: boolean
+  onFailure?: boolean
+}) {
+  if (onFailure) logOnFailure = onFailure
+  if (onSuccess) logOnSuccess = onSuccess
+}
+
+type Callback = (
+  rule: Rule,
+  result: { isSuccess: boolean; failedCondition?: Condition },
   data: any
-}) => any
+) => any
 
 export let logCallback: Callback = (params) => {}
 
-export function callLogCallback({
-  rule,
-  isSuccess,
-  failedCondition,
-  data,
-}: {
-  rule: Rule
-  isSuccess: boolean
-  failedCondition?: Condition
+export function callLogCallback(
+  rule: Rule,
+  result: { isSuccess: boolean; failedCondition?: Condition },
   data: any
-}) {
-  logCallback({ rule, isSuccess, failedCondition, data })
+) {
+  logCallback(rule, result, data)
 }
 
 export function setLogCallback(callback: Callback) {

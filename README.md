@@ -1,158 +1,250 @@
-# automation_rules README
+# automation-rules
 
-### Mappings
+Automation rules allow your app's users to created automated workflows when events occur and certain conditions are met. For example, say your app processes transactions for a store and the store owner wants to offer a 10% discount on purchases over $100. The owner can create an automation rule to automatically apply the discount when an order over $100 is placed.
 
-Mappings associate human-readable strings with actual key names from your object-oriented data. This is currently hard-coded in `mappings.js`
+## Getting Started
+
+To install the package, run `npm install automation-rules` in your terminal
+
+Add `import ar from "automation-rules` in your code wherever you wish to use the library.
+
+Rules are composed of four parts: Trigger, Conditions, Callback and Description.
+
+### Triggers
+
+A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around.
+
+```typescript
+const myTriggers = {
+  NEW_USER_CREATED: "When a new user is created",
+  ORDER_SUBMITTED: "When an order is submitted",
+}
+```
+
+### Params
+
+The library works by reading object key/value pairs of data provided to evaluate whether or not conditions are met. Before creating rules, you must tell the library the names of the keys you wish to evaluate.
 
 Example:
 
-```javascript
-module.exports = {
-  Assignee: "assignee",
-  "Card title": "cardTitle",
-  "Current status": "currentStatus",
-  "Previous status": "previousStatus",
-  "Team assigned": "teamAssigned",
-}
+Your want to evaluate the total price of an order. Your Order object has a key named `total`.
+
+```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+```
+
+Example:
+
+```typescript
+ar.op.addParam("total")
 ```
 
 <hr>
 
 ### Operators
 
-Operators are used to compare two pieces of information. These are static and provided by the library.
-
-To use, require the index.js file and then use `.Op.` to access the operators.
+Operators are used to compare two pieces of datainformation. These are static and provided by the library. To access, add `.op.` to your `ar` variable. For convenience of rendering in your UI, these operators resolve to human-readable strings.
 
 Example:
 
-```javascript
-const ar = require("./index")
-ar.Op.equals
+```typescript
+ar.op.equals //=> "equals"
+ar.op.doesNotEqual //=> "does not equal"
+ar.op.didEqual //=> "did equal"
+ar.op.didNotEqual //=> "did not equal"
+ar.op.doesInclude //=> "does include"
+ar.op.doesNotInclude //=> "does not include"
+ar.op.hasChanged //=> "has changed"
+ar.op.hasNotChanged //=> "has not changed"
+ar.op.isGreatherThan //=> "is greater than"
+ar.op.isGreatherThanOrEqualTo //=> "is greater than or equal to"
+ar.op.isLessThan //=> "is less than"
+ar.op.isLessThanOrEqualTo //=> "is less than or equal to"
+ar.op.isFalsy //=> "is falsy"
+ar.op.isTruthy //=> "is truthy"
 ```
-
-<details>
-<summary>Valid operators</summary>
-<ul>
-<li>equals</li>
-<li>doesNotEqual</li>
-<li>didEqual</li>
-<li>didNotEqual</li>
-<li>doesInclude</li>
-<li>doesNotInclude</li>
-<li>hasChanged</li>
-<li>hasNotChanged</li>
-<li>isGreatherThan</li>
-<li>isGreatherThanOrEqualTo</li>
-<li>isLessThan</li>
-<li>isLessThanOrEqualTo</li>
-<li>isFalsy</li>
-<li>isTruthy</li>
-</ul>
-</details>
 
 <hr>
 
-### condition ([_param_, _operator_, _value_])
+### Conditions
 
-Conditions allow you to verify that a specific scenario has been met.
+Conditions allow your users to verify that a specific scenario has been met. The `condition` function provides an easy way to get a typesafe condition.
+
+```typescript
+function condition<T extends object>(
+  param: keyof T,
+  operator: Operator,
+  value: T[keyof T]
+)
+
+type Condition = { param: keyof T; operator: Operator; value: T[keyof T] }
+```
 
 Example:
 
-```javascript
-const condition = ar.condition(["Assignee", ar.Op.equals, "Sam"])
-```
+```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
 
-**NOTE:** If you want to use past evaluating operators (didEqual, didNotEqual, hasChanged, hasNotChanged), when executing automatoin rules, your data will need to contain a key called `previous` that contains the data's previous state. More on that below.
+const condition = ar.condition<Order>(
+  "total",
+  ar.op.isGreaterThanOrEqualTo,
+  100
+)
+```
 
 <hr>
 
-### rule ({ callback, conditions, trigger })
+### Rules
 
-Create a rule with with a callback function to perform when the trigger and conditions are both met.
+Rules combine triggers, conditions with a callback function to execute when the conditions are met.
 
-Note: Triggers are just strings that describe a scenario, i.e. "When a new user is created"
+```typescript
+function rule<DataType>(
+  trigger: Trigger,
+  conditions: [Condition, ...Condition[]],
+  callback: (data: DataType) => unknown,
+  description?: string
+)
+```
 
 Example:
 
-```javascript
+```typescript
+type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+
 const triggers = {
   NEW_USER_CREATED: "When a new user is created",
+  ORDER_SUBMITTED: "When an order is submitted",
 }
 
-const rule = ar.rule({
-  callback: () => console.log("A new user was created!"),
-  conditions: [condition],
-  trigger: triggers.NEW_USER_CREATED,
+const myCondition = ar.condition<Order>(
+  "total",
+  ar.op.isGreaterThanOrEqualTo,
+  100
+)
+
+const myCallback = (order: Order) => alert(`Order of ${order.total} submitted!`)
+
+const rule = ar.rule<Order>(
+  triggers.ORDER_SUBMITTED,
+  [myCondition],
+  myCallback,
+  "Show alert on order submission"
+)
+```
+
+<hr>
+
+### Callbacks
+
+This a function to invoke when a trigger occurs and all conditions are met.
+
+```typescript
+const exampleCallback = (data: DataType) => {
+  /* do stuff */
+}
+```
+
+### Logging
+
+You can also enable logging on success and/or failure of rules.
+
+#### setLogging
+
+```typescript
+function setLogging({
+  onSuccess,
+  onFailure,
+}: {
+  onSuccess: boolean
+  onFailure: boolean
 })
 ```
 
+- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
+- `failedCondition` - The first condition that failed if the rule failed to succeed.
+
+#### setLogCallback
+
+Logging fires a callback function that you define. This allows you to customize how you log results.
+
+```typescript
+type Callback = (
+  rule: Rule,
+  result: { isSuccess: boolean; failedCondition?: Condition },
+  data: any
+) => {
+  /* do stuff */
+}
+
+function setLogCallback(callback: Callback)
+```
+
+### Additional functions
+
+#### addRules
+
+Add rule(s) to the current list of active rules.
+
+```typescript
+function addRules(...newRules: Rule[])
+```
+
 <hr>
 
-### addRule (rule)
-
-Add a rule to the current list of rules. (maintained in memory)
-
-<hr>
-
-### executeAllRulesWithTrigger (trigger, { data })
+#### executeRulesWithTrigger
 
 Execute all rules with a particular trigger. Place this method in your code where that trigger occurs.
 
-Example:
-
-```javascript
-//do thing A
-ar.executeAllRulesWithTrigger(trigger, {
-  data: { first_name: "Thomas", last_name: "Anderson", age: 34 },
-})
+```typescript
+function executeRulesWithTrigger<DataType>(trigger: Trigger, data: DataType)
 ```
 
 <hr>
 
-### getRules ({ withTrigger? })
+#### getRules ()
 
-This method will return a JSON payload of rules currently being stored.
+This method will return an array of all currently active rules.
 
 Example:
 
-```
+```typescript
 ar.getRules()
-```
-
-Response:
-
-```javascript
-;[
-  {
-    trigger: "Thing happened",
-    rules: [
-      {
-        conditions: [
-          { operator: "does not equal", param: "Assignee", value: 2 },
-          { operator: "equals", param: "Assignee", value: "Sam" },
-        ],
-        description: "Log i fired is Assignee is Sam",
-        trigger: "Thing happened",
-      },
-      {
-        conditions: [
-          { operator: "equals", param: "Assignee", value: "John" },
-          { operator: "does not equal", param: "Assignee", value: 4 },
-        ],
-        description: "Log i fired if Assignee is John",
-        trigger: "Thing happened",
-      },
-    ],
+/*=> [
+  { trigger: "When thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { console.log(data) }
+    description: "Log the data when thing happens"
   },
+  { trigger: "When other thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { alert(data.key) }
+    description: "Alert the value of the key when other thing happens"
+  }
 ]
+*/
 ```
 
 <hr>
 
-### setLogCallback({ data, failedCondition, isSuccess, rule })
+#### getRulesByTrigger ()
 
-Set the log callback function.
+```typescript
+function getRulesByTrigger(trigger: Trigger)
+```
 
-- `failedCondition` - This variable gives you access to which specific condition was not met if the rule fails.
-- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
+This method will return an array of all currently active rules for a specific trigger.
+
+Example:
+
+```typescript
+ar.getRulesByTrigger("when thing happens")
+/*=> [
+  { trigger: "When thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { console.log(data) }
+    description: "Log the data when thing happens"
+  }
+]
+*/
+```

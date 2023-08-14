@@ -1,10 +1,12 @@
-import { params } from "../config/params"
-import * as operators from "../config/operators"
-import settings from "../config/settings.json"
-import { callLogCallback } from "./logging"
-import type { Condition, Param, Operator, Rule } from "../types"
+import * as operators from "../operators"
+import { callLogCallback, logOnFailure } from "./logging"
+import type { Condition, Operator, Rule } from "../types"
 
-export function condition(param: Param, operator: Operator, value: any) {
+export function condition<T extends object>(
+  param: keyof T,
+  operator: Operator,
+  value: T[keyof T]
+) {
   return {
     operator,
     param,
@@ -13,14 +15,20 @@ export function condition(param: Param, operator: Operator, value: any) {
 }
 
 type Data = {
-  [key: Param]: any
+  [key: string]: any
   previous?: any
 }
 
-export function isConditionMet(condition: Condition, data: Data) {
+export function isConditionMet<DataType>(
+  condition: Condition,
+  data: DataType & { previous?: DataType }
+) {
+  type DataTypeKey = keyof DataType
   const { operator, value } = condition
-  const param = data[condition.param]
-  const previousParam1 = data.previous ? data.previous[param] : null
+  const param = data[condition.param as DataTypeKey]
+  const previousParam1 = data.previous
+    ? data.previous[condition.param as DataTypeKey]
+    : null
   let result
 
   switch (operator) {
@@ -31,16 +39,22 @@ export function isConditionMet(condition: Condition, data: Data) {
       result = param != value
       break
     case operators.didEqual:
+      console.log(previousParam1 + "==" + value)
+
       result = previousParam1 == value
       break
     case operators.didNotEqual:
       result = previousParam1 != value
       break
     case operators.doesInclude:
-      result = param.includes(value)
+      if (typeof param === "string" || Array.isArray(param)) {
+        result = param.includes(value)
+      } else result = false
       break
     case operators.doesNotInclude:
-      result = !param.includes(value)
+      if (typeof param === "string" || Array.isArray(param)) {
+        result = !param.includes(value)
+      } else result = false
       break
     case operators.isGreatherThan:
       result = param > value
@@ -76,17 +90,19 @@ export function stringifyCondition(condition: Condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-export function areAllConditionsMet(data: Data, rule: Rule) {
+export function areAllConditionsMet<DataType>(
+  data: DataType & { previous?: any },
+  rule: Rule
+) {
   let result = true
   for (let condition of rule.conditions) {
-    if (!isConditionMet(condition, data)) {
-      if (settings.logging.logFailure) {
-        callLogCallback({
+    if (!isConditionMet<DataType>(condition, data)) {
+      if (logOnFailure) {
+        callLogCallback(
           rule,
-          isSuccess: false,
-          failedCondition: condition,
-          data,
-        })
+          { isSuccess: false, failedCondition: condition },
+          data
+        )
       }
       result = false
       break
