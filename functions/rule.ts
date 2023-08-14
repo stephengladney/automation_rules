@@ -31,19 +31,10 @@ export function executeAutomationRule<DataType>(
 }
 
 export function getRules() {
-  const result: { trigger: Trigger; rules: Rule[] }[] = []
-  rules.forEach((rule) => {
-    const foundIndex = result.findIndex((i) => i.trigger === rule.trigger)
-    if (foundIndex != -1) {
-      result[foundIndex].rules.push(rule)
-    } else {
-      result.push({ trigger: rule.trigger, rules: [rule] })
-    }
-  })
-  return result
+  return rules
 }
 
-export function getRulesWithTrigger(rules: Rule[], trigger: Trigger) {
+export function getRulesByTrigger(trigger: Trigger) {
   return rules.filter((rule) => rule.trigger === trigger)
 }
 

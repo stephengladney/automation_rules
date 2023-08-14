@@ -5,7 +5,7 @@ import {
   executeAutomationRule,
   executeRules,
   getRules,
-  getRulesWithTrigger,
+  getRulesByTrigger,
   removeAllRules,
   removeRuleById,
   rules,
@@ -163,45 +163,32 @@ describe("rules", () => {
   })
 
   describe("getRules", () => {
-    it("returns all rules, organized by trigger", () => {
+    it("returns all rules", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
       const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
-
       const newRule2 = ar.rule("on test", [newCondition], () => {}, "test rule")
-
       const newRule3 = ar.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
       addRules(...rules)
-      const returnedRules = getRules()
-      expect(returnedRules).toEqual([
-        {
-          trigger: "on test",
-          rules: [
-            { ...newRule, id: 1 },
-            { ...newRule2, id: 2 },
-          ],
-        },
-        { trigger: "derp", rules: [{ ...newRule3, id: 3 }] },
+      expect(getRules()).toEqual([
+        { ...newRule, id: 1 },
+        { ...newRule2, id: 2 },
+        { ...newRule3, id: 3 },
       ])
     })
   })
 
-  describe("getRulesWithTrigger", () => {
-    it("returns all rules with the specified trigger", () => {
+  describe("getRulesByTrigger", () => {
+    it("returns all rules of a specific trigger", () => {
       const newCondition = condition<DataType>("name", ar.op.equals, true)
       const newRule = ar.rule("on test", [newCondition], () => {}, "test rule")
-
       const newRule2 = ar.rule("on test", [newCondition], () => {}, "test rule")
-
       const newRule3 = ar.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
-      const rulesWithTrigger = getRulesWithTrigger(rules, "on test")
-
-      expect(rulesWithTrigger.includes(newRule)).toBeTruthy()
-      expect(rulesWithTrigger.includes(newRule2)).toBeTruthy()
-      expect(rulesWithTrigger.includes(newRule3)).toBeFalsy()
+      addRules(...rules)
+      expect(getRulesByTrigger("derp")).toEqual([{ ...newRule3, id: 3 }])
     })
   })
 

@@ -165,56 +165,61 @@ Execute all rules with a particular trigger. Place this method in your code wher
 function executeRulesWithTrigger<DataType>(trigger: Trigger, data: DataType)
 ```
 
+<hr>
+
+#### getRules ()
+
+This method will return an array of all currently active rules.
+
 Example:
 
 ```typescript
-ar.op.executeAllRulesWithTrigger(trigger, {
-  data: { first_name: "Thomas", last_name: "Anderson", age: 34 },
-})
+ar.getRules()
+/*=> [
+  { trigger: "When thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { console.log(data) }
+    description: "Log the data when thing happens"
+  },
+  { trigger: "When other thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { alert(data.key) }
+    description: "Alert the value of the key when other thing happens"
+  }
+]
+*/
 ```
 
 <hr>
 
-### getRules ({ withTrigger? })
+#### getRulesByTrigger ()
 
-This method will return a JSON payload of rules currently being stored.
+```typescript
+
+```
+
+This method will return an array of all currently active rules for a specific trigger.
 
 Example:
 
-```
-ar.op.getRules()
-```
-
-Response:
-
-```javascript
-;[
-  {
-    trigger: "Thing happened",
-    rules: [
-      {
-        conditions: [
-          { operator: "does not equal", param: "Assignee", value: 2 },
-          { operator: "equals", param: "Assignee", value: "Sam" },
-        ],
-        description: "Log i fired is Assignee is Sam",
-        trigger: "Thing happened",
-      },
-      {
-        conditions: [
-          { operator: "equals", param: "Assignee", value: "John" },
-          { operator: "does not equal", param: "Assignee", value: 4 },
-        ],
-        description: "Log i fired if Assignee is John",
-        trigger: "Thing happened",
-      },
-    ],
+```typescript
+ar.getRules()
+/*=> [
+  { trigger: "When thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { console.log(data) }
+    description: "Log the data when thing happens"
   },
+  { trigger: "When other thing happens", 
+    conditions: [ar.condition("key", ar.op.equals, "value")],
+    callback: (data) => { alert(data.key) }
+    description: "Alert the value of the key when other thing happens"
+  }
 ]
+*/
 ```
 
 <hr>
-
 ### setLogCallback({ data, failedCondition, isSuccess, rule })
 
 Set the log callback function.

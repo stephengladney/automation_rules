@@ -2,10 +2,9 @@ import {
   addRules,
   executeRules,
   getRules,
-  getRulesWithTrigger,
+  getRulesByTrigger,
   removeAllRules,
   rule,
-  rules,
 } from "./functions/rule"
 import { condition } from "./functions/condition"
 import { setLogCallback } from "./functions/logging"
@@ -17,7 +16,7 @@ function executeRulesWithTrigger<DataType>(
   trigger: Trigger,
   data: DataType & { previous?: DataType }
 ) {
-  executeRules(getRulesWithTrigger(rules, trigger), data)
+  executeRules(getRulesByTrigger(trigger), data)
 }
 
 export default {
@@ -26,6 +25,7 @@ export default {
   condition,
   executeRulesWithTrigger,
   getRules,
+  getRulesByTrigger,
   op,
   params,
   rule,
