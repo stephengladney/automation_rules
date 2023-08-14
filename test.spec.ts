@@ -244,6 +244,7 @@ describe("logging", () => {
 
   it("calls the logging callback with data", () => {
     const dummyLoggingCallback = jest.fn()
+    ar.setLogging({ onSuccess: true })
     setLogCallback(dummyLoggingCallback)
     ar.addParam("name")
     const callback = jest.fn()
@@ -251,11 +252,10 @@ describe("logging", () => {
     const newRule = ar.rule("on test", [newCondition], callback, "test rule")
 
     executeAutomationRule(newRule, { name: true })
-    expect(dummyLoggingCallback).toHaveBeenCalledWith({
-      rule: newRule,
-      isSuccess: true,
-      failedCondition: undefined,
-      data: { name: true },
-    })
+    expect(dummyLoggingCallback).toHaveBeenCalledWith(
+      newRule,
+      { isSuccess: true, failedCondition: undefined },
+      { name: true }
+    )
   })
 })

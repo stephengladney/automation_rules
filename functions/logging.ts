@@ -7,11 +7,11 @@ export function setLogging({
   onSuccess,
   onFailure,
 }: {
-  onSuccess: boolean
-  onFailure: boolean
+  onSuccess?: boolean
+  onFailure?: boolean
 }) {
-  logOnFailure = onFailure
-  logOnSuccess = onSuccess
+  if (onFailure) logOnFailure = onFailure
+  if (onSuccess) logOnSuccess = onSuccess
 }
 
 type Callback = (
