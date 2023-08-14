@@ -71,10 +71,10 @@ ar.op.isTruthy //=> "is truthy"
 Conditions allow your users to verify that a specific scenario has been met. The `condition` function provides an easy way to get a typesafe condition.
 
 ```typescript
-function condition<T extends object>(
-  param: keyof T,
+function condition<T, U extends keyof T>(
+  param: U,
   operator: Operator,
-  value: T[keyof T]
+  value: T[U]
 )
 
 type Condition = { param: keyof T; operator: Operator; value: T[keyof T] }
