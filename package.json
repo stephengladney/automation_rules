@@ -1,7 +1,7 @@
 {
   "name": "automation-rules",
-  "version": "1.0.0",
-  "description": "### Mappings",
+  "version": "1.0.1",
+  "description": "Allow your app's users to created automated workflows when events occur and certain conditions are met.",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/stephengladney/automation_rules.git"
   },
+  "keywords": [
+    "automation",
+    "triggers",
+    "workflow"
+  ],
   "author": "Stephen Gladney",
   "license": "ISC",
   "bugs": {

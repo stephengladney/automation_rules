@@ -36,7 +36,7 @@ type Order = { items: Item[]; subtotal: number; tax: number; total: number }
 Example:
 
 ```typescript
-ar.op.addParam("total")
+ar.addParam("total")
 ```
 
 <hr>
