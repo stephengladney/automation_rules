@@ -24,7 +24,10 @@ export function isConditionMet<DataType>(
   data: DataType & { previous?: DataType }
 ) {
   type DataTypeKey = keyof DataType
-  const { operator, value } = condition
+  const {
+    operator,
+    value,
+  }: { operator: Operator; value: DataType[keyof DataType] } = condition
   const param = data[condition.param as DataTypeKey]
   const previousParam1 = data.previous
     ? data.previous[condition.param as DataTypeKey]
@@ -32,52 +35,52 @@ export function isConditionMet<DataType>(
   let result
 
   switch (operator) {
-    case operators.equals:
+    case "equals":
       result = param == value
       break
-    case operators.doesNotEqual:
+    case "does not equal":
       result = param != value
       break
-    case operators.didEqual:
+    case "did equal":
       console.log(previousParam1 + "==" + value)
 
       result = previousParam1 == value
       break
-    case operators.didNotEqual:
+    case "did not equal":
       result = previousParam1 != value
       break
-    case operators.doesInclude:
+    case "includes":
       if (typeof param === "string" || Array.isArray(param)) {
-        result = param.includes(value)
+        result = param.includes(value as (typeof param)[number])
       } else result = false
       break
-    case operators.doesNotInclude:
+    case "does not include":
       if (typeof param === "string" || Array.isArray(param)) {
-        result = !param.includes(value)
+        result = !param.includes(value as (typeof param)[number])
       } else result = false
       break
-    case operators.isGreatherThan:
+    case "is greater than":
       result = param > value
       break
-    case operators.isGreatherThanOrEqualTo:
+    case "is greater than or equal to":
       result = param >= value
       break
-    case operators.isLessThan:
+    case "is less than":
       result = param < value
       break
-    case operators.isGreatherThanOrEqualTo:
+    case "is less than or equal to":
       result = param <= value
       break
-    case operators.isFalsy:
+    case "is falsy":
       result = !param
       break
-    case operators.isTruthy:
+    case "is truthy":
       result = !!param
       break
-    case operators.hasChanged:
+    case "has changed":
       result = param !== previousParam1
       break
-    case operators.hasNotChanged:
+    case "has not changed":
       result = param === previousParam1
       break
     default:
