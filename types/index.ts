@@ -12,8 +12,9 @@ export type Condition = {
 
 export type Rule = {
   id?: string | number
-  callback: Function
-  conditions: Condition[]
-  description: string
   trigger: Trigger
+  conditions: Condition[]
+  callback: Function
+  callbackDescription?: string
+  description: string
 }

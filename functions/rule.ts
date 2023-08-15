@@ -9,12 +9,19 @@ export function rule<DataType>(
   trigger: Trigger,
   conditions: [Condition, ...Condition[]],
   callback: (data: DataType) => unknown,
+  callbackDescription?: string,
   description?: string
 ) {
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }
-  return { callback, conditions, description, trigger } as Rule
+  return {
+    callback,
+    callbackDescription,
+    conditions,
+    description,
+    trigger,
+  } as Rule
 }
 
 export function executeAutomationRule<DataType>(

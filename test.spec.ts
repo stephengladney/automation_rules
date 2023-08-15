@@ -97,10 +97,12 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback,
+        "test callback",
         "test rule"
       )
       expect(newRule).toEqual({
         callback,
+        callbackDescription: "test callback",
         conditions: [newCondition],
         description: "test rule",
         trigger: "on test",
@@ -117,6 +119,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback,
+        "test callback",
         "test rule"
       )
 
@@ -132,6 +135,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback,
+        "test callback",
         "test rule"
       )
 
@@ -147,6 +151,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       addRules(newRule)
@@ -159,6 +164,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       addRules(newRule)
@@ -185,6 +191,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       addRules(newRule)
@@ -200,12 +207,14 @@ describe("rules", () => {
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       const newRule2 = arule.rule(
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
@@ -227,12 +236,14 @@ describe("rules", () => {
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       const newRule2 = arule.rule(
         "on test",
         [newCondition],
         () => {},
+        "test callback",
         "test rule"
       )
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
@@ -252,6 +263,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback1,
+        "test callback",
         "test rule"
       )
 
@@ -259,6 +271,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback2,
+        "test callback",
         "test rule"
       )
 
@@ -277,6 +290,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback1,
+        "test callback",
         "test rule"
       )
 
@@ -284,6 +298,7 @@ describe("rules", () => {
         "on test",
         [newCondition],
         callback2,
+        "test callback",
         "test rule"
       )
 
@@ -310,7 +325,13 @@ describe("logging", () => {
     arule.addParam("name")
     const callback = jest.fn()
     const newCondition = condition<DataType>("name", "equals", true)
-    const newRule = arule.rule("on test", [newCondition], callback, "test rule")
+    const newRule = arule.rule(
+      "on test",
+      [newCondition],
+      callback,
+      "test callback",
+      "test rule"
+    )
 
     executeAutomationRule(newRule, { name: true })
     expect(dummyLoggingCallback).toHaveBeenCalledWith(
