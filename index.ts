@@ -4,6 +4,7 @@ import {
   getRules,
   getRulesByTrigger,
   removeAllRules,
+  removeRuleById,
   rule,
 } from "./functions/rule"
 import { condition } from "./functions/condition"
@@ -29,6 +30,7 @@ export default {
   operators,
   params,
   rule,
+  removeRuleById,
   removeAllRules,
   setLogCallback,
   setLogging,
