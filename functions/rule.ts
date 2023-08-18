@@ -31,7 +31,7 @@ export function executeAutomationRule<DataType>(
   if (areAllConditionsMet<DataType>(data, rule)) {
     rule.callback(data)
     if (logOnSuccess) {
-      callLogCallback(rule, { isSuccess: true }, data)
+      callLogCallback(rule, true, data)
     }
   }
 }

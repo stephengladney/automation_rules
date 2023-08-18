@@ -336,8 +336,11 @@ describe("logging", () => {
     executeAutomationRule(newRule, { name: true })
     expect(dummyLoggingCallback).toHaveBeenCalledWith(
       newRule,
-      { isSuccess: true, failedCondition: undefined },
-      { name: true }
+      true,
+      {
+        name: true,
+      },
+      undefined
     )
   })
 })

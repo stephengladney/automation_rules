@@ -101,11 +101,7 @@ export function areAllConditionsMet<DataType>(
   for (let condition of rule.conditions) {
     if (!isConditionMet<DataType>(condition, data)) {
       if (logOnFailure) {
-        callLogCallback(
-          rule,
-          { isSuccess: false, failedCondition: condition },
-          data
-        )
+        callLogCallback(rule, false, data, condition)
       }
       result = false
       break
