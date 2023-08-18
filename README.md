@@ -29,15 +29,11 @@ The library works by reading object key/value pairs of data provided to evaluate
 
 Example:
 
-Your want to evaluate the total price of an order. Your Order object has a key named `total`.
+You want to evaluate the total price of an order. Your Order object has a key named `total`.
 
 ```typescript
 type Order = { items: Item[]; subtotal: number; tax: number; total: number }
-```
 
-Example:
-
-```typescript
 arule.addParam("total")
 ```
 
@@ -75,10 +71,10 @@ const operators = [
 Conditions allow your users to verify that a specific scenario has been met. The `condition` function provides an easy way to get a typesafe condition.
 
 ```typescript
-function condition<T, U extends keyof T>(
-  param: U,
+function condition<T extends object>(
+  param: keyof T,
   operator: Operator,
-  value: T[U]
+  value: T[keyof T]
 )
 
 type Condition = { param: keyof T; operator: Operator; value: T[keyof T] }
