@@ -6,7 +6,7 @@ Automation rules allow your app's users to created automated workflows when even
 
 To install the package, run `npm install automation-rules` in your terminal
 
-Add `import arule from "automation-rules"` in your code wherever you wish to use the library.
+Add `import arule from "automation-rules"` in your code wherever you wish to use the library. (Note: You can use whatever alias you'd like.)
 
 Rules are composed of four parts: Trigger, Conditions, Callback and Description. Below is documentation of each of these as well as additional functions.
 
@@ -171,8 +171,9 @@ Logging fires a callback function that you define. This allows you to customize 
 ```typescript
 type Callback = (
   rule: Rule,
-  result: { isSuccess: boolean; failedCondition?: Condition },
-  data: any
+  isSuccess: boolean,
+  data: any,
+  failedCondition?: Condition
 ) => {
   /* do stuff */
 }
