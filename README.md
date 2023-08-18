@@ -8,7 +8,9 @@ To install the package, run `npm install automation-rules` in your terminal
 
 Add `import arule from "automation-rules"` in your code wherever you wish to use the library.
 
-Rules are composed of four parts: Trigger, Conditions, Callback and Description.
+Rules are composed of four parts: Trigger, Conditions, Callback and Description. Below is a description of each of these as well as documentation on additional functions.
+
+Additionally, there is an open-source sample project available at: https://github.com/stephengladney/ar-example
 
 ### Triggers
 
