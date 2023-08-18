@@ -16,18 +16,20 @@ export function setLogging({
 
 type Callback = (
   rule: Rule,
-  result: { isSuccess: boolean; failedCondition?: Condition },
-  data: any
+  isSuccess: boolean,
+  data: any,
+  failedCondition?: Condition
 ) => any
 
 export let logCallback: Callback = (params) => {}
 
 export function callLogCallback(
   rule: Rule,
-  result: { isSuccess: boolean; failedCondition?: Condition },
-  data: any
+  isSuccess: boolean,
+  data: any,
+  failedCondition?: Condition
 ) {
-  logCallback(rule, result, data)
+  logCallback(rule, isSuccess, data, failedCondition)
 }
 
 export function setLogCallback(callback: Callback) {
