@@ -45,10 +45,6 @@ export function getRules() {
   return rules
 }
 
-export function setRules(newRules: Rule[]) {
-  rules = newRules
-}
-
 export function setFunctionDictionary(dictionary: FunctionDictionary) {
   functionDictionary = dictionary
 }

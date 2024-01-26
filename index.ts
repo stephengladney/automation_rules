@@ -1,6 +1,7 @@
 import {
   addRule,
   executeRules,
+  getFunctionDictionary,
   getJsonStringFromRules,
   getRules,
   getRulesFromJsonString,
@@ -30,6 +31,7 @@ export default {
   addRule,
   condition,
   executeRulesWithTrigger,
+  getFunctionDictionary,
   getJsonStringFromRules,
   getRules,
   getRulesFromJsonString,
