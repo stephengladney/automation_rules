@@ -18,3 +18,12 @@ export type Rule = {
   callbackDescription?: string
   description: string
 }
+
+export type RuleJsonString = {
+  id: string | number
+  trigger: string
+  conditions: string
+  callback: string
+  callbackDescription: string
+  description: string
+}
