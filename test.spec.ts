@@ -1,10 +1,12 @@
 import { condition, isConditionMet } from "./functions/condition"
 import {
-  addRules,
+  addRule,
   executeAutomationRule,
   executeRules,
+  getJsonStringFromRules,
   getRules,
   getRulesByTrigger,
+  getRulesFromJsonString,
   removeAllRules,
   removeRuleById,
   rules,
@@ -154,7 +156,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       expect(rules[0].description).toBe("test rule")
     })
 
@@ -167,7 +169,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       expect(rules[0].id).toBe(1)
     })
   })
@@ -177,7 +179,8 @@ describe("rules", () => {
       const newCondition = condition<DataType>("name", "equals", true)
       const newRule = arule.rule("on test", [newCondition], () => {}, "rule 1")
       const newRule2 = arule.rule("on test", [newCondition], () => {}, "rule 2")
-      addRules(newRule, newRule2)
+      addRule(newRule)
+      addRule(newRule2)
       removeRuleById(1)
       expect(rules.length).toBe(1)
       expect(rules[0].id).toBe(2)
@@ -194,7 +197,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       removeAllRules()
       expect(rules.length).toBe(0)
     })
@@ -220,7 +223,7 @@ describe("rules", () => {
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
-      addRules(...rules)
+      rules.forEach((rule) => addRule(rule))
       expect(getRules()).toEqual([
         { ...newRule, id: 1 },
         { ...newRule2, id: 2 },
@@ -249,7 +252,7 @@ describe("rules", () => {
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
-      addRules(...rules)
+      rules.forEach((rule) => addRule(rule))
       expect(getRulesByTrigger("derp")).toEqual([{ ...newRule3, id: 3 }])
     })
   })
@@ -302,11 +305,48 @@ describe("rules", () => {
         "test rule"
       )
 
-      addRules(newRule, newRule2)
+      addRule(newRule)
+      addRule(newRule2)
+
       arule.executeRulesWithTrigger("on test", { name: true })
 
       expect(callback1).toHaveBeenCalled()
       expect(callback2).toHaveBeenCalled()
+    })
+  })
+
+  describe("saving rules", () => {
+    it("converts both ways correctly", () => {
+      const newCondition = condition<DataType>("name", "equals", true)
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const newRule = arule.rule(
+        "on 1st test",
+        [newCondition],
+        callback1,
+        "test callback 1",
+        "test rule 1"
+      )
+
+      const newRule2 = arule.rule(
+        "on 2nd test",
+        [newCondition],
+        callback2,
+        "test callback 2",
+        "test rule 2"
+      )
+
+      addRule(newRule)
+      addRule(newRule2)
+      arule.setFunctionDictionary({
+        "1stcallback": callback1,
+        "2ndcallback": callback2,
+      })
+      const before = arule.getRules()
+      const jsonString = getJsonStringFromRules()
+      const asRules = getRulesFromJsonString(jsonString)
+
+      expect(before).toEqual(asRules)
     })
   })
 })
