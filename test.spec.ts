@@ -1,6 +1,6 @@
 import { condition, isConditionMet } from "./functions/condition"
 import {
-  addRules,
+  addRule,
   executeAutomationRule,
   executeRules,
   getRules,
@@ -154,7 +154,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       expect(rules[0].description).toBe("test rule")
     })
 
@@ -167,7 +167,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       expect(rules[0].id).toBe(1)
     })
   })
@@ -177,7 +177,8 @@ describe("rules", () => {
       const newCondition = condition<DataType>("name", "equals", true)
       const newRule = arule.rule("on test", [newCondition], () => {}, "rule 1")
       const newRule2 = arule.rule("on test", [newCondition], () => {}, "rule 2")
-      addRules(newRule, newRule2)
+      addRule(newRule)
+      addRule(newRule2)
       removeRuleById(1)
       expect(rules.length).toBe(1)
       expect(rules[0].id).toBe(2)
@@ -194,7 +195,7 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      addRules(newRule)
+      addRule(newRule)
       removeAllRules()
       expect(rules.length).toBe(0)
     })
@@ -220,7 +221,7 @@ describe("rules", () => {
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
-      addRules(...rules)
+      rules.forEach((rule) => addRule(rule))
       expect(getRules()).toEqual([
         { ...newRule, id: 1 },
         { ...newRule2, id: 2 },
@@ -249,7 +250,7 @@ describe("rules", () => {
       const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
 
       const rules = [newRule, newRule2, newRule3]
-      addRules(...rules)
+      rules.forEach((rule) => addRule(rule))
       expect(getRulesByTrigger("derp")).toEqual([{ ...newRule3, id: 3 }])
     })
   })
@@ -302,7 +303,8 @@ describe("rules", () => {
         "test rule"
       )
 
-      addRules(newRule, newRule2)
+      addRule(newRule)
+      addRule(newRule2)
       arule.executeRulesWithTrigger("on test", { name: true })
 
       expect(callback1).toHaveBeenCalled()

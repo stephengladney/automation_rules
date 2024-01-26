@@ -1,5 +1,5 @@
 import {
-  addRules,
+  addRule,
   executeRules,
   getRules,
   getRulesByTrigger,
@@ -22,7 +22,7 @@ function executeRulesWithTrigger<DataType>(
 
 export default {
   addParam,
-  addRules,
+  addRule,
   condition,
   executeRulesWithTrigger,
   getRules,
