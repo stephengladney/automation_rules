@@ -1,4 +1,3 @@
-import * as operators from "../operators"
 import { callLogCallback, logOnFailure } from "./logging"
 import type { Condition, Operator, Rule } from "../types"
 
@@ -42,8 +41,6 @@ export function isConditionMet<DataType>(
       result = param != value
       break
     case "did equal":
-      console.log(previousParam1 + "==" + value)
-
       result = previousParam1 == value
       break
     case "did not equal":

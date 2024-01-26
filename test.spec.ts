@@ -3,8 +3,10 @@ import {
   addRule,
   executeAutomationRule,
   executeRules,
+  getJsonStringFromRules,
   getRules,
   getRulesByTrigger,
+  getRulesFromJsonString,
   removeAllRules,
   removeRuleById,
   rules,
@@ -305,10 +307,46 @@ describe("rules", () => {
 
       addRule(newRule)
       addRule(newRule2)
+
       arule.executeRulesWithTrigger("on test", { name: true })
 
       expect(callback1).toHaveBeenCalled()
       expect(callback2).toHaveBeenCalled()
+    })
+  })
+
+  describe("saving rules", () => {
+    it("converts both ways correctly", () => {
+      const newCondition = condition<DataType>("name", "equals", true)
+      const callback1 = jest.fn()
+      const callback2 = jest.fn()
+      const newRule = arule.rule(
+        "on 1st test",
+        [newCondition],
+        callback1,
+        "test callback 1",
+        "test rule 1"
+      )
+
+      const newRule2 = arule.rule(
+        "on 2nd test",
+        [newCondition],
+        callback2,
+        "test callback 2",
+        "test rule 2"
+      )
+
+      addRule(newRule)
+      addRule(newRule2)
+      arule.setFunctionDictionary({
+        "1stcallback": callback1,
+        "2ndcallback": callback2,
+      })
+      const before = arule.getRules()
+      const jsonString = getJsonStringFromRules()
+      const asRules = getRulesFromJsonString(jsonString)
+
+      expect(before).toEqual(asRules)
     })
   })
 })
