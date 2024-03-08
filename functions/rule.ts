@@ -1,6 +1,6 @@
 import { areAllConditionsMet } from "./condition"
 import { callLogCallback, logOnSuccess } from "./logging"
-import type { Condition, Rule, RuleJsonString, Trigger } from "../types"
+import type { Condition, Rule, Trigger } from "../types"
 
 type FunctionDictionary = { [key: string]: Function }
 
