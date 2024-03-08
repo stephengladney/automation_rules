@@ -1,7 +1,7 @@
 import { callLogCallback, logOnFailure } from "./logging"
 import type { Condition, Operator, Rule } from "../types"
 
-export function condition<T extends object>(
+export function createCondition<T extends object>(
   param: keyof T,
   operator: Operator,
   value: T[keyof T]

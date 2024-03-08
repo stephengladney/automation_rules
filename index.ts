@@ -1,19 +1,16 @@
 import {
-  addRule,
+  createRule,
   executeRules,
   getFunctionDictionary,
-  getJsonStringFromRules,
+  getJsonStringFromRule,
+  getRuleFromJsonString,
   getRules,
-  getRulesFromJsonString,
   getRulesByTrigger,
-  removeAllRules,
-  removeRuleById,
-  rule,
   setFunctionDictionary,
 } from "./functions/rule"
-import { condition } from "./functions/condition"
+import { createCondition } from "./functions/condition"
 import { setLogCallback, setLogging } from "./functions/logging"
-import { addParam, params } from "./functions/params"
+import { createParam, params } from "./functions/params"
 import { operators } from "./operators"
 import type { Condition, Operator, Rule, Trigger } from "./types"
 
@@ -27,20 +24,17 @@ function executeRulesWithTrigger<DataType>(
 export type { Condition, Operator, Rule, Trigger }
 
 export default {
-  addParam,
-  addRule,
-  condition,
+  createCondition,
+  createParam,
+  createRule,
   executeRulesWithTrigger,
   getFunctionDictionary,
-  getJsonStringFromRules,
+  getJsonStringFromRule,
+  getRuleFromJsonString,
   getRules,
-  getRulesFromJsonString,
   getRulesByTrigger,
   operators,
   params,
-  rule,
-  removeRuleById,
-  removeAllRules,
   setFunctionDictionary,
   setLogCallback,
   setLogging,

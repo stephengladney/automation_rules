@@ -8,18 +8,18 @@ export let rules: Rule[] = []
 export let ruleId = 1
 export let functionDictionary = {}
 
-export function rule<DataType>(
+export function createRule<DataType>(
   trigger: Trigger,
   conditions: [Condition, ...Condition[]],
   callback: (data: DataType) => unknown,
   callbackDescription?: string,
   description?: string,
-  id?: number
+  id?: number | string
 ) {
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }
-  return {
+  const rule = {
     id,
     callback,
     callbackDescription,
@@ -27,6 +27,14 @@ export function rule<DataType>(
     description,
     trigger,
   } as Rule
+
+  if (!rule.id) {
+    rule.id = ruleId
+    ruleId += 1
+  }
+
+  rules.push(rule)
+  return rule
 }
 
 export function executeAutomationRule<DataType>(
@@ -53,33 +61,52 @@ export function getFunctionDictionary(): FunctionDictionary {
   return functionDictionary
 }
 
-export function getJsonStringFromRules() {
-  const result: object[] = []
-  rules.forEach((rule) => {
-    result.push({
-      id: rule.id,
-      trigger: rule.trigger,
-      conditions: JSON.stringify(rule.conditions),
-      callback: getKeyWhereValueIs(functionDictionary, rule.callback),
-      callbackDescription: rule.callbackDescription,
-      description: rule.description,
-    })
+export function getJsonStringFromRule(rule: Rule) {
+  return JSON.stringify({
+    id: rule.id,
+    trigger: rule.trigger,
+    conditions: JSON.stringify(rule.conditions),
+    callback: getKeyWhereValueIs(functionDictionary, rule.callback),
+    callbackDescription: rule.callbackDescription,
+    description: rule.description,
   })
-  return JSON.stringify(result)
 }
 
-export function getRulesFromJsonString(jsonString: string) {
-  const rulesArray = JSON.parse(jsonString)
-  const newRulesArray = rulesArray.map((rule: RuleJsonString) => {
-    return {
-      ...rule,
-      conditions: JSON.parse(rule.conditions),
-      callback:
-        functionDictionary[rule.callback as keyof typeof functionDictionary],
-    }
-  })
-  return newRulesArray as Rule[]
+// export function getJsonStringFromRules() {
+//   return JSON.stringify(
+//     rules.map((rule) => ({
+//       id: rule.id,
+//       trigger: rule.trigger,
+//       conditions: JSON.stringify(rule.conditions),
+//       callback: getKeyWhereValueIs(functionDictionary, rule.callback),
+//       callbackDescription: rule.callbackDescription,
+//       description: rule.description,
+//     }))
+//   )
+// }
+
+export function getRuleFromJsonString(json: string) {
+  const rule = JSON.parse(json)
+  return {
+    ...rule,
+    conditions: JSON.parse(rule.conditions),
+    callback:
+      functionDictionary[rule.callback as keyof typeof functionDictionary],
+  }
 }
+
+// export function getRulesFromJsonString(jsonString: string) {
+//   const rulesArray = JSON.parse(jsonString)
+//   const newRulesArray = rulesArray.map((rule: RuleJsonString) => {
+//     return {
+//       ...rule,
+//       conditions: JSON.parse(rule.conditions),
+//       callback:
+//         functionDictionary[rule.callback as keyof typeof functionDictionary],
+//     }
+//   })
+//   return newRulesArray as Rule[]
+// }
 
 export function getRulesByTrigger(trigger: Trigger) {
   return rules.filter((rule) => rule.trigger === trigger)
@@ -87,11 +114,6 @@ export function getRulesByTrigger(trigger: Trigger) {
 
 export function executeRules(rules: Rule[], data: any) {
   rules.forEach((rule) => executeAutomationRule(rule, data))
-}
-
-export function addRule(newRule: Rule) {
-  rules.push({ ...newRule, id: newRule.id ?? ruleId })
-  if (!newRule.id) ruleId += 1
 }
 
 export function removeRuleById(id: number) {

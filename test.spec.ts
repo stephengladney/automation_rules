@@ -1,12 +1,11 @@
-import { condition, isConditionMet } from "./functions/condition"
+import { createCondition, isConditionMet } from "./functions/condition"
 import {
-  addRule,
   executeAutomationRule,
   executeRules,
-  getJsonStringFromRules,
+  getJsonStringFromRule,
   getRules,
   getRulesByTrigger,
-  getRulesFromJsonString,
+  getRuleFromJsonString,
   removeAllRules,
   removeRuleById,
   rules,
@@ -18,9 +17,9 @@ import { logCallback, setLogCallback } from "./functions/logging"
 type DataType = { name: boolean; age: number }
 
 describe("params", () => {
-  describe("addParam", () => {
+  describe("createParam", () => {
     it("adds a param", () => {
-      arule.addParam("derp")
+      arule.createParam("derp")
       expect(arule.params.includes("derp")).toBeTruthy()
     })
   })
@@ -50,8 +49,8 @@ describe("operators", () => {
 describe("conditions", () => {
   describe("condition", () => {
     it("returns a condition object", () => {
-      arule.addParam("name")
-      const newCondition = condition<DataType>("name", "equals", true)
+      arule.createParam("name")
+      const newCondition = createCondition<DataType>("name", "equals", true)
       expect(newCondition).toEqual({
         param: "name",
         operator: "equals",
@@ -62,23 +61,23 @@ describe("conditions", () => {
 
   describe("isConditionMet", () => {
     it("returns true if condition is met", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const data = { name: true }
-      const newCondition = condition<DataType>("name", "equals", true)
+      const newCondition = createCondition<DataType>("name", "equals", true)
       expect(isConditionMet(newCondition, data)).toBeTruthy()
     })
 
     it("returns false if condition is not met", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const data = { name: false }
-      const newCondition = condition<DataType>("name", "equals", true)
+      const newCondition = createCondition<DataType>("name", "equals", true)
       expect(isConditionMet(newCondition, data)).toBeFalsy()
     })
 
     it("returns true if previous value matches condition", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const data = { name: true, previous: { name: false } }
-      const newCondition = condition<DataType>("name", "did equal", false)
+      const newCondition = createCondition<DataType>("name", "did equal", false)
       expect(isConditionMet(newCondition, data)).toBeTruthy()
     })
   })
@@ -92,17 +91,18 @@ describe("rules", () => {
 
   describe("rule", () => {
     it("creates a new rule", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const callback = () => {}
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         callback,
         "test callback",
         "test rule"
       )
-      expect(newRule).toEqual({
+      expect(createRule).toEqual({
+        id: 1,
         callback,
         callbackDescription: "test callback",
         conditions: [newCondition],
@@ -114,10 +114,10 @@ describe("rules", () => {
 
   describe("executeAutomationRule", () => {
     it("calls the callback when conditions are met", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const callback = jest.fn()
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         callback,
@@ -125,15 +125,15 @@ describe("rules", () => {
         "test rule"
       )
 
-      executeAutomationRule(newRule, { name: true })
+      executeAutomationRule(createRule, { name: true })
       expect(callback).toHaveBeenCalled()
     })
 
     it("doesn't call the callback when conditions are not met", () => {
-      arule.addParam("name")
+      arule.createParam("name")
       const callback = jest.fn()
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         callback,
@@ -141,46 +141,52 @@ describe("rules", () => {
         "test rule"
       )
 
-      executeAutomationRule(newRule, { name: false })
+      executeAutomationRule(createRule, { name: false })
       expect(callback).not.toHaveBeenCalled()
     })
   })
 
   describe("addRules", () => {
     it("adds the new rules to the rules array", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      addRule(newRule)
       expect(rules[0].description).toBe("test rule")
     })
 
     it("adds an id to a new rule", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      addRule(newRule)
       expect(rules[0].id).toBe(1)
     })
   })
 
   describe("removeRuleById", () => {
     it("removes the rule with the specified id", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule("on test", [newCondition], () => {}, "rule 1")
-      const newRule2 = arule.rule("on test", [newCondition], () => {}, "rule 2")
-      addRule(newRule)
-      addRule(newRule2)
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
+        "on test",
+        [newCondition],
+        () => {},
+        "rule 1"
+      )
+      const createRule2 = arule.createRule(
+        "on test",
+        [newCondition],
+        () => {},
+        "rule 2"
+      )
       removeRuleById(1)
       expect(rules.length).toBe(1)
       expect(rules[0].id).toBe(2)
@@ -189,15 +195,14 @@ describe("rules", () => {
 
   describe("removeAllRules", () => {
     it("removes all rules from the rules array", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      addRule(newRule)
       removeAllRules()
       expect(rules.length).toBe(0)
     })
@@ -205,64 +210,70 @@ describe("rules", () => {
 
   describe("getRules", () => {
     it("returns all rules", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      const newRule2 = arule.rule(
+      const createRule2 = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
+      const createRule3 = arule.createRule(
+        "derp",
+        [newCondition],
+        () => {},
+        "test rule"
+      )
 
-      const rules = [newRule, newRule2, newRule3]
-      rules.forEach((rule) => addRule(rule))
       expect(getRules()).toEqual([
-        { ...newRule, id: 1 },
-        { ...newRule2, id: 2 },
-        { ...newRule3, id: 3 },
+        { ...createRule, id: 1 },
+        { ...createRule2, id: 2 },
+        { ...createRule3, id: 3 },
       ])
     })
   })
 
   describe("getRulesByTrigger", () => {
     it("returns all rules of a specific trigger", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
-      const newRule = arule.rule(
+      const newCondition = createCondition<DataType>("name", "equals", true)
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      const newRule2 = arule.rule(
+      const createRule2 = arule.createRule(
         "on test",
         [newCondition],
         () => {},
         "test callback",
         "test rule"
       )
-      const newRule3 = arule.rule("derp", [newCondition], () => {}, "test rule")
+      const createRule3 = arule.createRule(
+        "derp",
+        [newCondition],
+        () => {},
+        "test rule"
+      )
 
-      const rules = [newRule, newRule2, newRule3]
-      rules.forEach((rule) => addRule(rule))
-      expect(getRulesByTrigger("derp")).toEqual([{ ...newRule3, id: 3 }])
+      expect(getRulesByTrigger("derp")).toEqual([{ ...createRule3, id: 3 }])
     })
   })
 
   describe("executeRules", () => {
     it("executes all of the provided rules", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
+      const newCondition = createCondition<DataType>("name", "equals", true)
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      const newRule = arule.rule(
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         callback1,
@@ -270,7 +281,7 @@ describe("rules", () => {
         "test rule"
       )
 
-      const newRule2 = arule.rule(
+      const createRule2 = arule.createRule(
         "on test",
         [newCondition],
         callback2,
@@ -278,7 +289,7 @@ describe("rules", () => {
         "test rule"
       )
 
-      executeRules([newRule, newRule2], { name: true })
+      executeRules([createRule, createRule2], { name: true })
       expect(callback1).toHaveBeenCalled()
       expect(callback2).toHaveBeenCalled()
     })
@@ -286,10 +297,10 @@ describe("rules", () => {
 
   describe("executeRulesWithTrigger", () => {
     it("executes all rules with the provided trigger", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
+      const newCondition = createCondition<DataType>("name", "equals", true)
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      const newRule = arule.rule(
+      const createRule = arule.createRule(
         "on test",
         [newCondition],
         callback1,
@@ -297,16 +308,13 @@ describe("rules", () => {
         "test rule"
       )
 
-      const newRule2 = arule.rule(
+      const createRule2 = arule.createRule(
         "on test",
         [newCondition],
         callback2,
         "test callback",
         "test rule"
       )
-
-      addRule(newRule)
-      addRule(newRule2)
 
       arule.executeRulesWithTrigger("on test", { name: true })
 
@@ -317,10 +325,10 @@ describe("rules", () => {
 
   describe("saving rules", () => {
     it("converts both ways correctly", () => {
-      const newCondition = condition<DataType>("name", "equals", true)
+      const newCondition = createCondition<DataType>("name", "equals", true)
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      const newRule = arule.rule(
+      const rule1 = arule.createRule(
         "on 1st test",
         [newCondition],
         callback1,
@@ -328,7 +336,7 @@ describe("rules", () => {
         "test rule 1"
       )
 
-      const newRule2 = arule.rule(
+      const rule2 = arule.createRule(
         "on 2nd test",
         [newCondition],
         callback2,
@@ -336,17 +344,18 @@ describe("rules", () => {
         "test rule 2"
       )
 
-      addRule(newRule)
-      addRule(newRule2)
       arule.setFunctionDictionary({
         "1stcallback": callback1,
         "2ndcallback": callback2,
       })
       const before = arule.getRules()
-      const jsonString = getJsonStringFromRules()
-      const asRules = getRulesFromJsonString(jsonString)
+      const jsonString = getJsonStringFromRule(rule1)
+      const jsonString2 = getJsonStringFromRule(rule2)
+      const rule1Returned = getRuleFromJsonString(jsonString)
+      const rule2Returned = getRuleFromJsonString(jsonString2)
+      const after = [rule1Returned, rule2Returned]
 
-      expect(before).toEqual(asRules)
+      expect(before).toEqual(after)
     })
   })
 })
@@ -362,10 +371,10 @@ describe("logging", () => {
     const dummyLoggingCallback = jest.fn()
     arule.setLogging({ onSuccess: true })
     setLogCallback(dummyLoggingCallback)
-    arule.addParam("name")
+    arule.createParam("name")
     const callback = jest.fn()
-    const newCondition = condition<DataType>("name", "equals", true)
-    const newRule = arule.rule(
+    const newCondition = createCondition<DataType>("name", "equals", true)
+    const createRule = arule.createRule(
       "on test",
       [newCondition],
       callback,
@@ -373,9 +382,9 @@ describe("logging", () => {
       "test rule"
     )
 
-    executeAutomationRule(newRule, { name: true })
+    executeAutomationRule(createRule, { name: true })
     expect(dummyLoggingCallback).toHaveBeenCalledWith(
-      newRule,
+      createRule,
       true,
       {
         name: true,
