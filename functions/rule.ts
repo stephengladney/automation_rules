@@ -72,19 +72,6 @@ export function getJsonStringFromRule(rule: Rule) {
   })
 }
 
-// export function getJsonStringFromRules() {
-//   return JSON.stringify(
-//     rules.map((rule) => ({
-//       id: rule.id,
-//       trigger: rule.trigger,
-//       conditions: JSON.stringify(rule.conditions),
-//       callback: getKeyWhereValueIs(functionDictionary, rule.callback),
-//       callbackDescription: rule.callbackDescription,
-//       description: rule.description,
-//     }))
-//   )
-// }
-
 export function getRuleFromJsonString(json: string) {
   const rule = JSON.parse(json)
   return {
@@ -94,19 +81,6 @@ export function getRuleFromJsonString(json: string) {
       functionDictionary[rule.callback as keyof typeof functionDictionary],
   }
 }
-
-// export function getRulesFromJsonString(jsonString: string) {
-//   const rulesArray = JSON.parse(jsonString)
-//   const newRulesArray = rulesArray.map((rule: RuleJsonString) => {
-//     return {
-//       ...rule,
-//       conditions: JSON.parse(rule.conditions),
-//       callback:
-//         functionDictionary[rule.callback as keyof typeof functionDictionary],
-//     }
-//   })
-//   return newRulesArray as Rule[]
-// }
 
 export function getRulesByTrigger(trigger: Trigger) {
   return rules.filter((rule) => rule.trigger === trigger)
