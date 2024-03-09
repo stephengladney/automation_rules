@@ -1,8 +1,8 @@
 import { callLogCallback, logOnFailure } from "./logging"
-import type { Condition, Operator, Rule } from "../types"
+import type { Condition, Operator, Param, Rule } from "../types"
 
 export function createCondition<T extends object>(
-  param: keyof T,
+  param: Param,
   operator: Operator,
   value: T[keyof T]
 ) {
@@ -27,9 +27,9 @@ export function isConditionMet<DataType>(
     operator,
     value,
   }: { operator: Operator; value: DataType[keyof DataType] } = condition
-  const param = data[condition.param as DataTypeKey]
+  const param = data[condition.param.key as DataTypeKey]
   const previousParam1 = data.previous
-    ? data.previous[condition.param as DataTypeKey]
+    ? data.previous[condition.param.key as DataTypeKey]
     : null
   let result
 

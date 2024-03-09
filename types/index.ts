@@ -1,12 +1,12 @@
 import { operators } from "../operators"
 
+export type Trigger = { schema: string; event: string }
+export type Param = { schema: string; key: string }
 export type Operator = (typeof operators)[number]
-
-export type Trigger = string
 
 export type Condition = {
   operator: Operator
-  param: string
+  param: Param
   value: any
 }
 

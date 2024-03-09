@@ -8,7 +8,7 @@ To install the package, run `npm install automation-rules` in your terminal
 
 Add `import arule from "automation-rules"` in your code wherever you wish to use the library. (Note: You can use whatever alias you'd like.)
 
-Rules are composed of four parts: Trigger, Conditions, Callback and Description. Below is documentation of each of these as well as additional functions.
+Rules are composed of three parts: Trigger, Conditions and Callbacks. Below is documentation of each of these as well as additional functions.
 
 Additionally, there is an open-source sample project available at: https://github.com/stephengladney/ar-example
 
@@ -17,10 +17,11 @@ Additionally, there is an open-source sample project available at: https://githu
 A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around. It's recommended to write these in a way that's easy for your users to understand.
 
 ```typescript
-const myTriggers = {
-  NEW_USER_CREATED: "When a new user is created",
-  ORDER_SUBMITTED: "When an order is submitted",
-}
+const myTriggers = [
+  "When a user is created",
+  "When a message is received",
+  "When an order is submitted",
+]
 ```
 
 ### Params
@@ -243,31 +244,6 @@ This function will convert a JSON string retrieved from your database back to a 
 
 ### Additional functions
 
-#### getRules ()
-
-This method will return an array of all currently active rules.
-
-Example:
-
-```typescript
-arule.getRules()
-/*=> [
-  { trigger: "When thing happens", 
-    conditions: [arule.condition("key", "equals", "value")],
-    callback: (data) => { console.log(data) }
-    description: "Log the data when thing happens"
-  },
-  { trigger: "When other thing happens", 
-    conditions: [arule.condition("key", "equals", "value")],
-    callback: (data) => { alert(data.key) }
-    description: "Alert the value of the key when other thing happens"
-  }
-]
-*/
-```
-
-<hr>
-
 #### getRulesByTrigger ()
 
 ```typescript
@@ -279,10 +255,11 @@ This method will return an array of all currently active rules for a specific tr
 Example:
 
 ```typescript
-arule.getRulesByTrigger("when thing happens")
+arule.getRulesByTrigger("When a user is created")
 /*=> [
-  { trigger: "When thing happens", 
-    conditions: [arule.condition("key", "equals", "value")],
+  { id: 1
+    trigger: "When a user is created", 
+    conditions: {param: "age", operator: "is greater than or equal to", value: 21)],
     callback: (data) => { console.log(data) }
     description: "Log the data when thing happens"
   }
