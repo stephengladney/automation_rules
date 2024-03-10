@@ -1,19 +1,27 @@
 import {
+  getTriggerBySchemaAndEvent,
+  getTriggerEventsBySchema,
+  getTriggerSchemas,
+  getTriggersBySchema,
+} from "./functions/trigger"
+import {
+  getParamBySchemaAndKey,
+  getParamKeysBySchema,
+  getParamsBySchema,
+  getParamSchemas,
+} from "./functions/param"
+import { operators } from "./operators"
+import { createCondition } from "./functions/condition"
+import {
   createRule,
   executeRules,
-  getFunctionDictionary,
-  getJsonStringFromRule,
-  getRuleFromJsonString,
-  getRules,
+  getAllRules,
   getRulesByTrigger,
-  setFunctionDictionary,
 } from "./functions/rule"
-import { createCondition } from "./functions/condition"
-import { setLogCallback, setLogging } from "./functions/logging"
-import { createParams, getParamsBySchema } from "./functions/param"
-import { getTriggersBySchema, createTriggers } from "./functions/trigger"
-import { operators } from "./operators"
-import type { Condition, Operator, Rule, Trigger } from "./types"
+import { getLogCallback, setLogCallback, setLogging } from "./functions/log"
+import { getJsonStringFromRule, getRuleFromJsonString } from "./functions/json"
+
+import type { Condition, Operator, Rule, SafeTrigger, Trigger } from "./types"
 
 function executeRulesWithTrigger<DataType>(
   trigger: Trigger,
@@ -22,23 +30,38 @@ function executeRulesWithTrigger<DataType>(
   executeRules(getRulesByTrigger(trigger), data)
 }
 
-export type { Condition, Operator, Rule }
+export type { Condition, Operator, Rule, Trigger }
 
 export default {
-  createCondition,
-  createParams,
-  createRule,
-  createTriggers,
-  executeRulesWithTrigger,
-  getFunctionDictionary,
-  getJsonStringFromRule,
-  getParamsBySchema,
-  getRuleFromJsonString,
-  getRules,
-  getRulesByTrigger,
-  getTriggersBySchema,
+  conditions: {
+    create: createCondition,
+  },
+  json: {
+    getJsonStringFromRule,
+    getRuleFromJsonString,
+  },
+  log: {
+    getLogCallback,
+    setLogCallback,
+    setLogging,
+  },
   operators,
-  setFunctionDictionary,
-  setLogCallback,
-  setLogging,
+  params: {
+    getAllBySchema: getParamsBySchema,
+    getBySchemaAndKey: getParamBySchemaAndKey,
+    keys: { getAllBySchema: getParamKeysBySchema },
+    schemas: { getAll: getParamSchemas },
+  },
+  rules: {
+    create: createRule,
+    executeAllByTrigger: executeRulesWithTrigger,
+    getAll: getAllRules,
+    getAllByTrigger: getRulesByTrigger,
+  },
+  triggers: {
+    events: { getAllBySchema: getTriggerEventsBySchema },
+    schemas: { getAll: getTriggerSchemas },
+    getAllBySchema: getTriggersBySchema,
+    getBySchemaAndEvent: getTriggerBySchemaAndEvent,
+  },
 }

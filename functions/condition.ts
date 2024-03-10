@@ -1,10 +1,10 @@
-import { callLogCallback, logOnFailure } from "./logging"
+import { callLogCallback, logOnFailure } from "./log"
 import type { Condition, Operator, Param, Rule } from "../types"
 
-export function createCondition<T extends object>(
+export function createCondition(
   param: Param,
   operator: Operator,
-  value: T[keyof T]
+  value: unknown
 ) {
   return {
     operator,

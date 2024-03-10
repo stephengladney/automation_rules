@@ -14,15 +14,18 @@ Additionally, there is an open-source sample project available at: https://githu
 
 ### Triggers
 
-A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around. It's recommended to write these in a way that's easy for your users to understand.
+A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, hard-code these as a readonly object with keys of the types of the schemas you wish to evaluate and values of the events.
 
 ```typescript
-const myTriggers = [
-  "When a user is created",
-  "When a message is received",
-  "When an order is submitted",
-]
+const triggers = {
+  user: ["created", "deleted", "updated"],
+  team: ["created", "deleted", "updated", "suspened", "redeemed"],
+} as const
 ```
+
+You can then use these built-in functions to access type safe triggers in your code...
+
+####
 
 ### Params
 

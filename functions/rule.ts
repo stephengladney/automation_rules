@@ -1,8 +1,6 @@
 import { areAllConditionsMet } from "./condition"
-import { callLogCallback, logOnSuccess } from "./logging"
+import { callLogCallback, logOnSuccess } from "./log"
 import type { Condition, Rule, Trigger } from "../types"
-
-type FunctionDictionary = { [key: string]: Function }
 
 export let rules: Rule[] = []
 export let ruleId = 1
@@ -49,37 +47,8 @@ export function executeAutomationRule<DataType>(
   }
 }
 
-export function getRules() {
+export function getAllRules() {
   return rules
-}
-
-export function setFunctionDictionary(dictionary: FunctionDictionary) {
-  functionDictionary = dictionary
-}
-
-export function getFunctionDictionary(): FunctionDictionary {
-  return functionDictionary
-}
-
-export function getJsonStringFromRule(rule: Rule) {
-  return JSON.stringify({
-    id: rule.id,
-    trigger: rule.trigger,
-    conditions: JSON.stringify(rule.conditions),
-    callback: getKeyWhereValueIs(functionDictionary, rule.callback),
-    callbackDescription: rule.callbackDescription,
-    description: rule.description,
-  })
-}
-
-export function getRuleFromJsonString(json: string) {
-  const rule = JSON.parse(json)
-  return {
-    ...rule,
-    conditions: JSON.parse(rule.conditions),
-    callback:
-      functionDictionary[rule.callback as keyof typeof functionDictionary],
-  }
 }
 
 export function getRulesByTrigger(trigger: Trigger) {
@@ -100,14 +69,4 @@ export function removeAllRules() {
 
 export function setRuleId(n: number) {
   ruleId = n
-}
-
-function getKeyWhereValueIs<T extends object>(
-  obj: T,
-  value: any
-): string | null {
-  for (let key in obj) {
-    if (obj[key] === value) return key
-  }
-  return null
 }
