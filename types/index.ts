@@ -1,12 +1,21 @@
 import { operators } from "../operators"
 
-export type Operator = (typeof operators)[number]
+export type TriggersMap = { readonly [key: string]: readonly string[] }
+export type Trigger = { schema: string; event: string }
 
-export type Trigger = string
+export type ParamsMap = { readonly [key: string]: readonly string[] }
+export type Param = { schema: string; key: string }
+
+export type SafeTrigger<
+  T extends Record<string, readonly string[]>,
+  U extends keyof T
+> = T[U][number]
+
+export type Operator = (typeof operators)[number]
 
 export type Condition = {
   operator: Operator
-  param: string
+  param: Param
   value: any
 }
 
@@ -16,14 +25,5 @@ export type Rule = {
   conditions: Condition[]
   callback: Function
   callbackDescription?: string
-  description: string
-}
-
-export type RuleJsonString = {
-  id: string | number
-  trigger: string
-  conditions: string
-  callback: string
-  callbackDescription: string
   description: string
 }

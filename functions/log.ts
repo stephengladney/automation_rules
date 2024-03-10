@@ -21,7 +21,7 @@ type Callback = (
   failedCondition?: Condition
 ) => any
 
-export let logCallback: Callback = (params) => {}
+let logCallback: Callback = (params) => {}
 
 export function callLogCallback(
   rule: Rule,
@@ -34,4 +34,8 @@ export function callLogCallback(
 
 export function setLogCallback(callback: Callback) {
   logCallback = callback
+}
+
+export function getLogCallback() {
+  return logCallback
 }
