@@ -152,7 +152,7 @@ describe("rules", () => {
   describe("executeAutomationRule", () => {
     it("calls the callback when conditions are met", () => {
       const callback = jest.fn()
-      const newCondition = createCondition(newParam, "equals", true)
+      const newCondition = createCondition(newParam, "equals", "Stephen")
       const newRule = automationrules.rules.create(
         newTrigger,
         [newCondition],
@@ -160,6 +160,8 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
+      executeAutomationRule(newRule, { name: "Stephen" })
+      expect(callback).toHaveBeenCalled()
     })
 
     it("doesn't call the callback when conditions are not met", () => {
@@ -282,8 +284,8 @@ describe("rules", () => {
         "test callback",
         "test rule"
       )
-      automationrules.rules.create(
-        { schema: "person", event: "derp2" },
+      const newRule2 = automationrules.rules.create(
+        newTrigger,
         [newCondition],
         () => {},
         "test callback",
@@ -296,7 +298,10 @@ describe("rules", () => {
         "test rule"
       )
 
-      expect(getRulesByTrigger(newTrigger)).toEqual([{ ...newRule3, id: 3 }])
+      expect(automationrules.rules.getAllByTrigger(newTrigger)).toEqual([
+        { ...newRule2, id: 2 },
+        { ...newRule3, id: 3 },
+      ])
     })
   })
 
@@ -325,7 +330,9 @@ describe("rules", () => {
         "test rule"
       )
 
-      executeRules([newRule, newRule2], { name: true })
+      const allRules = automationrules.rules.getAllByTrigger(newTrigger)
+
+      executeRules(allRules, { name: true })
       expect(callback1).toHaveBeenCalled()
       expect(callback2).toHaveBeenCalled()
     })

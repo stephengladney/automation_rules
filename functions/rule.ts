@@ -17,7 +17,7 @@ export function createRule<DataType>(
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }
-  const rule = {
+  const newRule = {
     id,
     callback,
     callbackDescription,
@@ -26,13 +26,14 @@ export function createRule<DataType>(
     trigger,
   } as Rule
 
-  if (!rule.id) {
-    rule.id = ruleId
+  rules.push({ ...newRule, id: newRule.id ?? ruleId })
+
+  if (!newRule.id) {
+    newRule.id = ruleId
     ruleId += 1
   }
 
-  rules.push(rule)
-  return rule
+  return newRule
 }
 
 export function executeAutomationRule<DataType>(
@@ -52,7 +53,9 @@ export function getAllRules() {
 }
 
 export function getRulesByTrigger(trigger: Trigger) {
-  return rules.filter((rule) => rule.trigger === trigger)
+  return rules.filter((rule) => {
+    return JSON.stringify(rule.trigger) === JSON.stringify(trigger)
+  })
 }
 
 export function executeRules(rules: Rule[], data: any) {
