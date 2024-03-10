@@ -1,78 +1,69 @@
 # automation-rules
 
-Automation rules allow your app's users to created automated workflows when events occur and certain conditions are met. For example, say your app processes transactions for a store and the store owner wants to offer a 10% discount on purchases over $100. The owner can create an automation rule to automatically apply the discount when an order over $100 is placed.
+Automation rules allow your app's users to created automated workflows when certain events occur in the application and particular conditions are met. For example, say your app processes transactions for a store and the store owner wants to offer a 10% discount on purchases over $100. The owner can create an automation rule to automatically apply the discount when an order over $100 is placed.
 
 ## Getting Started
 
 To install the package, run `npm install automation-rules` in your terminal
 
-Add `import arule from "automation-rules"` in your code wherever you wish to use the library. (Note: You can use whatever alias you'd like.)
+Add `import automationrules from "automation-rules"` in your code wherever you wish to use the library. _(Note: You can use whatever alias you'd like.)_
 
-Rules are composed of three parts: Trigger, Conditions and Callbacks. Below is documentation of each of these as well as additional functions.
+#### Rules are composed of three main parts:
 
-Additionally, there is an open-source sample project available at: https://github.com/stephengladney/ar-example
+- Trigger
+- Conditions
+- Callbacks
 
-### Triggers
+## Triggers
 
-A `Trigger` is a string that describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, hard-code these as a readonly object with keys of the types of the schemas you wish to evaluate and values of the events.
+A `Trigger` describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, you must hard-code your triggers as a variable in your code. The variable should be a readonly object with models you wish to evaluate as keys and arrays of the events as values.
+
+Example:
+
+- You have an e-commerce app that lets local merchant sell their producst online.
+- The app has two models: **orders** and **customers**.
+- Allow merchants to create automations when orders are created and/or when an order is paid.
+- Allow merchants to create automations when new customers are created.
 
 ```typescript
 const triggers = {
-  user: ["created", "deleted", "updated"],
-  team: ["created", "deleted", "updated", "suspened", "redeemed"],
+  order: ["created", "paid"],
+  customers: ["created"],
 } as const
 ```
 
-You can then use these built-in functions to access type safe triggers in your code...
+_IMPORTANT: You must define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of TypeScript's autocomplete when using triggers._
 
-####
+_NOTE: Both the model and event names here are just strings for your reference. It's not required that they match actual model or event names elsewhere in your code._
+
+<hr>
+
+## Conditions
+
+A `Condition` verifies whether or not a set of data meets certain criteria. Conditions are composed of three parts:
+
+- Param
+- Operator
+- Value
 
 ### Params
 
-The library works by reading object key/value pairs and evaluating whether or not specific conditions are met regarding the values. A `Param` is a key name (passed as a string) that you would like to evaluate the corresponding value of in automation rules.
+A `Param` is a key name of a particular data type that you would like to evaluate in an automation rule. Just like Triggers, you must hard-code your params as a variable in your code. The variable should be a readonly object with models you wish to evaluate as keys and arrays of the model's key names as values.
 
 Example:
 
-You want to evaluate the total price of an order. Your Order object has a key named `total`.
+- Allow merchants to evaluate the subtotal, tip, tax, and/or total price of an order.
+- Your **Order** model has keys named **subtotal**, **tip**, **tax** and **total**.
 
 ```typescript
-type Order = { items: Item[]; subtotal: number; tax: number; total: number }
-
-arule.createParam("total")
+export const params = {
+  order: ["subtotal", "tip", "tax", "total"],
+} as const
 ```
 
-<hr>
+_IMPORTANT: You must define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of TypeScript's autocomplete when using params._
 
-### Operators
-
-Operators are used to evaluate the value of something in an automation rules. These are static and provided by the library. To access, use `arule.operators`. For convenience of rendering in your UI, these operators resolve to human-readable strings. The library also includes an `Operator` type which you can use for taking advantage of autocomplete when writing code.
-
-Example:
-
-```typescript
-const operators = [
-  "equals",
-  "does not equal",
-  "did equal",
-  "did not equal",
-  "includes",
-  "does not include",
-  "has changed",
-  "has not changed",
-  "is greater than",
-  "is greater than or equal to",
-  "is less than",
-  "is less than or equal to",
-  "is falsy",
-  "is truthy",
-]
-```
-
-<hr>
-
-### Conditions
-
-Conditions allow your users to verify that a specific scenario has been met. The `condition` function provides an easy way to get a typesafe condition.
+_NOTE: The model names here are just strings for your reference. However, the key names must match the **actual** key names on the related model._
 
 ```typescript
 function createCondition<T extends object>(
@@ -96,11 +87,44 @@ const condition = arule.createCondition(
 )
 ```
 
-<hr>
+### Operators
 
-### Rules
+Operators are used to evaluate the value of something in an automation rules. These are static and provided by the library. To access, use `automationrules.operators`. For convenience of rendering in your UI, these operators resolve to human-readable strings. The library also includes an `Operator` type which you can use for taking advantage of autocomplete when writing code.
 
-Rules combine triggers, conditions with a callback function to execute when the conditions are met. You can optionally add a description or ID to the rule. Note: If no ID is passed, the library will assign an integer as the ID (auto-incremented).
+Example:
+
+```typescript
+automationrules.operators
+//=>
+[
+  "equals",
+  "does not equal",
+  "did equal",
+  "did not equal",
+  "includes",
+  "does not include",
+  "has changed",
+  "has not changed",
+  "is greater than",
+  "is greater than or equal to",
+  "is less than",
+  "is less than or equal to",
+  "is falsy",
+  "is truthy",
+]
+```
+
+## Rules
+
+A Rules combines a trigger and condition(s) with a callback function to execute when an event occurs and the condition(s) are met. Rules are composed of three required parts and two optional parts:
+
+- Trigger
+- Condition[]
+- Callback
+- description _(optional)_
+- id _(optional)_
+
+_Note: If no ID is passed, the library will assign an integer as the ID. (auto-incremented)_
 
 ```typescript
 function createRule(
