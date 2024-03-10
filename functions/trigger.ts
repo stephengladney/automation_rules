@@ -1,29 +1,29 @@
 import type { Trigger, TriggersMap } from "../types"
 
-export function getTriggerSchemas(triggers: TriggersMap) {
+export function getTriggerModels(triggers: TriggersMap) {
   return Object.keys(triggers)
 }
 
-export function getTriggersBySchema<
+export function getTriggersByModel<
   T extends Record<string, readonly string[]>,
   K extends keyof T
->(triggers: T, schema: K) {
-  return triggers[schema].map((event) => ({ schema, event })) as Trigger[]
+>(triggers: T, model: K) {
+  return triggers[model].map((event) => ({ model, event })) as Trigger[]
 }
 
-export function getTriggerEventsBySchema<
+export function getTriggerEventsByModel<
   T extends Record<string, readonly string[]>,
   K extends keyof T
->(triggers: T, schema: K) {
-  return triggers[schema]
+>(triggers: T, model: K) {
+  return triggers[model]
 }
 
-export function getTriggerBySchemaAndEvent<
+export function getTriggerByModelAndEvent<
   T extends Record<string, readonly string[]>,
   U extends keyof T
->(triggers: T, schema: U, event: T[U][number]) {
+>(triggers: T, model: U, event: T[U][number]) {
   return {
-    schema,
+    model,
     event,
   } as Trigger
 }

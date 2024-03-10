@@ -1,10 +1,10 @@
 import { operators } from "../operators"
 
 export type TriggersMap = { readonly [key: string]: readonly string[] }
-export type Trigger = { schema: string; event: string }
+export type Trigger = { model: string; event: string }
 
 export type ParamsMap = { readonly [key: string]: readonly string[] }
-export type Param = { schema: string; key: string }
+export type Param = { model: string; key: string }
 
 export type SafeTrigger<
   T extends Record<string, readonly string[]>,

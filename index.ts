@@ -1,14 +1,14 @@
 import {
-  getTriggerBySchemaAndEvent,
-  getTriggerEventsBySchema,
-  getTriggerSchemas,
-  getTriggersBySchema,
+  getTriggerByModelAndEvent,
+  getTriggerEventsByModel,
+  getTriggerModels,
+  getTriggersByModel,
 } from "./functions/trigger"
 import {
-  getParamBySchemaAndKey,
-  getParamKeysBySchema,
-  getParamsBySchema,
-  getParamSchemas,
+  getParamByModelAndKey,
+  getParamKeysByModel,
+  getParamsByModel,
+  getParamModels,
 } from "./functions/param"
 import { operators } from "./operators"
 import { createCondition } from "./functions/condition"
@@ -47,10 +47,10 @@ export default {
   },
   operators,
   params: {
-    getAllBySchema: getParamsBySchema,
-    getBySchemaAndKey: getParamBySchemaAndKey,
-    keys: { getAllBySchema: getParamKeysBySchema },
-    schemas: { getAll: getParamSchemas },
+    getAllByModel: getParamsByModel,
+    getByModelAndKey: getParamByModelAndKey,
+    keys: { getAllByModel: getParamKeysByModel },
+    models: { getAll: getParamModels },
   },
   rules: {
     create: createRule,
@@ -59,9 +59,9 @@ export default {
     getAllByTrigger: getRulesByTrigger,
   },
   triggers: {
-    events: { getAllBySchema: getTriggerEventsBySchema },
-    schemas: { getAll: getTriggerSchemas },
-    getAllBySchema: getTriggersBySchema,
-    getBySchemaAndEvent: getTriggerBySchemaAndEvent,
+    events: { getAllByModel: getTriggerEventsByModel },
+    models: { getAll: getTriggerModels },
+    getAllByModel: getTriggersByModel,
+    getByModelAndEvent: getTriggerByModelAndEvent,
   },
 }

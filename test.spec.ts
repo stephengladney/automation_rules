@@ -10,59 +10,102 @@ import {
 } from "./functions/rule"
 import automationrules from "./index"
 
-type DataType = { name: boolean; age: number }
-
 const triggers = {
   person: ["When a person is created", "When a person is deleted"],
+  team: ["When a team is created"],
 } as const
 
-const params = { person: ["name", "age", "sex"] } as const
+const params = { person: ["name", "age", "sex"], team: ["name"] } as const
 
-const newParam = automationrules.params.getBySchemaAndKey(
+const newParam = automationrules.params.getByModelAndKey(
   params,
   "person",
   "name"
 )
 
-const newTrigger = automationrules.triggers.getBySchemaAndEvent(
+const newTrigger = automationrules.triggers.getByModelAndEvent(
   triggers,
   "person",
   "When a person is created"
 )
 
-describe("params", () => {
-  describe("getAllBySchema", () => {
-    it("adds a param", () => {
-      expect(automationrules.params.getAllBySchema(params, "person")).toEqual([
-        { schema: "person", key: "name" },
-        { schema: "person", key: "age" },
-        { schema: "person", key: "sex" },
+describe("triggers", () => {
+  describe("triggers.getAllByModel", () => {
+    it("returns all triggers with a specific model", () => {
+      expect(
+        automationrules.triggers.getAllByModel(triggers, "person")
+      ).toEqual([
+        { model: "person", event: "When a person is created" },
+        { model: "person", event: "When a person is deleted" },
       ])
     })
   })
 
-  describe("getKeysBySchema", () => {
-    it("returns the correct keys", () => {
+  describe("triggers.getByModelAndEvent", () => {
+    it("returns the correct trigger", () => {
       expect(
-        automationrules.params.keys.getAllBySchema(params, "person")
-      ).toEqual(["name", "age", "sex"])
+        automationrules.triggers.getByModelAndEvent(params, "person", "name")
+      ).toEqual({
+        model: "person",
+        event: "name",
+      })
     })
   })
 
-  describe("getBySchemaAndKey", () => {
+  describe("triggers.events.getAllByModel", () => {
+    it("returns the correct events", () => {
+      expect(
+        automationrules.triggers.events.getAllByModel(triggers, "person")
+      ).toEqual(["When a person is created", "When a person is deleted"])
+    })
+  })
+
+  describe("triggers.models.getAll", () => {
+    it("return", () => {
+      expect(automationrules.triggers.models.getAll(triggers)).toEqual([
+        "person",
+        "team",
+      ])
+    })
+  })
+})
+
+describe("params", () => {
+  describe("params.getAllByModel", () => {
+    it("adds a param", () => {
+      expect(automationrules.params.getAllByModel(params, "person")).toEqual([
+        { model: "person", key: "name" },
+        { model: "person", key: "age" },
+        { model: "person", key: "sex" },
+      ])
+    })
+  })
+
+  describe("params.getByModelAndKey", () => {
     it("returns the correct param", () => {
       expect(
-        automationrules.params.getBySchemaAndKey(params, "person", "name")
+        automationrules.params.getByModelAndKey(params, "person", "name")
       ).toEqual({
-        schema: "person",
+        model: "person",
         key: "name",
       })
     })
   })
 
-  describe("getKeysBySchema", () => {
+  describe("params.keys.getAllByModel", () => {
+    it("returns the correct keys", () => {
+      expect(
+        automationrules.params.keys.getAllByModel(params, "person")
+      ).toEqual(["name", "age", "sex"])
+    })
+  })
+
+  describe("params.keys.getAll", () => {
     it("return", () => {
-      expect(automationrules.params.schemas.getAll(params)).toEqual(["person"])
+      expect(automationrules.params.models.getAll(params)).toEqual([
+        "person",
+        "team",
+      ])
     })
   })
 })
@@ -278,7 +321,7 @@ describe("rules", () => {
     it("returns all rules of a specific trigger", () => {
       const newCondition = createCondition(newParam, "equals", true)
       automationrules.rules.create(
-        { schema: "person", event: "derp" },
+        { model: "person", event: "derp" },
         [newCondition],
         () => {},
         "test callback",
