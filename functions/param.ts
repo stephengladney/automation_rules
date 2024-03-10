@@ -21,7 +21,7 @@ export function getParamKeysBySchema<
 export function getParamBySchemaAndKey<
   T extends Record<string, readonly string[]>,
   U extends keyof T
->(triggers: T, schema: U, key: T[U][number]) {
+>(params: T, schema: U, key: T[U][number]) {
   return {
     schema,
     key,

@@ -21,7 +21,7 @@ import {
 import { getLogCallback, setLogCallback, setLogging } from "./functions/log"
 import { getJsonStringFromRule, getRuleFromJsonString } from "./functions/json"
 
-import type { Condition, Operator, Rule, SafeTrigger, Trigger } from "./types"
+import type { Condition, Operator, Rule, Trigger } from "./types"
 
 function executeRulesWithTrigger<DataType>(
   trigger: Trigger,
