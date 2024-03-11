@@ -241,8 +241,8 @@ function create<T, U extends (...args: any) => (data?: T) => unknown>({
   conditions: [Condition, ...Condition[]], // at least one condition is required
   callback?: (data?: T) => unknown,
   callbackDescription?: string,
-  createCallback?: U
-  createCallbackArgs?: Parameters<U>
+  createCallback?: U,
+  createCallbackArgs?: Parameters<U>,
   description?: string,
   id?: number | string
 })
@@ -331,12 +331,11 @@ const customMessage = "Thank you for your support!"
 const newRule = automationrules.rules.create({
   trigger: newTrigger,
   conditions: [newCondition],
-  createCallback: getSendMessageCallback
-  createCallbackArgs: [customMessage]
-  callbackDescription: "Send a custom message to the customer"
-  description: submittedDescription
+  createCallback: getSendMessageCallback,
+  createCallbackArgs: [customMessage],
+  callbackDescription: "Send a custom message to the customer",
+  description: submittedDescription,
 })
-
 ```
 
 ### `executeAllByTrigger()`
