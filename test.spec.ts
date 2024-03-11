@@ -1,8 +1,6 @@
 import { createCondition, isConditionMet } from "./functions/condition"
 import {
   executeAutomationRule,
-  executeRules,
-  getRulesByTrigger,
   removeAllRules,
   removeRuleById,
   rules,
@@ -174,13 +172,14 @@ describe("rules", () => {
     it("creates a new rule", () => {
       const callback = () => {}
       const newCondition = createCondition(newParam, "equals", true)
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
+
+      const newRule = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
         callback,
-        "test callback",
-        "test rule"
-      )
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
       expect(newRule).toEqual({
         id: 1,
         callback,
@@ -196,13 +195,14 @@ describe("rules", () => {
     it("calls the callback when conditions are met", () => {
       const callback = jest.fn()
       const newCondition = createCondition(newParam, "equals", "Stephen")
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
+
+      const newRule = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
         callback,
-        "test callback",
-        "test rule"
-      )
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
       executeAutomationRule(newRule, { name: "Stephen" })
       expect(callback).toHaveBeenCalled()
     })
@@ -210,41 +210,64 @@ describe("rules", () => {
     it("doesn't call the callback when conditions are not met", () => {
       const callback = jest.fn()
       const newCondition = createCondition(newParam, "equals", true)
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
+
+      const newRule = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
         callback,
-        "test callback",
-        "test rule"
-      )
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
 
       executeAutomationRule(newRule, { name: false })
       expect(callback).not.toHaveBeenCalled()
+    })
+
+    it("calls the callback funfunction with args if conditions are met", () => {
+      const callback = jest.fn()
+      const funFunction = (a: string, b: number) => (data: any) => {
+        callback(a, b, data)
+      }
+      const newCondition = createCondition(newParam, "equals", true)
+
+      const newRule = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        createCallback: funFunction,
+        createCallbackArgs: ["the answer is", 42],
+        callbackDescription: "test funfunction callback",
+        description: "test funfunction callback",
+      })
+
+      executeAutomationRule(newRule, { name: true })
+      expect(callback).toHaveBeenCalledWith("the answer is", 42, { name: true })
     })
   })
 
   describe("addRules", () => {
     it("adds the new rules to the rules array", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
+
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
       expect(rules[0].description).toBe("test rule")
     })
 
     it("adds an id to a new rule", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
+
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
       expect(rules[0].id).toBe(1)
     })
   })
@@ -252,18 +275,18 @@ describe("rules", () => {
   describe("removeRuleById", () => {
     it("removes the rule with the specified id", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "rule 1"
-      )
-      automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "rule 2"
-      )
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        description: "rule 1",
+      })
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        description: "rule 2",
+      })
       removeRuleById(1)
       expect(rules.length).toBe(1)
       expect(rules[0].id).toBe(2)
@@ -273,13 +296,13 @@ describe("rules", () => {
   describe("removeAllRules", () => {
     it("removes all rules from the rules array", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
       removeAllRules()
       expect(rules.length).toBe(0)
     })
@@ -288,26 +311,30 @@ describe("rules", () => {
   describe("getRules", () => {
     it("returns all rules", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
-      const newRule2 = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
-      const newRule3 = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test rule"
-      )
+
+      const newRule = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
+
+      const newRule2 = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
+
+      const newRule3 = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
 
       expect(automationrules.rules.getAll()).toEqual([
         { ...newRule, id: 1 },
@@ -320,64 +347,34 @@ describe("rules", () => {
   describe("getRulesByTrigger", () => {
     it("returns all rules of a specific trigger", () => {
       const newCondition = createCondition(newParam, "equals", true)
-      automationrules.rules.create(
-        { model: "person", event: "derp" },
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
-      const newRule2 = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test callback",
-        "test rule"
-      )
-      const newRule3 = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        () => {},
-        "test rule"
-      )
+      automationrules.rules.create({
+        trigger: { model: "person", event: "derp" },
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
+
+      const newRule2 = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
+
+      const newRule3 = automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
 
       expect(automationrules.rules.getAllByTrigger(newTrigger)).toEqual([
         { ...newRule2, id: 2 },
         { ...newRule3, id: 3 },
       ])
-    })
-  })
-
-  describe("executeRules", () => {
-    it("executes all of the provided rules", () => {
-      const newCondition = automationrules.conditions.create(
-        newParam,
-        "equals",
-        true
-      )
-      const callback1 = jest.fn()
-      const callback2 = jest.fn()
-      const newRule = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        callback1,
-        "test callback",
-        "test rule"
-      )
-
-      const newRule2 = automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        callback2,
-        "test callback",
-        "test rule"
-      )
-
-      const allRules = automationrules.rules.getAllByTrigger(newTrigger)
-
-      executeRules(allRules, { name: true })
-      expect(callback1).toHaveBeenCalled()
-      expect(callback2).toHaveBeenCalled()
     })
   })
 
@@ -390,21 +387,22 @@ describe("rules", () => {
       )
       const callback1 = jest.fn()
       const callback2 = jest.fn()
-      automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        callback1,
-        "test callback",
-        "test rule"
-      )
 
-      automationrules.rules.create(
-        newTrigger,
-        [newCondition],
-        callback2,
-        "test callback",
-        "test rule"
-      )
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: callback1,
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
+
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: callback2,
+        callbackDescription: "test callback",
+        description: "test rule",
+      })
 
       automationrules.rules.executeAllByTrigger(newTrigger, { name: true })
 
@@ -423,27 +421,29 @@ describe("json", () => {
     )
     const callback1 = jest.fn()
     const callback2 = jest.fn()
-    const rule1 = automationrules.rules.create(
-      newTrigger,
-      [newCondition],
-      callback1,
-      "test callback 1",
-      "test rule 1"
-    )
 
-    const rule2 = automationrules.rules.create(
-      newTrigger,
-      [newCondition],
-      callback2,
-      "test callback 2",
-      "test rule 2"
-    )
+    const rule1 = automationrules.rules.create({
+      trigger: newTrigger,
+      conditions: [newCondition],
+      callback: callback1,
+      callbackDescription: "test callback",
+      description: "test rule",
+    })
+
+    const rule2 = automationrules.rules.create({
+      trigger: newTrigger,
+      conditions: [newCondition],
+      callback: callback2,
+      callbackDescription: "test callback 2",
+      description: "test rule 2",
+    })
 
     const functionDictionary = {
       "1stcallback": callback1,
       "2ndcallback": callback2,
     }
     const before = automationrules.rules.getAll()
+
     const jsonString = automationrules.json.getJsonStringFromRule(
       rule1,
       functionDictionary
@@ -477,21 +477,23 @@ describe("logging", () => {
     const dummyLoggingCallback = jest.fn()
     automationrules.log.setLogging({ onSuccess: true })
     automationrules.log.setLogCallback(dummyLoggingCallback)
-    const callback = jest.fn()
+
     const newCondition = automationrules.conditions.create(
       newParam,
       "equals",
       true
     )
-    const newRule = automationrules.rules.create(
-      newTrigger,
-      [newCondition],
-      callback,
-      "test callback",
-      "test rule"
-    )
+
+    const newRule = automationrules.rules.create({
+      trigger: newTrigger,
+      conditions: [newCondition],
+      callback: () => {},
+      callbackDescription: "test callback",
+      description: "test rule",
+    })
 
     executeAutomationRule(newRule, { name: true })
+
     expect(dummyLoggingCallback).toHaveBeenCalledWith(
       newRule,
       true,

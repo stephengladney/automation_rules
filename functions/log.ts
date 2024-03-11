@@ -14,25 +14,25 @@ export function setLogging({
   if (onSuccess) logOnSuccess = onSuccess
 }
 
-type Callback = (
+type LogCallback = (
   rule: Rule,
   isSuccess: boolean,
   data: any,
   failedCondition?: Condition
 ) => any
 
-let logCallback: Callback = (params) => {}
+let logCallback: LogCallback = () => {}
 
 export function callLogCallback(
   rule: Rule,
   isSuccess: boolean,
-  data: any,
+  data: unknown,
   failedCondition?: Condition
 ) {
   logCallback(rule, isSuccess, data, failedCondition)
 }
 
-export function setLogCallback(callback: Callback) {
+export function setLogCallback(callback: LogCallback) {
   logCallback = callback
 }
 

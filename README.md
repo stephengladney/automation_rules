@@ -11,12 +11,12 @@ Add `import automationrules from "automation-rules"` in your code wherever you w
 #### Rules are composed of three main parts:
 
 - Trigger
-- Conditions
-- Callbacks
+- Condition(s)
+- Callback
 
 ## Triggers
 
-A `Trigger` describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, you must hard-code your triggers as a variable in your code. The variable should be a readonly object with models you wish to evaluate as keys and arrays of the events as values.
+A `Trigger` describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, you must hard-code your triggers as a variable in your code. The variable should be a readonly object with models you wish to evaluate as keys and arrays of the events as values. The variable should also be exported.
 
 Example:
 
@@ -26,17 +26,53 @@ Example:
 - Allow merchants to create automations when new customers are created.
 
 ```typescript
-const triggers = {
+export const triggers = {
   order: ["created", "paid"],
   customers: ["created"],
 } as const
 ```
 
-_IMPORTANT: You must define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of TypeScript's autocomplete when using triggers._
+_IMPORTANT: You must define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of autocomplete when using triggers._
 
 _NOTE: Both the model and event names here are just strings for your reference. It's not required that they match actual model or event names elsewhere in your code._
 
-<hr>
+### `getAllByModel()`
+
+This function returns all of your Triggers for a specific model.
+
+```typescript
+function getAllByModel<
+  T extends Record<string, readonly string[]>,
+  K extends keyof T
+>(triggers: T, model: K)
+
+// Example:
+
+import { triggers } from "somefile.ts"
+
+automationrules.triggers.getAllByModel(triggers, "order")
+
+//=> [{ model: "order", event: "created" }, { model: "order", event: "paid" }]
+```
+
+### `getByModelAndEvent()`
+
+This function returns a specific Trigger.
+
+```typescript
+function getByModelAndEvent<
+  T extends Record<string, readonly string[]>,
+  U extends keyof T
+>(triggers: T, model: U, event: T[U][number])
+
+// Example:
+
+import { triggers } from "somefile.ts"
+
+automationrules.triggers.getByModelAndEvent(triggers, "order", "created")
+
+//=> { model: "order", event: "created" }
+```
 
 ## Conditions
 
@@ -65,26 +101,47 @@ _IMPORTANT: You must define this variable as read-only (using `as const`) if you
 
 _NOTE: The model names here are just strings for your reference. However, the key names must match the **actual** key names on the related model._
 
-```typescript
-function createCondition<T extends object>(
-  param: keyof T,
-  operator: Operator,
-  value: T[keyof T]
-)
+#### `getAllByModel()`
 
-type Condition = { param: keyof T; operator: Operator; value: T[keyof T] }
+This function returns all of your `Params` for a specific model.
+
+```typescript
+function getAllByModel<
+  T extends Record<string, readonly string[]>,
+  U extends keyof T
+>(params: T, model: U)
+
+// Example:
+
+import { params } from "somefile.ts"
+
+automationrules.params.getAllByModel(params, "order")[
+  //=>
+  ({ model: "order", key: "subtotal" },
+  { model: "order", key: "tip" },
+  { model: "order", key: "tax" },
+  { model: "order", key: "total" })
+]
 ```
 
-Example:
+#### `getByModelAndKey()`
+
+This function returns a specific `Param`.
 
 ```typescript
-type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+function getParamByModelAndKey<
+  T extends Record<string, readonly string[]>,
+  U extends keyof T
+>(params: T, model: U, key: T[U][number])
 
-const condition = arule.createCondition(
-  "total",
-  "is greater than or equal to",
-  100
-)
+// Example:
+
+import { params } from "somefile.ts"
+
+automationrules.params.getByModelAndEvent(params, "order", "subtotal")
+
+//=>
+{ model: "order", key: "subtotal" }
 ```
 
 ### Operators
@@ -114,97 +171,150 @@ automationrules.operators
 ]
 ```
 
+### `create()`
+
+This function creates a new `Condition`.
+
+```typescript
+function create(param: Param, operator: Operator, value: unknown)
+
+// Example:
+
+import { params } from "somefile.ts"
+
+const orderTotalParam = automationrules.params.getByModelAndKey(
+  params,
+  "order",
+  "total"
+)
+
+const condition = automationrules.conditions.create(
+  orderTotalParam,
+  "is greater than or equal to",
+  100
+)
+```
+
 ## Rules
 
-A Rules combines a trigger and condition(s) with a callback function to execute when an event occurs and the condition(s) are met. Rules are composed of three required parts and two optional parts:
+A `Rule` combines a `Trigger` and `Condition`(s) with a callback function to execute when an event occurs and the conditions are met. `Rules` are composed of three required parts and three optional parts:
 
-- Trigger
-- Condition[]
-- Callback
+- `Trigger`
+- `Condition`(s)
+- `Callback`
+- callback description _(optional)_
 - description _(optional)_
 - id _(optional)_
 
 _Note: If no ID is passed, the library will assign an integer as the ID. (auto-incremented)_
 
+### `create()`
+
+This function creates a new `Rule`.
+
 ```typescript
-function createRule(
+function create<DataType>(
   trigger: Trigger,
-  conditions: [Condition, ...Condition[]],
+  conditions: [Condition, ...Condition[]], // at least one condition is required
   callback: (data: DataType) => unknown,
+  callbackDescription?: string,
   description?: string,
   id?: number | string
 )
-```
 
-Example:
+// Example:
 
-```typescript
-type Order = { items: Item[]; subtotal: number; tax: number; total: number }
+import { params, triggers } from "somefile.ts"
 
-const triggers = {
-  NEW_USER_CREATED: "When a new user is created",
-  ORDER_SUBMITTED: "When an order is submitted",
-}
+// Get the order created trigger
+const orderCreatedTrigger = automationrules.triggers.getBySchemaAndEvent(
+  triggers,
+  "order",
+  "created"
+)
 
-const myCondition = arule.createCondition(
-  "total",
-  "is greater than or equal to",
+// Get the order total param
+const orderTotalParam = automationrules.params.getBySchemaAndKey(
+  params,
+  "order",
+  "total"
+)
+
+// Create a new condition
+const orderTotalOver100 = automationrules.conditions.create(
+  orderTotalParam,
+  "is greater than",
   100
 )
 
-const myCallback = (order: Order) => alert(`Order of ${order.total} submitted!`)
+// Create a callback
+const discountOrder = (order: Order) => ({
+  ...order,
+  discount: 10,
+  total: order.total - 10,
+})
 
-const rule = arule.createRule(
-  triggers.ORDER_SUBMITTED,
-  [myCondition],
-  myCallback,
-  "Show alert on order submission"
+// Create a new rule
+automationrules.rules.create(
+  orderCreatedTrigger,
+  [orderTotalOver100],
+  discountOrder,
+  "Discount the order by $10",
+  "When order total is over $100, apply a $10 discount"
 )
 ```
 
-<hr>
-
 ### Callbacks
 
-This a function that's call when a rule is invoked and all conditions are met. Rules are invoked by using the `executeRulesWithTrigger` function, which is covered below. This function takes in data to evaluate. This data is also passed to the callback function.
+This a function that's called when a rule is invoked and all conditions are met. The data that was evaluated for the rule is passed to the callback function.
 
 ```typescript
-const exampleCallback = (data: DataType) => {
+// Example:
+
+const exampleCallback = (data: T) => {
   /* do stuff */
 }
 ```
 
-Tip: You may want to use user-submitted values in your callbacks. To do this, create a function that takes in the user-submitted values and returns another function. Use this returned function for your automation rule's callback.
-
-Example:
+_TIP: You may want to utilize user-submitted values in your callback. For example, your user wants to send a custom message to their customer. To do this, create a function that takes in the user-submitted value(s) and returns another function that takes a single data param. Use this returned function for your automation rule's callback. Here's an example:_
 
 ```typescript
-function getRuleCallback(value: string) {
-  return (data: DataType) => {
-    // some code that uses value
-    // ...and maybe data
-    }
+function getMessageCallback(msg: string) {
+  return (data: Order) => sendMessage(data.customer, msg)
+}
 
-const myCallback = getRuleCallback(someUserSubmittedValue)
+const messageCallback = getMessageCallback(messageInput)
 ```
 
-### Executing rules
+### `executeAllByTrigger()`
 
-#### executeRulesWithTrigger
-
-Execute all rules with a particular trigger. Place this method in your code where that trigger occurs. For example, if your trigger is "When a user is created", add this to the code that creates a new user.
+This function executes all rules with a particular trigger. You should call this function in your code where the related trigger event happens.
 
 ```typescript
-function executeRulesWithTrigger<DataType>(trigger: Trigger, data: DataType)
+function executeRulesWithTrigger<T>(trigger: Trigger, data: T)
+
+// Example:
+
+import { triggers } from "somefile.ts"
+import automationrules from "automation-rules"
+
+const orderCreatedTrigger = automationrules.triggers.findByModelAndEvent(
+  triggers,
+  "order",
+  "created"
+)
+
+function createOrder(order: Order) {
+  // do stuff related to creating an order
+  automationrules.rules.executeAllByTrigger(orderCreatedTrigger, order)
+}
 ```
 
-<hr>
+## Logging
 
-### Logging
+You can enable user-facing logging on success and/or failure of rules. Logs help your app's users verify which automation rules succeed or fail and why. This helps them troubleshoot when a rule does or does not fire unexpectedly.
 
-You can also enable logging on success and/or failure of rules.
-
-#### setLogging
+### `setLogging()`
 
 ```typescript
 function setLogging({
@@ -216,24 +326,50 @@ function setLogging({
 })
 ```
 
-- `isSuccess` - Boolean that indicates whether all of the conditions were met and the callback was executed.
-- `failedCondition` - The first condition that failed if the rule failed to succeed.
+### `setLogCallback()`
 
-#### setLogCallback
-
-Logging fires a callback function that you define. This allows you to customize how you log results.
+This sets your `LogCallback` function. If using logging, this function should be called once in your application at initialization.
 
 ```typescript
-type Callback = (
+type LogCallback = (
   rule: Rule,
-  isSuccess: boolean,
-  data: any,
-  failedCondition?: Condition
+  isSuccess: boolean, // indicates where all conditions were met
+  data: unknown,
+  failedCondition?: Condition // if failed, the first condition that failed
 ) => {
   /* do stuff */
 }
 
-function setLogCallback(callback: Callback)
+function setLogCallback(callback: LogCallback)
+
+// Example:
+
+const myLogCallback = (
+  rule: Rule,
+  isSuccess: boolean,
+  data: unknown,
+  failedCondition?: Condition
+) => {
+
+  const failedReason = !isSuccess
+    ? `${failedCondition!.param.key} ${failedCondition!.operator} ${
+        failedCondition!.value} is not true`
+    : ""
+
+  logs.push({
+      rule: rule.description,
+      success: isSuccess,
+      failReason: failedReason,
+    })
+
+  console.log(logs) //=>
+  // [
+  //  {
+  //   rule: "When order total is over $100",
+  //   success: false,
+  //   failReason: "total is greater than 100 is not true",
+  //  }
+  // ]
 ```
 
 ### Persisting rules
@@ -242,18 +378,21 @@ Obviously, you will want the ability to persist automation rules created by your
 
 #### Function Dictionary
 
-Since functions themselves can't be stored to and retrieved from a database, we instead associate a name (string) with a function and store the name. A `FunctionDictionary` is an object that stores the names as keys and their functions as values. This is hard-coded and set once in your application's code.
+Since functions themselves can't be stored to and retrieved from a database, we instead associate a name with a function and store the name. A `FunctionDictionary` is an object that stores the names as keys and their functions as values. This is hard-coded and set once in your application's code.
 
 Example:
 
 ```typescript
-arule.setFunctionDictionary({
-  sayhello: (data: { name: string }) => alert(`Hello ${data.name}!`),
-  saygoodbye: (data: { name: string }) => alert(`Goodbye ${data.name}!`),
-})
+function someFunction() {}
+function someOtherFunction() {}
+
+const functionDictionary = {
+  someFunction: someFunction,
+  someOtherFunction: someOtherFunction,
+}
 ```
 
-#### getJsonStringFromRule
+#### `getJsonStringFromRule()`
 
 ```typescript
 function getJsonStringFromRule(rule: Rule): string
@@ -261,7 +400,7 @@ function getJsonStringFromRule(rule: Rule): string
 
 Rules will be stored as JSON in your database. This is a function that returns a JSON string version of your rule that you can store in your database.
 
-#### getRuleFromJsonString
+#### `getRuleFromJsonString()`
 
 ```typescript
 function getRuleFromJsonString(json: string): Rule

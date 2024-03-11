@@ -23,9 +23,9 @@ import { getJsonStringFromRule, getRuleFromJsonString } from "./functions/json"
 
 import type { Condition, Operator, Rule, Trigger } from "./types"
 
-function executeRulesWithTrigger<DataType>(
+function executeRulesWithTrigger<T>(
   trigger: Trigger,
-  data: DataType & { previous?: DataType }
+  data: T & { previous?: T }
 ) {
   executeRules(getRulesByTrigger(trigger), data)
 }

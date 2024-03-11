@@ -6,14 +6,37 @@ export let rules: Rule[] = []
 export let ruleId = 1
 export let functionDictionary = {}
 
-export function createRule<DataType>(
-  trigger: Trigger,
-  conditions: [Condition, ...Condition[]],
-  callback: (data: DataType) => unknown,
-  callbackDescription?: string,
-  description?: string,
+export function createRule<
+  T,
+  CCB extends (...args: any) => (data?: any) => any
+>({
+  trigger,
+  conditions,
+  callback,
+  callbackDescription,
+  createCallback,
+  createCallbackArgs,
+  description,
+  id,
+}: {
+  trigger: Trigger
+  conditions: [Condition, ...Condition[]]
+  description?: string
   id?: number | string
-) {
+} & (
+  | {
+      callback: (data?: T) => unknown
+      callbackDescription?: string
+      createCallback?: undefined
+      createCallbackArgs?: undefined
+    }
+  | {
+      callback?: undefined
+      callbackDescription?: string
+      createCallback: CCB
+      createCallbackArgs: Parameters<CCB>
+    }
+)) {
   if (!conditions || conditions.length === 0) {
     throw "rule: must supply at least one condition"
   }
@@ -22,6 +45,8 @@ export function createRule<DataType>(
     callback,
     callbackDescription,
     conditions,
+    createCallback,
+    createCallbackArgs,
     description,
     trigger,
   } as Rule
@@ -36,12 +61,15 @@ export function createRule<DataType>(
   return newRule
 }
 
-export function executeAutomationRule<DataType>(
+export function executeAutomationRule<T>(
   rule: Rule,
-  data: DataType & { previous?: DataType }
+  data: T & { previous?: T }
 ) {
-  if (areAllConditionsMet<DataType>(data, rule)) {
-    rule.callback(data)
+  if (areAllConditionsMet<T>(data, rule)) {
+    if (rule.callback) rule.callback(data)
+    else if (rule.createCallback) {
+      rule.createCallback(...rule.createCallbackArgs!)(data)
+    }
     if (logOnSuccess) {
       callLogCallback(rule, true, data)
     }
