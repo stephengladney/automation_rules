@@ -275,6 +275,7 @@ describe("rules", () => {
   describe("removeRuleById", () => {
     it("removes the rule with the specified id", () => {
       const newCondition = createCondition(newParam, "equals", true)
+
       automationrules.rules.create({
         trigger: newTrigger,
         conditions: [newCondition],
@@ -296,6 +297,7 @@ describe("rules", () => {
   describe("removeAllRules", () => {
     it("removes all rules from the rules array", () => {
       const newCondition = createCondition(newParam, "equals", true)
+
       automationrules.rules.create({
         trigger: newTrigger,
         conditions: [newCondition],
@@ -347,6 +349,7 @@ describe("rules", () => {
   describe("getRulesByTrigger", () => {
     it("returns all rules of a specific trigger", () => {
       const newCondition = createCondition(newParam, "equals", true)
+
       automationrules.rules.create({
         trigger: { model: "person", event: "derp" },
         conditions: [newCondition],
@@ -413,7 +416,12 @@ describe("rules", () => {
 })
 
 describe("json", () => {
-  it("converts both ways correctly", () => {
+  afterEach(() => {
+    removeAllRules()
+    setRuleId(1)
+  })
+
+  it("converts both ways correctly - regular callbacks", () => {
     const newCondition = automationrules.conditions.create(
       newParam,
       "equals",
@@ -461,6 +469,67 @@ describe("json", () => {
       functionDictionary
     )
     const after = [rule1Returned, rule2Returned]
+
+    expect(before).toEqual(after)
+  })
+
+  it("converts both ways correctly - funfunction callbacks", () => {
+    const newCondition = automationrules.conditions.create(
+      newParam,
+      "equals",
+      true
+    )
+    const callback1 = jest.fn()
+    const callback2 = jest.fn()
+
+    const funFunction = (a: string, b: number) => (data: any) => {
+      callback1(a, b, data)
+    }
+
+    const rule1 = automationrules.rules.create({
+      trigger: newTrigger,
+      conditions: [newCondition],
+      createCallback: funFunction,
+      createCallbackArgs: ["the answer is", 42],
+      callbackDescription: "test funfunction callback",
+      description: "test funfunction callback",
+    })
+
+    const rule2 = automationrules.rules.create({
+      trigger: newTrigger,
+      conditions: [newCondition],
+      callback: callback2,
+      callbackDescription: "test callback 2",
+      description: "test rule 2",
+    })
+
+    const functionDictionary = {
+      "1stcallback": callback1,
+      "2ndcallback": callback2,
+      funfunction: funFunction,
+    }
+    const before = automationrules.rules.getAll()
+
+    console.log(before[0])
+
+    const jsonString = automationrules.json.getJsonStringFromRule(
+      rule1,
+      functionDictionary
+    )
+    const jsonString2 = automationrules.json.getJsonStringFromRule(
+      rule2,
+      functionDictionary
+    )
+    const rule1Returned = automationrules.json.getRuleFromJsonString(
+      jsonString,
+      functionDictionary
+    )
+    const rule2Returned = automationrules.json.getRuleFromJsonString(
+      jsonString2,
+      functionDictionary
+    )
+    const after = [rule1Returned, rule2Returned]
+    console.log(after[0])
 
     expect(before).toEqual(after)
   })

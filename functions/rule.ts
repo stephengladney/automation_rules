@@ -8,7 +8,7 @@ export let functionDictionary = {}
 
 export function createRule<
   T,
-  CCB extends (...args: any) => (data?: any) => any
+  U extends (...args: any) => (data?: T) => unknown
 >({
   trigger,
   conditions,
@@ -33,8 +33,8 @@ export function createRule<
   | {
       callback?: undefined
       callbackDescription?: string
-      createCallback: CCB
-      createCallbackArgs: Parameters<CCB>
+      createCallback: U
+      createCallbackArgs: Parameters<U>
     }
 )) {
   if (!conditions || conditions.length === 0) {
