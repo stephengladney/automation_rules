@@ -1,6 +1,6 @@
-import type { Trigger, TriggersMap } from "../types"
+import type { Trigger } from "../types"
 
-export function getTriggerModels(triggers: TriggersMap) {
+export function getTriggerModels(triggers: Record<string, readonly string[]>) {
   return Object.keys(triggers)
 }
 

@@ -1,6 +1,6 @@
-import type { Param, ParamsMap } from "../types"
+import type { Param } from "../types"
 
-export function getParamModels(params: ParamsMap) {
+export function getParamModels(params: Record<string, readonly string[]>) {
   return Object.keys(params)
 }
 
