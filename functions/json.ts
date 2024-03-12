@@ -8,7 +8,11 @@ export function getJsonStringFromRule(
     id: rule.id,
     trigger: rule.trigger,
     conditions: JSON.stringify(rule.conditions),
-    callback: getKeyWhereValueIs(functionDictionary, rule.callback),
+    callback:
+      getKeyWhereValueIs(functionDictionary, rule.callback) ?? undefined,
+    createCallback:
+      getKeyWhereValueIs(functionDictionary, rule.createCallback) ?? undefined,
+    createCallbackArgs: rule.createCallbackArgs,
     callbackDescription: rule.callbackDescription,
     description: rule.description,
   })
@@ -23,7 +27,12 @@ export function getRuleFromJsonString(
     ...rule,
     conditions: JSON.parse(rule.conditions),
     callback:
-      functionDictionary[rule.callback as keyof typeof functionDictionary],
+      functionDictionary[rule.callback as keyof typeof functionDictionary] ??
+      undefined,
+    createCallback:
+      functionDictionary[
+        rule.createCallback as keyof typeof functionDictionary
+      ] ?? undefined,
   }
 }
 
