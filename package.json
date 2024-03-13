@@ -1,6 +1,6 @@
 {
   "name": "automation-rules",
-  "version": "1.8.2",
+  "version": "1.8.1",
   "description": "Allow your app's users to created automated workflows when events occur and certain conditions are met.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,13 +12,10 @@
     "url": "git+https://github.com/stephengladney/automation_rules.git"
   },
   "keywords": [
-    "automate",
-    "automated workflow",
     "automation",
     "triggers",
     "typescript",
-    "workflow",
-    "zero dependency"
+    "workflow"
   ],
   "author": "Stephen Gladney",
   "license": "ISC",
@@ -27,8 +24,9 @@
   },
   "homepage": "https://github.com/stephengladney/automation_rules#readme",
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.2"
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.10",
+    "jest": "^29.6.2",
+    "ts-jest": "^29.1.1"
   }
 }

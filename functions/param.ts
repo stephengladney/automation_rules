@@ -1,29 +1,29 @@
-import type { Param } from "../types"
+import type { Param, ParamsMap } from "../types"
 
-export function getParamModels(params: Record<string, readonly string[]>) {
+export function getParamSchemas(params: ParamsMap) {
   return Object.keys(params)
 }
 
-export function getParamsByModel<
+export function getParamsBySchema<
   T extends Record<string, readonly string[]>,
   U extends keyof T
->(params: T, model: U) {
-  return params[model].map((key) => ({ model, key })) as Param[]
+>(params: T, schema: U) {
+  return params[schema].map((key) => ({ schema, key })) as Param[]
 }
 
-export function getParamKeysByModel<
+export function getParamKeysBySchema<
   T extends Record<string, readonly string[]>,
   K extends keyof T
->(params: T, model: K) {
-  return params[model]
+>(params: T, schema: K) {
+  return params[schema]
 }
 
-export function getParamByModelAndKey<
+export function getParamBySchemaAndKey<
   T extends Record<string, readonly string[]>,
   U extends keyof T
->(params: T, model: U, key: T[U][number]) {
+>(params: T, schema: U, key: T[U][number]) {
   return {
-    model,
+    schema,
     key,
   } as Param
 }

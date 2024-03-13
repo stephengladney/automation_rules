@@ -1,14 +1,14 @@
 import {
-  getTriggerByModelAndEvent,
-  getTriggerEventsByModel,
-  getTriggerModels,
-  getTriggersByModel,
+  getTriggerBySchemaAndEvent,
+  getTriggerEventsBySchema,
+  getTriggerSchemas,
+  getTriggersBySchema,
 } from "./functions/trigger"
 import {
-  getParamByModelAndKey,
-  getParamKeysByModel,
-  getParamsByModel,
-  getParamModels,
+  getParamBySchemaAndKey,
+  getParamKeysBySchema,
+  getParamsBySchema,
+  getParamSchemas,
 } from "./functions/param"
 import { operators } from "./operators"
 import { createCondition } from "./functions/condition"
@@ -23,9 +23,9 @@ import { getJsonStringFromRule, getRuleFromJsonString } from "./functions/json"
 
 import type { Condition, Operator, Rule, Trigger } from "./types"
 
-function executeRulesWithTrigger<T>(
+function executeRulesWithTrigger<DataType>(
   trigger: Trigger,
-  data: T & { previous?: T }
+  data: DataType & { previous?: DataType }
 ) {
   executeRules(getRulesByTrigger(trigger), data)
 }
@@ -47,10 +47,10 @@ export default {
   },
   operators,
   params: {
-    getAllByModel: getParamsByModel,
-    getByModelAndKey: getParamByModelAndKey,
-    keys: { getAllByModel: getParamKeysByModel },
-    models: { getAll: getParamModels },
+    getAllBySchema: getParamsBySchema,
+    getBySchemaAndKey: getParamBySchemaAndKey,
+    keys: { getAllBySchema: getParamKeysBySchema },
+    schemas: { getAll: getParamSchemas },
   },
   rules: {
     create: createRule,
@@ -59,9 +59,9 @@ export default {
     getAllByTrigger: getRulesByTrigger,
   },
   triggers: {
-    events: { getAllByModel: getTriggerEventsByModel },
-    models: { getAll: getTriggerModels },
-    getAllByModel: getTriggersByModel,
-    getByModelAndEvent: getTriggerByModelAndEvent,
+    events: { getAllBySchema: getTriggerEventsBySchema },
+    schemas: { getAll: getTriggerSchemas },
+    getAllBySchema: getTriggersBySchema,
+    getBySchemaAndEvent: getTriggerBySchemaAndEvent,
   },
 }

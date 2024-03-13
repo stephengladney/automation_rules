@@ -13,15 +13,23 @@ export function createCondition(
   } as Condition
 }
 
-export function isConditionMet<T>(
+type Data = {
+  [key: string]: any
+  previous?: any
+}
+
+export function isConditionMet<DataType>(
   condition: Condition,
-  data: T & { previous?: T }
+  data: DataType & { previous?: DataType }
 ) {
-  const { operator, value }: { operator: Operator; value: T[keyof T] } =
-    condition
-  const param = data[condition.param.key as keyof T]
+  type DataTypeKey = keyof DataType
+  const {
+    operator,
+    value,
+  }: { operator: Operator; value: DataType[keyof DataType] } = condition
+  const param = data[condition.param.key as DataTypeKey]
   const previousParam1 = data.previous
-    ? data.previous[condition.param.key as keyof T]
+    ? data.previous[condition.param.key as DataTypeKey]
     : null
   let result
 
@@ -82,13 +90,13 @@ export function stringifyCondition(condition: Condition) {
   return `${condition.param} ${condition.operator} ${condition.value}`
 }
 
-export function areAllConditionsMet<T>(
-  data: T & { previous?: any },
+export function areAllConditionsMet<DataType>(
+  data: DataType & { previous?: any },
   rule: Rule
 ) {
   let result = true
   for (let condition of rule.conditions) {
-    if (!isConditionMet<T>(condition, data)) {
+    if (!isConditionMet<DataType>(condition, data)) {
       if (logOnFailure) {
         callLogCallback(rule, false, data, condition)
       }
