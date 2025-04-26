@@ -18,11 +18,13 @@ export function createRule<
   createCallbackArgs,
   description,
   id,
+  tags,
 }: {
   trigger: Trigger
   conditions: [Condition, ...Condition[]]
   description?: string
   id?: number | string
+  tags?: string[]
 } & (
   | {
       callback: (data?: T) => unknown
@@ -49,6 +51,7 @@ export function createRule<
     createCallbackArgs,
     description,
     trigger,
+    tags,
   } as Rule
 
   rules.push({ ...newRule, id: newRule.id ?? ruleId })
@@ -90,12 +93,15 @@ export function executeRules(rules: Rule[], data: any) {
   rules.forEach((rule) => executeAutomationRule(rule, data))
 }
 
-export function removeRuleById(id: number) {
+export function removeById(id: number) {
   rules = rules.filter((rule) => rule.id !== id)
 }
 
-export function removeAllRules() {
+export function removeAll() {
   rules = []
+}
+export function removeByTag(tag: string) {
+  rules = rules.filter((rule) => !rule.tags?.includes(tag))
 }
 
 export function setRuleId(n: number) {

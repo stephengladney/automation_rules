@@ -17,6 +17,9 @@ import {
   executeRules,
   getAllRules,
   getRulesByTrigger,
+  removeById,
+  removeAll,
+  removeByTag,
 } from "./functions/rule"
 import { getLogCallback, setLogCallback, setLogging } from "./functions/log"
 import { getJsonStringFromRule, getRuleFromJsonString } from "./functions/json"
@@ -57,6 +60,9 @@ export default {
     executeAllByTrigger: executeRulesWithTrigger,
     getAll: getAllRules,
     getAllByTrigger: getRulesByTrigger,
+    removeAll: removeAll,
+    removeById: removeById,
+    removeByTag: removeByTag,
   },
   triggers: {
     events: { getAllByModel: getTriggerEventsByModel },

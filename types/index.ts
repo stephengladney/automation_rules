@@ -21,4 +21,5 @@ export type Rule = {
   createCallback?: (...args: any) => any
   createCallbackArgs?: any[]
   description: string
+  tags?: string[]
 }

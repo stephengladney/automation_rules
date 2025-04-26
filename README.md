@@ -6,9 +6,9 @@ For example, your app is an e-commerce app that lets merchants sell products onl
 
 ## Getting Started
 
-To install the package, run `npm install automation-rules` in your terminal
+To install the package, run `npm install automation-rules` in your terminal.
 
-Add `import automationrules from "automation-rules"` in your code wherever you wish to use the library. _(Note: You can use whatever alias you'd like.)_
+Add `import ar from "automation-rules"` in your code wherever you wish to use the library. _(Note: You can use whatever alias you'd like.)_
 
 #### Rules are composed of three main parts:
 
@@ -18,21 +18,18 @@ Add `import automationrules from "automation-rules"` in your code wherever you w
 
 ## Triggers
 
-A `Trigger` describes a particular event in your app that you want to allow users to build an automation rule around. It's a simple object with keys of **model** and **event** which are both strings.
-
-```typescript
-type Trigger = { model: string; event: string }
-```
-
-To ensure type safety, you must hard-code your triggers as a variable in your code. The variable should be a readonly object with models you wish to evaluate as keys and arrays of the events as values. The variable should also be exported.
+A `Trigger` describes a particular event in your app that you want to allow users to build an automation rule around. To ensure type safety, you must hard-code your triggers as a variable in your code. This should be stored as an object, where the keys are your app's model names and the values are an array of strings that represent properties on those models.
 
 Example:
 
 - Your application has two models: **orders** and **customers**.
 - You want to allow merchants to creation an automation rule for when:
+
   - Orders are created
   - Orders are paid
   - New customers are created
+
+So you'll want to declare your triggers as such...
 
 ```typescript
 export const triggers = {
@@ -41,11 +38,9 @@ export const triggers = {
 } as const
 ```
 
-_NOTE: Both the model and event names are just strings for your reference. It's not required that they match actual model or event names elsewhere in your code._
+_IMPORTANT: You should define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of autocomplete when using triggers._
 
-_IMPORTANT: You must define this variable as read-only (using `as const`) if you want to ensure type safety and take advantage of autocomplete when using triggers._
-
-### `getAllByModel()`
+### `triggers.getAllByModel()`
 
 This function returns all of your Triggers for a specific model. This is useful for rendering a list of possible triggers to users in your UI once they've selected a specific model.
 
@@ -57,16 +52,16 @@ function getAllByModel<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-automationrules.triggers.getAllByModel(triggers, "order")[
+ar.triggers.getAllByModel(triggers, "order")[
   //=>
   ({ model: "order", event: "created" }, { model: "order", event: "paid" })
 ]
 ```
 
-### `getByModelAndEvent()`
+### `triggers.getByModelAndEvent()`
 
 This function returns a specific Trigger.
 
@@ -78,31 +73,33 @@ function getByModelAndEvent<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-automationrules.triggers.getByModelAndEvent(triggers, "order", "created")
+ar.triggers.getByModelAndEvent(triggers, "order", "created")
 
 //=>
 { model: "order", event: "created" }
 ```
 
-### `models.getAll()`
+### `triggers.models.getAll()`
+
+This function returns all of your models that can be used for a `Trigger`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ```typescript
 function getAll(triggers: Record<string, readonly string[]>)
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-automationrules.triggers.models.getAll(triggers)
+ar.triggers.models.getAll(triggers)
 ```
 
-This function returns all of your models that can be used for a `Trigger`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
+### `triggers.events.getAllByModel()`
 
-### `events.getAllByModel()`
+This function returns all of your events that can be used for a `Trigger`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ```typescript
 function getAllByModel<
@@ -112,13 +109,11 @@ function getAllByModel<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-automationrules.triggers.events.getAllAllByModel(triggers, "person")
+ar.triggers.events.getAllAllByModel(triggers, "person")
 ```
-
-This function returns all of your events that can be used for a `Trigger`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ## Conditions
 
@@ -130,8 +125,8 @@ A `Condition` verifies whether or not a set of data meets certain criteria. Cond
 
 ```typescript
 type Condition = {
-  operator: Operator
   param: Param
+  operator: Operator
   value: any
 }
 ```
@@ -161,7 +156,7 @@ _IMPORTANT: You must define this variable as read-only (using `as const`) if you
 
 _NOTE: The model names here are just strings for your reference. However, the key names must match the **actual** key names on the related model._
 
-#### `getAllByModel()`
+### `params.getAllByModel()`
 
 This function returns all of your `Params` for a specific model.
 
@@ -173,10 +168,10 @@ function getAllByModel<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params } from "somefile.ts"
 
-automationrules.params.getAllByModel(params, "order")[
+ar.params.getAllByModel(params, "order")[
   //=>
   ({ model: "order", key: "subtotal" },
   { model: "order", key: "tip" },
@@ -185,7 +180,7 @@ automationrules.params.getAllByModel(params, "order")[
 ]
 ```
 
-#### `getByModelAndKey()`
+### `params.getByModelAndKey()`
 
 This function returns a specific `Param`.
 
@@ -197,31 +192,33 @@ function getParamByModelAndKey<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params } from "somefile.ts"
 
-automationrules.params.getByModelAndEvent(params, "order", "subtotal")
+ar.params.getByModelAndEvent(params, "order", "subtotal")
 
 //=>
 { model: "order", key: "subtotal" }
 ```
 
-### `models.getAll()`
+### `params.models.getAll()`
+
+This function returns all of your models that can be used for a `Param`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ```typescript
 function getAll(params: Record<string, readonly string[]>)
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params } from "somefile.ts"
 
-automationrules.params.models.getAll(params)
+ar.params.models.getAll(params)
 ```
 
-This function returns all of your models that can be used for a `Param`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
+### `params.events.getAllByModel()`
 
-### `events.getAllByModel()`
+This function returns all of your events that can be used for a `Param`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ```typescript
 function getAllByModel<
@@ -231,22 +228,20 @@ function getAllByModel<
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params } from "somefile.ts"
 
-automationrules.params.events.getAllAllByModel(params, "person")
+ar.params.events.getAllAllByModel(params, "person")
 ```
-
-This function returns all of your events that can be used for a `Param`. Again, this is useful for rendering a list of options to users in your UI when they are creating a new rule.
 
 ### Operators
 
-Operators are used to evaluate the value of something in an automation rules. These are static and provided by the library. To access, use `automationrules.operators`. For convenience of rendering in your UI, these operators resolve to human-readable strings. The library also includes an `Operator` type which you can use for taking advantage of autocomplete when writing code.
+Operators are used to evaluate the value of something in an automation rules. These are static and provided by the library. For convenience of rendering these in your UI, access these with use `ar.operators`. If you're hard-coding any conditions in your code, auto-complete will work out of the box.
 
 Example:
 
 ```typescript
-automationrules.operators
+ar.operators
 
 //=>
 [
@@ -267,7 +262,7 @@ automationrules.operators
 ]
 ```
 
-### `create()`
+### `conditions.create()`
 
 This function creates a new `Condition`.
 
@@ -276,16 +271,12 @@ function create(param: Param, operator: Operator, value: unknown)
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params } from "somefile.ts"
 
-const orderTotalParam = automationrules.params.getByModelAndKey(
-  params,
-  "order",
-  "total"
-)
+const orderTotalParam = ar.params.getByModelAndKey(params, "order", "total")
 
-const condition = automationrules.conditions.create(
+const condition = ar.conditions.create(
   orderTotalParam,
   "is greater than or equal to",
   100
@@ -305,7 +296,7 @@ A `Rule` combines a `Trigger` and `Condition`(s) with a callback function to exe
 
 _Note: If no ID is passed, the library will assign an integer as the ID. (auto-incremented)_
 
-### `create()`
+### `rules.create()`
 
 This function creates a new `Rule`.
 
@@ -323,7 +314,7 @@ function create<T, U extends (...args: any) => (data?: T) => unknown>({
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { params, triggers } from "somefile.ts"
 
 // Assume these values were submitted by your user in the UI
@@ -336,21 +327,21 @@ const submittedDescription = "When order total is over $100, apply a $10 discoun
 const submittedCallbackDescription = "Discount the order by $10"
 
 // Get the order created trigger
-const newTrigger = automationrules.triggers.getBySchemaAndEvent(
+const newTrigger = ar.triggers.getBySchemaAndEvent(
   triggers,
   selectedModel,
   selectedEvent
 )
 
 // Get the order total param
-const newParam = automationrules.params.getBySchemaAndKey(
+const newParam = ar.params.getBySchemaAndKey(
   params,
   selectedModel,
   selectedKey
 )
 
 // Create a new condition
-const newCondition = automationrules.conditions.create(
+const newCondition = ar.conditions.create(
   newParam,
   selectedOperator,
   submittedValue
@@ -364,7 +355,7 @@ const discountOrder = (order: Order) => ({
 })
 
 // Create a new rule
-const newRule = automationrules.rules.create({
+const newRule = ar.rules.create({
   trigger: newTrigger,
   conditions: [newCondition],
   callback: discountOrder,
@@ -373,7 +364,7 @@ const newRule = automationrules.rules.create({
 })
 ```
 
-### callback
+### Callback
 
 This a function that's called when a rule is invoked and all conditions are met. The data that was evaluated for the rule is passed to the callback function.
 
@@ -392,7 +383,7 @@ Sometimes you want to utilize user-submitted values in your callback. For exampl
 ```typescript
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 
 function sendMessage(customer: string, msg: string) {
   /* code to send message */
@@ -405,7 +396,7 @@ function getSendMessageCallback(message: string) {
 // Assume this value was submitted by you user in the UI
 const customMessage = "Thank you for your support!"
 
-const newRule = automationrules.rules.create({
+const newRule = ar.rules.create({
   trigger: newTrigger,
   conditions: [newCondition],
   createCallback: getSendMessageCallback,
@@ -415,7 +406,7 @@ const newRule = automationrules.rules.create({
 })
 ```
 
-### `executeAllByTrigger()`
+### `rules.executeAllByTrigger()`
 
 This function executes all rules with a particular `Trigger`. You should call this function in your code where the related trigger event happens.
 
@@ -424,10 +415,10 @@ function executeAllByTrigger<T>(trigger: Trigger, data: T)
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-const orderCreatedTrigger = automationrules.triggers.findByModelAndEvent(
+const orderCreatedTrigger = ar.triggers.findByModelAndEvent(
   triggers,
   "order",
   "created"
@@ -435,11 +426,11 @@ const orderCreatedTrigger = automationrules.triggers.findByModelAndEvent(
 
 function createOrder(order: Order) {
   // do stuff related to creating an order
-  automationrules.rules.executeAllByTrigger(orderCreatedTrigger, order)
+  ar.rules.executeAllByTrigger(orderCreatedTrigger, order)
 }
 ```
 
-### `getAllByTrigger()`
+### `rules.getAllByTrigger()`
 
 This function retrieves all rules with a particular `Trigger`.
 
@@ -448,23 +439,23 @@ function getAllByTrigger(trigger: Trigger)
 
 // Example:
 
-import automationrules from "automation-rules"
+import ar from "automation-rules"
 import { triggers } from "somefile.ts"
 
-const orderCreatedTrigger = automationrules.triggers.findByModelAndEvent(
+const orderCreatedTrigger = ar.triggers.findByModelAndEvent(
   triggers,
   "order",
   "created"
 )
 
-automationrules.rules.getAllByTrigger(orderCreatedTrigger)
+ar.rules.getAllByTrigger(orderCreatedTrigger)
 ```
 
 ## Logging
 
 You can enable user-facing logging on success and/or failure of rules. Logs help your app's users verify which automation rules succeed or fail and why. This helps them troubleshoot when a rule does or does not fire unexpectedly.
 
-### `setLogging()`
+### `logs.setLogging()`
 
 ```typescript
 function setLogging({
@@ -476,7 +467,7 @@ function setLogging({
 })
 ```
 
-### `setLogCallback()`
+### `logs.setLogCallback()`
 
 This sets your `LogCallback` function. If using logging, this function should be called once in your application at initialization.
 
@@ -500,24 +491,24 @@ const myLogCallback = (
   data: unknown,
   failedCondition?: Condition
 ) => {
-  const failedReason = !isSuccess
-    ? `${failedCondition!.param.key} ${failedCondition!.operator} ${
-        failedCondition!.value
-      } is not true`
-    : ""
+  if (!isSuccess) {
+    const failedReason = `${failedCondition!.param.key} ${
+      failedCondition!.operator
+    } ${failedCondition!.value} is not true`
 
-  logs.push({
-    rule: rule.description,
-    isSuccess: isSuccess,
-    failReason: failedReason,
-  })
+    myLogs.push({
+      rule: rule.description,
+      isSuccess: isSuccess,
+      failReason: failedReason,
+    })
+  }
 }
 
 setLogCallback(myLogCallback)
 
 // An order comes in for less than $100...
 
-console.log(logs)[
+console.log(myLogs)[
   //=>
   {
     rule: "When order total is over $100",
@@ -554,7 +545,7 @@ export const functionDictionary = {
 }
 ```
 
-#### `getJsonStringFromRule()`
+#### `json.getJsonStringFromRule()`
 
 This is a function that returns a JSON string version of a rule that you can store in your database.
 
@@ -568,10 +559,10 @@ function getJsonStringFromRule(
 
 import { functionDictionary } from "somefile.ts"
 
-automationrules.log.getJsonStringFromRule(someRule, functionDictionary)
+ar.json.getJsonStringFromRule(someRule, functionDictionary)
 ```
 
-#### `getRuleFromJsonString()`
+#### `json.getRuleFromJsonString()`
 
 This is a function that returns a Rule from a JSON string.
 

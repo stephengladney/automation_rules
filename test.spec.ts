@@ -1,8 +1,9 @@
 import { createCondition, isConditionMet } from "./functions/condition"
 import {
   executeAutomationRule,
-  removeAllRules,
-  removeRuleById,
+  removeAll,
+  removeById,
+  removeByTag,
   rules,
   setRuleId,
 } from "./functions/rule"
@@ -130,7 +131,7 @@ describe("operators", () => {
 })
 
 describe("conditions", () => {
-  describe("condition", () => {
+  describe("createCondition", () => {
     it("returns a condition object", () => {
       const newCondition = createCondition(newParam, "equals", true)
       expect(newCondition).toEqual({
@@ -164,7 +165,7 @@ describe("conditions", () => {
 
 describe("rules", () => {
   afterEach(() => {
-    removeAllRules()
+    removeAll()
     setRuleId(1)
   })
 
@@ -288,7 +289,30 @@ describe("rules", () => {
         callback: () => {},
         description: "rule 2",
       })
-      removeRuleById(1)
+      removeById(1)
+      expect(rules.length).toBe(1)
+      expect(rules[0].id).toBe(2)
+    })
+  })
+
+  describe("removeByTag", () => {
+    it("removed the rule(s) with the specific tag", () => {
+      const newCondition = createCondition(newParam, "equals", true)
+
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        description: "rule 1",
+        tags: ["mytag"],
+      })
+      automationrules.rules.create({
+        trigger: newTrigger,
+        conditions: [newCondition],
+        callback: () => {},
+        description: "rule 2",
+      })
+      removeByTag("mytag")
       expect(rules.length).toBe(1)
       expect(rules[0].id).toBe(2)
     })
@@ -305,7 +329,7 @@ describe("rules", () => {
         callbackDescription: "test callback",
         description: "test rule",
       })
-      removeAllRules()
+      removeAll()
       expect(rules.length).toBe(0)
     })
   })
@@ -417,7 +441,7 @@ describe("rules", () => {
 
 describe("json", () => {
   afterEach(() => {
-    removeAllRules()
+    removeAll()
     setRuleId(1)
   })
 
@@ -510,8 +534,6 @@ describe("json", () => {
     }
     const before = automationrules.rules.getAll()
 
-    console.log(before[0])
-
     const jsonString = automationrules.json.getJsonStringFromRule(
       rule1,
       functionDictionary
@@ -529,7 +551,6 @@ describe("json", () => {
       functionDictionary
     )
     const after = [rule1Returned, rule2Returned]
-    console.log(after[0])
 
     expect(before).toEqual(after)
   })

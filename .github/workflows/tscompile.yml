@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
-      - run: npm install
+      - run: npm ci
       - run: tsc
       - run: rm dist/test.spec.js dist/test.spec.d.ts
       - run: npm publish
